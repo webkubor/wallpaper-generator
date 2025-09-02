@@ -16,9 +16,13 @@
           </template>
         </n-switch>
       </n-layout-header>
-      <n-layout-content>
+      <n-layout-content class="content">
         <WallpaperEditor />
       </n-layout-content>
+      <n-layout-footer class="footer" bordered>
+        <p>Designed & Developed by webkubor</p>
+        <p>Contact: <a href="mailto:webkubor@163.com">webkubor@163.com</a></p>
+      </n-layout-footer>
     </n-layout>
   </n-config-provider>
 </template>
@@ -28,6 +32,36 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+}
+
+.n-layout {
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.footer {
+  text-align: center;
+  padding: 16px;
+  color: var(--n-text-color-disabled);
+  font-size: 12px;
+
+  a {
+    color: var(--n-text-color-disabled);
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  p {
+    margin: 4px 0;
+  }
 }
 
 .header {
@@ -59,7 +93,7 @@ h1 {
 
 <script setup lang="ts">
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NSwitch, NIcon } from "naive-ui";
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed } from "vue";
 import { PhSun as Sun, PhMoon as Moon } from "@phosphor-icons/vue";

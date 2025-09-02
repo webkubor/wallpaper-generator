@@ -1,7 +1,8 @@
 <template>
-  <div class="wallpaper-editor">
+  <div class="editor-container">
+    <div class="wallpaper-editor">
     <!-- Left: Settings Panel -->
-    <n-card title="设置" class="settings-panel">
+    <n-card title="设置" class="settings-panel" hoverable bordered>
       <n-collapse default-expanded-names="1,2,3">
         <n-collapse-item title="基础设置" name="1">
           <n-space vertical>
@@ -48,6 +49,16 @@
                 <n-radio-button v-for="device in deviceOptions" :key="device.value" :value="device.value" :label="device.label" />
               </n-radio-group>
             </n-form-item>
+            
+            <!-- 自定义尺寸输入 -->
+            <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
+              <n-form-item label="宽度" label-placement="left">
+                <n-input-number v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" @update:value="updateCustomSize" />
+              </n-form-item>
+              <n-form-item label="高度" label-placement="left">
+                <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" @update:value="updateCustomSize" />
+              </n-form-item>
+            </div>
             <n-button type="primary" @click="downloadWallpaper" :loading="isDownloading">下载壁纸</n-button>
           </n-space>
         </n-collapse-item>
@@ -57,38 +68,38 @@
     <!-- Center: Preview Area -->
         <!-- Center: Preview Area -->
     <div class="preview-area">
-      <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
-        <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" />
-        <div class="watermark" :style="watermarkStyle">
-          <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
-          <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
+        <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
+          <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" />
+          <div class="watermark" :style="watermarkStyle">
+            <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
+            <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
+          </div>
+
+          <!-- Cropper Modal -->
+          <n-modal v-model:show="showCropperModal" preset="card" style="width: 80vw; height: 80vh;" title="裁剪图片">
+            <div class="cropper-container">
+              <VueCropper
+                ref="cropperRef"
+                :img="cropperSource"
+                :auto-crop="true"
+                :fixed-box="true"
+                :fixed="true"
+                :center-box="true"
+                :auto-crop-width="currentDevice.width"
+                :auto-crop-height="currentDevice.height"
+                output-type="png"
+              />
+            </div>
+            <template #footer>
+              <n-space justify="end">
+                <n-button @click="showCropperModal = false">取消</n-button>
+                <n-button type="primary" @click="confirmCrop">确认</n-button>
+              </n-space>
+            </template>
+          </n-modal>
         </div>
       </div>
     </div>
-
-    <!-- Cropper Modal -->
-        <!-- Cropper Modal -->
-    <n-modal v-model:show="showCropperModal" preset="card" style="width: 80vw; height: 80vh;" title="裁剪图片">
-      <div class="cropper-container">
-        <VueCropper
-          ref="cropperRef"
-          :img="cropperSource"
-          :auto-crop="true"
-          :fixed-box="true"
-          :fixed="true"
-          :center-box="true"
-          :auto-crop-width="currentDevice.width"
-          :auto-crop-height="currentDevice.height"
-          output-type="png"
-        />
-      </div>
-      <template #footer>
-        <n-space justify="end">
-          <n-button @click="showCropperModal = false">取消</n-button>
-          <n-button type="primary" @click="confirmCrop">确认</n-button>
-        </n-space>
-      </template>
-    </n-modal>
   </div>
 </template>
 
@@ -97,7 +108,7 @@ import { computed, ref } from 'vue';
 import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/next/dist/index.css'
-import { useWallpaper } from '../composables/useWallpaper';
+import { useWallpaper, deviceTypes, type Device } from '../composables/useWallpaper';
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
   NColorPicker, NSlider, NRadioGroup, NRadioButton, 
@@ -120,6 +131,22 @@ const isDownloading = ref(false);
 const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
+
+// 自定义尺寸相关
+const customWidth = ref(1080);
+const customHeight = ref(1080);
+
+// 更新自定义尺寸
+const updateCustomSize = () => {
+  if (previewSettings.value.selectedDevice === 'custom') {
+    // 找到自定义尺寸设备并更新其尺寸
+    const customDeviceIndex = deviceTypes.findIndex((device: Device) => device.id === 'custom');
+    if (customDeviceIndex !== -1) {
+      deviceTypes[customDeviceIndex].width = customWidth.value;
+      deviceTypes[customDeviceIndex].height = customHeight.value;
+    }
+  }
+};
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {
   if (options.file.file) {
@@ -183,11 +210,22 @@ const canvasStyle = computed(() => ({
 </script>
 
 <style scoped lang="scss">
+.editor-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  height: 100%;
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .wallpaper-editor {
   display: flex;
-  gap: 24px;
+  flex-direction: row;
+  gap: 20px;
   width: 100%;
-  height: 100%;
 }
 
 .settings-panel {
@@ -219,7 +257,7 @@ const canvasStyle = computed(() => ({
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   border-radius: 12px;
   transition: all 0.3s ease;
-  flex-shrink: 0; /* Prevent canvas from shrinking */
+  flex-shrink: 0;
 }
 
 .background-image {
@@ -247,5 +285,15 @@ const canvasStyle = computed(() => ({
 
 .watermark-image {
   height: 30px;
+}
+
+.custom-size-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.02);
 }
 </style>

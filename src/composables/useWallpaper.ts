@@ -35,7 +35,7 @@ export const deviceTypes: Device[] = [
   { id: 'iphone', name: 'iPhone', width: 390, height: 844 },
   { id: 'ipad', name: 'iPad', width: 820, height: 1180 },
   { id: 'mac', name: 'Mac', width: 1440, height: 900 },
-  { id: 'xiaohongshu', name: '小红书', width: 1080, height: 1920 }
+  { id: 'custom', name: '自定义尺寸', width: 1080, height: 1080 }
 ]
 
 // 获取设备信息

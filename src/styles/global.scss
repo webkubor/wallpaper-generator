@@ -84,3 +84,31 @@ main {
     }
   }
 }
+
+// General transitions for a smoother feel
+.n-card, .n-button {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+// Add a subtle lift effect on card hover
+.n-card[hoverable]:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--n-box-shadow-3) !important;
+}
+
+// Animation for content fade-in
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Apply animation to the main editor card
+.editor-card {
+  animation: content-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
