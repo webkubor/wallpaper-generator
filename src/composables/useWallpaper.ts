@@ -38,8 +38,8 @@ export interface ScalingMode {
 // 设备类型定义
 export const deviceTypes: Device[] = [
   { id: 'iphone', name: 'iPhone', width: 300, height: 650 }, // 宽高比 0.462
-  {id: 'ipad', name: 'iPad', width: 575, height: 400}, // 横屏
-  { id: 'mac', name: 'Mac', width: 640, height: 400 },        // 横屏
+  { id: 'ipad', name: 'iPad', width: 575, height: 400 }, // 横屏
+  { id: 'mac', name: 'Mac', width: 640, height: 400 }, // 横屏
   { id: 'custom', name: '自定义尺寸', width: 400, height: 400 }  
 ]
 
@@ -135,7 +135,7 @@ export const useWallpaper = () => {
 
   // 计算属性
   const selectedDeviceInfo = computed(() => {
-    return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[0]
+    return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[1]
   })
   
   const watermarkText = computed(() => {
@@ -160,7 +160,7 @@ export const useWallpaper = () => {
   }
   
   const currentDevice = computed(() => {
-    return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[0]
+    return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[1]
   })
   
   return {

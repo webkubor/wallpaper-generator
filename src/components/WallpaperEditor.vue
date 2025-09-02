@@ -247,7 +247,7 @@ const backgroundImageStyle = computed(() => ({
 }
 
 .settings-panel {
-  width: 320px;
+  width: 280px;
   height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
@@ -263,7 +263,7 @@ const backgroundImageStyle = computed(() => ({
   padding: 10px;
   overflow: hidden;
   background-color: var(--n-body-color);
-  max-width: 600px;
+  max-width: 800px;
   height: 100%;
 }
 
