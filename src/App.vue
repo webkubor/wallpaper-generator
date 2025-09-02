@@ -45,9 +45,13 @@
 
 .footer {
   text-align: center;
-  padding: 16px;
+  padding: 8px;
   color: var(--n-text-color-disabled);
   font-size: 12px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   a {
     color: var(--n-text-color-disabled);
@@ -60,7 +64,7 @@
   }
 
   p {
-    margin: 4px 0;
+    margin: 2px 0;
   }
 }
 

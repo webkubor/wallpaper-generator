@@ -13,7 +13,7 @@
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "vue": "^3.5.18",
-    "vue-cropper": "^0.6.5"
+    "vue-cropper": "^1.1.4"
   },
   "devDependencies": {
     "@phosphor-icons/vue": "^2.2.1",

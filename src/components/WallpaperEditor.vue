@@ -2,12 +2,12 @@
   <div class="editor-container">
     <div class="wallpaper-editor">
     <!-- Left: Settings Panel -->
-    <n-card title="设置" class="settings-panel" hoverable bordered>
-      <n-collapse default-expanded-names="1,2,3">
+    <n-card title="设置" class="settings-panel" hoverable bordered content-style="padding: 10px; height: 100%; overflow: auto;">
+      <n-collapse default-expanded-names="1,3" style="height: 100%; overflow: auto;">
         <n-collapse-item title="基础设置" name="1">
-          <n-space vertical>
-            <n-form-item label="上传背景" label-placement="left">
-              <n-upload action="" :show-file-list="false" @change="handleImageUpload">
+          <n-space vertical size="small">
+            <n-form-item label="上传背景" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
+              <n-upload :custom-request="() => {}" :show-file-list="false" @change="handleImageUpload">
                 <n-button>选择图片</n-button>
               </n-upload>
             </n-form-item>
@@ -15,47 +15,53 @@
         </n-collapse-item>
 
         <n-collapse-item title="水印与文字" name="2">
-          <n-space vertical>
-            <n-form-item label="水印文字" label-placement="left">
+          <n-space vertical size="small">
+            <n-form-item label="水印文字" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-input v-model:value="watermarkSettings.text" placeholder="输入水印文字" />
             </n-form-item>
-            <n-form-item label="图片水印" label-placement="left">
+            <n-form-item label="图片水印" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-upload list-type="image-card" :max="1" @change="handleWatermarkUpload">
                 点击上传
               </n-upload>
             </n-form-item>
-            <n-form-item label="字体" label-placement="left">
+            <n-form-item label="字体" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-select v-model:value="watermarkSettings.fontFamily" :options="fontOptions as any" />
             </n-form-item>
-            <n-form-item label="颜色" label-placement="left">
+            <n-form-item label="颜色" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-color-picker v-model:value="watermarkSettings.color" />
             </n-form-item>
-            <n-form-item label="大小" label-placement="left">
+            <n-form-item label="大小" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-slider v-model:value="watermarkSettings.fontSize" :min="12" :max="200" />
             </n-form-item>
-            <n-form-item label="透明度" label-placement="left">
+            <n-form-item label="透明度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-slider v-model:value="watermarkSettings.opacity" :min="0" :max="1" :step="0.1" />
             </n-form-item>
-            <n-form-item label="旋转" label-placement="left">
+            <n-form-item label="旋转" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-slider v-model:value="watermarkSettings.rotation" :min="-180" :max="180" />
             </n-form-item>
           </n-space>
         </n-collapse-item>
 
         <n-collapse-item title="布局与导出" name="3">
-          <n-space vertical>
-            <n-form-item label="设备" label-placement="left">
+          <n-space vertical size="small">
+            <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-radio-group v-model:value="previewSettings.selectedDevice">
                 <n-radio-button v-for="device in deviceOptions" :key="device.value" :value="device.value" :label="device.label" />
               </n-radio-group>
             </n-form-item>
             
+            <n-form-item label="缩放模式" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
+              <n-radio-group v-model:value="previewSettings.scalingMode">
+                <n-radio-button v-for="mode in scalingModeOptions" :key="mode.value" :value="mode.value" :label="mode.label" />
+              </n-radio-group>
+            </n-form-item>
+            
             <!-- 自定义尺寸输入 -->
             <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
-              <n-form-item label="宽度" label-placement="left">
+              <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
                 <n-input-number v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" @update:value="updateCustomSize" />
               </n-form-item>
-              <n-form-item label="高度" label-placement="left">
+              <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
                 <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" @update:value="updateCustomSize" />
               </n-form-item>
             </div>
@@ -66,10 +72,9 @@
     </n-card>
 
     <!-- Center: Preview Area -->
-        <!-- Center: Preview Area -->
     <div class="preview-area">
         <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
-          <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" />
+          <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
           <div class="watermark" :style="watermarkStyle">
             <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
             <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
@@ -82,11 +87,12 @@
                 ref="cropperRef"
                 :img="cropperSource"
                 :auto-crop="true"
-                :fixed-box="true"
-                :fixed="true"
+                :fixed-box="false"
+                :fixed="false"
                 :center-box="true"
                 :auto-crop-width="currentDevice.width"
                 :auto-crop-height="currentDevice.height"
+                :aspect-ratio="currentDevice.width / currentDevice.height"
                 output-type="png"
               />
             </div>
@@ -107,8 +113,8 @@
 import { computed, ref } from 'vue';
 import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
-import 'vue-cropper/next/dist/index.css'
-import { useWallpaper, deviceTypes, type Device } from '../composables/useWallpaper';
+import 'vue-cropper/dist/index.css'
+import { useWallpaper } from '../composables/useWallpaper';
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
   NColorPicker, NSlider, NRadioGroup, NRadioButton, 
@@ -123,6 +129,7 @@ const {
   previewSettings,
   deviceOptions,
   fontOptions,
+  scalingModeOptions,
   currentDevice
 } = useWallpaper();
 
@@ -133,17 +140,17 @@ const cropperSource = ref('');
 const cropperRef = ref<any>(null);
 
 // 自定义尺寸相关
-const customWidth = ref(1080);
-const customHeight = ref(1080);
+const customWidth = ref(400);
+const customHeight = ref(400);
 
 // 更新自定义尺寸
 const updateCustomSize = () => {
   if (previewSettings.value.selectedDevice === 'custom') {
     // 找到自定义尺寸设备并更新其尺寸
-    const customDeviceIndex = deviceTypes.findIndex((device: Device) => device.id === 'custom');
+    const customDeviceIndex = previewSettings.value.devices.findIndex(device => device.id === 'custom');
     if (customDeviceIndex !== -1) {
-      deviceTypes[customDeviceIndex].width = customWidth.value;
-      deviceTypes[customDeviceIndex].height = customHeight.value;
+      previewSettings.value.devices[customDeviceIndex].width = customWidth.value;
+      previewSettings.value.devices[customDeviceIndex].height = customHeight.value;
     }
   }
 };
@@ -207,18 +214,24 @@ const canvasStyle = computed(() => ({
   height: `${currentDevice.value.height}px`,
 }));
 
+// 根据用户选择的缩放模式动态调整背景图片样式
+const backgroundImageStyle = computed(() => ({
+  objectFit: previewSettings.value.scalingMode as 'contain' | 'cover',
+}));
+
 </script>
 
 <style scoped lang="scss">
 .editor-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px;
-  height: 100%;
+  align-items: center;
+  padding: 10px;
+  height: calc(100vh - 110px); /* 减去头部(64px)和底部(40px)的高度以及一些间距 */
   box-sizing: border-box;
   max-width: 1200px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .wallpaper-editor {
@@ -226,13 +239,17 @@ const canvasStyle = computed(() => ({
   flex-direction: row;
   gap: 20px;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .settings-panel {
-  width: 350px;
-  max-height: 100%;
+  width: 320px;
+  height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .preview-area {
@@ -240,9 +257,11 @@ const canvasStyle = computed(() => ({
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  overflow: auto;
+  padding: 10px;
+  overflow: hidden;
   background-color: var(--n-body-color);
+  max-width: 600px;
+  height: 100%;
 }
 
 .cropper-container {
@@ -258,6 +277,8 @@ const canvasStyle = computed(() => ({
   border-radius: 12px;
   transition: all 0.3s ease;
   flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .background-image {
@@ -266,7 +287,7 @@ const canvasStyle = computed(() => ({
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-color: #f5f5f5; /* 背景色，在留白区域显示 */
 }
 
 .watermark {
@@ -289,11 +310,16 @@ const canvasStyle = computed(() => ({
 
 .custom-size-inputs {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 8px;
   border-radius: 6px;
   background-color: rgba(0, 0, 0, 0.02);
+
+  .n-form-item {
+    flex: 1;
+    margin-bottom: 0;
+  }
 }
 </style>

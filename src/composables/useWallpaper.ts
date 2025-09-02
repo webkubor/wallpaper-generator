@@ -30,12 +30,17 @@ export interface WatermarkSettings {
   rotation: number;
 }
 
+export interface ScalingMode {
+  value: string;
+  label: string;
+}
+
 // 设备类型定义
 export const deviceTypes: Device[] = [
-  { id: 'iphone', name: 'iPhone', width: 390, height: 844 },
-  { id: 'ipad', name: 'iPad', width: 820, height: 1180 },
-  { id: 'mac', name: 'Mac', width: 1440, height: 900 },
-  { id: 'custom', name: '自定义尺寸', width: 1080, height: 1080 }
+  { id: 'iphone', name: 'iPhone', width: 270, height: 584 },  // 约 0.69 倍缩放，保持宽高比
+  { id: 'ipad', name: 'iPad', width: 400, height: 575 },      // 约 0.49 倍缩放，保持宽高比
+  { id: 'mac', name: 'Mac', width: 480, height: 300 },        // 约 0.33 倍缩放，保持宽高比
+  { id: 'custom', name: '自定义尺寸', width: 400, height: 400 }  // 默认正方形
 ]
 
 // 获取设备信息
@@ -67,12 +72,19 @@ export const defaultWatermarkSettings: WatermarkSettings = {
   rotation: 0
 }
 
+// 缩放模式选项
+export const scalingModes: ScalingMode[] = [
+  { value: 'contain', label: '等比缩放（可能留白）' },
+  { value: 'cover', label: '填充（可能裁剪）' }
+];
+
 // 默认预览设置
 export const defaultPreviewSettings = {
   selectedDevice: 'iphone',
   showCombined: false,
   backgroundColor: '#ffffff',
   showDeviceBorder: true,
+  scalingMode: 'contain', // 默认使用等比缩放模式
   devices: deviceTypes.map(device => ({
     ...device,
     selected: false
@@ -106,6 +118,13 @@ export const useWallpaper = () => {
     { label: '中下', value: 'bottom-center' },
     { label: '右下', value: 'bottom-right' },
   ];
+
+  const scalingModeOptions = computed(() => {
+    return scalingModes.map(mode => ({
+      label: mode.label,
+      value: mode.value,
+    }))
+  });
 
   const deviceOptions = computed(() => {
     return deviceTypes.map(device => ({
@@ -152,6 +171,7 @@ export const useWallpaper = () => {
     deviceOptions,
     fontOptions,
     positionOptions,
+    scalingModeOptions,
     currentDevice,
     selectedDeviceInfo,
     selectedDevices,
