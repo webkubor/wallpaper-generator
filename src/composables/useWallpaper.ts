@@ -37,10 +37,10 @@ export interface ScalingMode {
 
 // 设备类型定义
 export const deviceTypes: Device[] = [
-  { id: 'iphone', name: 'iPhone', width: 270, height: 584 },  // 约 0.69 倍缩放，保持宽高比
-  { id: 'ipad', name: 'iPad', width: 400, height: 575 },      // 约 0.49 倍缩放，保持宽高比
-  { id: 'mac', name: 'Mac', width: 480, height: 300 },        // 约 0.33 倍缩放，保持宽高比
-  { id: 'custom', name: '自定义尺寸', width: 400, height: 400 }  // 默认正方形
+  { id: 'iphone', name: 'iPhone', width: 300, height: 650 }, // 宽高比 0.462
+  {id: 'ipad', name: 'iPad', width: 575, height: 400}, // 横屏
+  { id: 'mac', name: 'Mac', width: 640, height: 400 },        // 横屏
+  { id: 'custom', name: '自定义尺寸', width: 400, height: 400 }  
 ]
 
 // 获取设备信息

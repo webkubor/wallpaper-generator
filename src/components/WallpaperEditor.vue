@@ -203,10 +203,13 @@ const watermarkStyle = computed(() => ({
   fontFamily: watermarkSettings.value.fontFamily,
   fontSize: `${watermarkSettings.value.fontSize}px`,
   color: watermarkSettings.value.color,
-  opacity: watermarkSettings.value.opacity,
+  opacity: Math.min(watermarkSettings.value.opacity + 0.2, 1), // 增加基础透明度
   transform: `rotate(${watermarkSettings.value.rotation}deg) translateX(-50%)`,
   fontWeight: 800,
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.5)', // 增强文字阴影效果
+  letterSpacing: '1px', // 增加字间距
+  textStroke: '1px rgba(0, 0, 0, 0.3)', // 添加文字描边
+  WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)', // 兼容 Webkit 浏览器
 }));
 
 const canvasStyle = computed(() => ({
