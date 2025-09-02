@@ -16,5 +16,6 @@ declare module 'vue' {
     PhoneTopIcon: typeof import('./src/components/svg/PhoneTopIcon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    WallpaperEditor: typeof import('./src/components/WallpaperEditor.vue')['default']
   }
 }

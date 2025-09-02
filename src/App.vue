@@ -1,56 +1,55 @@
-
-
 <template>
-  <NConfigProvider :theme="isDark ? darkTheme : lightTheme" :theme-overrides="themeOverrides">
-    <NMessageProvider>
-      <NGlobalStyle />
-      <div class="container">
-        <header class="wallpaper-generator__header">
-          <h1>壁纸生成器</h1>
-          <p>上传图片，添加水印，生成适合小红书的壁纸</p>
-        </header>
-        
-        <main>
-          <n-button type="primary">测试按钮</n-button>
-          <!-- 稍后添加 WallpaperEditor 组件 -->
-        </main>
-        
-        <footer class="wallpaper-generator__footer">
-          <p>&copy; {{ new Date().getFullYear() }} 壁纸生成器</p>
-        </footer>
-      </div>
-    </NMessageProvider>
-  </NConfigProvider>
+  <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
+    <n-global-style />
+    <n-button @click="toggleTheme" class="theme-toggle-button">切换主题</n-button>
+    <div class="container">
+      <WallpaperEditor />
+    </div>
+  </n-config-provider>
 </template>
 
+<style scoped lang="scss">
+.theme-toggle-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+</style>
 
 <script setup lang="ts">
-import { darkTheme, lightTheme } from "naive-ui";
-import { ref } from "vue";
+import WallpaperEditor from '@/components/WallpaperEditor.vue';
+import { darkTheme } from "naive-ui";
+import { useDark } from "@vueuse/core";
+import { computed } from "vue";
 
-const isDark = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const isDark = useDark();
 
-const themeOverrides = {
-  common: {
-    primaryColor: "#325BFD",
-    primaryColorHover: "#0033E5",
-    primaryColorPressed: "#0023C0",
-    primaryColorSuppl: "rgba(0, 51, 229, 0.5)",
-    successColor: "#2FC25B",
-    successColorHover: "#53CF74",
-    successColorPressed: "#1E9C48",
-    successColorSuppl: "rgba(47, 194, 91, 0.5)",
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+};
 
-    warningColor: "#FAAD14",
-    warningColorHover: "#FFC53D",
-    warningColorPressed: "#D48806",
-    warningColorSuppl: "rgba(250, 173, 20, 0.5)",
-
-    errorColor: "#F5222D",
-    errorColorHover: "#FF4D4F",
-    errorColorPressed: "#CF1322",
-    errorColorSuppl: "rgba(208, 48, 80, 0.5)",
+const themeOverrides = computed(() => {
+  if (isDark.value) {
+    // 深色模式下的组件主题色
+    return {
+      common: {
+        primaryColor: '#66b1ff',
+        primaryColorHover: '#8cc5ff',
+        primaryColorPressed: '#5299e0',
+        primaryColorSuppl: 'rgba(102, 177, 255, 0.5)'
+      }
+    };
+  } else {
+    // 浅色模式下的组件主题色
+    return {
+      common: {
+        primaryColor: '#325BFD',
+        primaryColorHover: '#0033E5',
+        primaryColorPressed: '#0023C0',
+        primaryColorSuppl: 'rgba(0, 51, 229, 0.5)'
+      }
+    };
   }
-
-}
+});
 </script>

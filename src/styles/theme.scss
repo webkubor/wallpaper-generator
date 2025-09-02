@@ -1,0 +1,12 @@
+:root {
+    --primary-color: #325BFD;
+    --primary-color-hover: #0033E5;
+  }
+  
+  /* 暗色模式下的主题色 */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary-color: #66b1ff;
+      --primary-color-hover: #8cc5ff;
+    }
+  }

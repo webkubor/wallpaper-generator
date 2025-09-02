@@ -9,18 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@phosphor-icons/vue": "^2.2.1",
-    "dayjs": "^1.11.18",
-    "file-saver": "^2.0.5",
+    "@vueuse/core": "^13.9.0",
     "html-to-image": "^1.11.13",
-    "naive-ui": "^2.42.0",
-    "sass": "^1.91.0",
+    "html2canvas": "^1.4.1",
     "vue": "^3.5.18"
   },
   "devDependencies": {
+    "@phosphor-icons/vue": "^2.2.1",
+    "@types/html2canvas": "^1.0.0",
     "@types/node": "^24.3.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.7.0",
+    "dayjs": "^1.11.18",
+    "naive-ui": "^2.42.0",
+    "sass": "^1.91.0",
     "typescript": "~5.8.3",
     "unplugin-auto-import": "^20.1.0",
     "unplugin-vue-components": "^29.0.0",
