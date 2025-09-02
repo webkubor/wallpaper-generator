@@ -7,6 +7,7 @@ export interface Device {
   width: number;
   height: number;
   selected?: boolean;
+  hasFrame?: boolean;
 }
 
 export interface FontOption {
@@ -35,12 +36,11 @@ export interface ScalingMode {
   label: string;
 }
 
-// 设备类型定义
 export const deviceTypes: Device[] = [
-  { id: 'iphone', name: 'iPhone', width: 300, height: 650 }, // 宽高比 0.462
-  { id: 'ipad', name: 'iPad', width: 575, height: 400 }, // 横屏
-  { id: 'mac', name: 'Mac', width: 640, height: 400 }, // 横屏
-  { id: 'custom', name: '自定义尺寸', width: 400, height: 400 }  
+  { id: 'iphone', name: 'iPhone', width: 300, height: 650, hasFrame: true }, // 宽高比 0.462
+  { id: 'ipad', name: 'iPad', width: 575, height: 400, hasFrame: true }, // 横屏
+  { id: 'mac', name: 'Mac', width: 640, height: 400, hasFrame: true }, // 横屏
+  { id: 'custom', name: '自定义尺寸', width: 400, height: 400, hasFrame: false }  
 ]
 
 // 获取设备信息
@@ -49,7 +49,17 @@ export const getDeviceById = (id: string): Device | undefined => {
 }
 
 // 水印位置样式计算
-export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) => {
+export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings, deviceId: string) => {
+  // 获取设备信息
+  const device = getDeviceById(deviceId);
+  const hasFrame = device?.hasFrame || false;
+  
+  // 如果是有框架的设备，水印位置在框架下方
+  if (hasFrame && deviceId !== 'custom') {
+    return { bottom: '-40px', left: '50%', transform: `translateX(-50%) rotate(${watermarkSettings.rotation}deg)` };
+  }
+  
+  // 自定义设备或无框架设备使用原有的位置计算
   const positions = {
     'top-left': { top: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px' },
     'top-right': { top: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px' },
@@ -57,7 +67,13 @@ export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) 
     'bottom-right': { bottom: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px' },
     'center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) rotate(${watermarkSettings.rotation}deg)` }
   }
-  return positions[watermarkSettings.position as keyof typeof positions]
+  
+  // 自定义设备默认使用底部中间位置
+  if (deviceId === 'custom') {
+    return { bottom: watermarkSettings.padding + 'px', left: '50%', transform: `translateX(-50%) rotate(${watermarkSettings.rotation}deg)` };
+  }
+  
+  return positions[watermarkSettings.position as keyof typeof positions];
 }
 
 // 默认水印设置
