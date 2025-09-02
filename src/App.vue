@@ -28,16 +28,6 @@
 </template>
 
 <style scoped lang="scss">
-:global(body, #app) {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
-.n-layout {
-  height: 100vh;
-}
-
 .content {
   flex: 1;
   overflow-y: auto;

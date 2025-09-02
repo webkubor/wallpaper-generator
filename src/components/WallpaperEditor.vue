@@ -232,7 +232,6 @@ const backgroundImageStyle = computed(() => ({
   padding: 10px;
   height: calc(100vh - 110px); /* 减去头部(64px)和底部(40px)的高度以及一些间距 */
   box-sizing: border-box;
-  max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -263,7 +262,6 @@ const backgroundImageStyle = computed(() => ({
   padding: 10px;
   overflow: hidden;
   background-color: var(--n-body-color);
-  max-width: 800px;
   height: 100%;
 }
 
