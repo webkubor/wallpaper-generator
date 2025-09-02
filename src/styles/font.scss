@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  @font-face {
+    font-family: 'AlimamaFangYuanTiVF-Thin';
+    src: url('@/assets/fonts/AlimamaFangYuanTiVF-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'drizzle';
+    src: url('@/assets/fonts/drizzle.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'cute';
+    src: url('@/assets/fonts/cute.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'vampire-wars';
+    src: url('@/assets/fonts/vampire-wars.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'AiChinese02';
+    src: url('@/assets/fonts/AiChinese02.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Chinese3';
+    src: url('@/assets/fonts/Chinese3.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+
+ 
+  .chinese-cute {
+    font-family: 'cute';
+  }
+  .chinese-ai {
+    font-family: 'Chinese3';
+  }
+  .chinese-love {
+    font-family: 'drizzle';
+  }
+  .chinese-circle {
+    font-family: 'AlimamaFangYuanTiVF-Thin';
+  }
+
+  .chinese-500 {
+    font-family: 'AiChinese02';
+  }
+  .en-title {
+    font-family: 'vampire-wars';
+  }
