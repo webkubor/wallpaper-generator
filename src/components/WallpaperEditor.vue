@@ -55,6 +55,7 @@
     </n-card>
 
     <!-- Center: Preview Area -->
+        <!-- Center: Preview Area -->
     <div class="preview-area">
       <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
         <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" />
@@ -64,17 +65,43 @@
         </div>
       </div>
     </div>
+
+    <!-- Cropper Modal -->
+        <!-- Cropper Modal -->
+    <n-modal v-model:show="showCropperModal" preset="card" style="width: 80vw; height: 80vh;" title="裁剪图片">
+      <div class="cropper-container">
+        <VueCropper
+          ref="cropperRef"
+          :img="cropperSource"
+          :auto-crop="true"
+          :fixed-box="true"
+          :fixed="true"
+          :center-box="true"
+          :auto-crop-width="currentDevice.width"
+          :auto-crop-height="currentDevice.height"
+          output-type="png"
+        />
+      </div>
+      <template #footer>
+        <n-space justify="end">
+          <n-button @click="showCropperModal = false">取消</n-button>
+          <n-button type="primary" @click="confirmCrop">确认</n-button>
+        </n-space>
+      </template>
+    </n-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import html2canvas from 'html2canvas';
+import { VueCropper } from 'vue-cropper'
+import 'vue-cropper/next/dist/index.css'
 import { useWallpaper } from '../composables/useWallpaper';
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
-  NColorPicker, NSlider, NInputNumber, NRadioGroup, NRadioButton, 
-  NCollapse, NCollapseItem
+  NColorPicker, NSlider, NRadioGroup, NRadioButton, 
+  NCollapse, NCollapseItem, NModal
 } from 'naive-ui';
 import type { UploadFileInfo } from 'naive-ui';
 
@@ -85,21 +112,31 @@ const {
   previewSettings,
   deviceOptions,
   fontOptions,
-  positionOptions,
   currentDevice
 } = useWallpaper();
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const isDownloading = ref(false);
+const showCropperModal = ref(false);
+const cropperSource = ref('');
+const cropperRef = ref<any>(null);
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {
   if (options.file.file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      imageUrl.value = e.target?.result as string;
+      cropperSource.value = e.target?.result as string;
+      showCropperModal.value = true;
     };
     reader.readAsDataURL(options.file.file);
   }
+};
+
+const confirmCrop = () => {
+  cropperRef.value.getCropData((data: string) => {
+    imageUrl.value = data;
+    showCropperModal.value = false;
+  });
 };
 
 const handleWatermarkUpload = (options: { file: UploadFileInfo }) => {
@@ -168,6 +205,11 @@ const canvasStyle = computed(() => ({
   padding: 20px;
   overflow: auto;
   background-color: var(--n-body-color);
+}
+
+.cropper-container {
+  width: 100%;
+  height: 100%;
 }
 
 .preview-canvas {

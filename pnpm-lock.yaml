@@ -17,6 +17,9 @@ dependencies:
   vue:
     specifier: ^3.5.18
     version: 3.5.20(typescript@5.8.3)
+  vue-cropper:
+    specifier: ^0.6.5
+    version: 0.6.5
 
 devDependencies:
   '@phosphor-icons/vue':
@@ -1611,6 +1614,10 @@ packages:
   /vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
     dev: true
+
+  /vue-cropper@0.6.5:
+    resolution: {integrity: sha512-lSvY6IpeA/Tv/iPZ/FOkMHVRBPSlm7t57nuHEZFBMRNOH8ElvfqVlnHGDOAMlvPhh9gHiddiQoASS+fY0MFX0g==}
+    dev: false
 
   /vue-router@4.5.1(vue@3.5.20):
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}

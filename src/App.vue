@@ -1,8 +1,25 @@
 <template>
   <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
     <n-global-style />
-    <n-button @click="toggleTheme" class="theme-toggle-button">切换主题</n-button>
-    <WallpaperEditor />
+    <n-layout>
+      <n-layout-header class="header">
+        <div class="title-container">
+          <img src="/webkubor.svg" class="logo" alt="Logo" />
+          <h1>壁纸生成器</h1>
+        </div>
+        <n-switch v-model:value="isDark" @update:value="toggleTheme">
+          <template #checked-icon>
+            <n-icon :component="Moon" />
+          </template>
+          <template #unchecked-icon>
+            <n-icon :component="Sun" />
+          </template>
+        </n-switch>
+      </n-layout-header>
+      <n-layout-content>
+        <WallpaperEditor />
+      </n-layout-content>
+    </n-layout>
   </n-config-provider>
 </template>
 
@@ -13,19 +30,39 @@
   overflow: hidden;
 }
 
-.theme-toggle-button {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 64px;
 }
+
+.title-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
 </style>
 
 <script setup lang="ts">
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
-import { darkTheme } from "naive-ui";
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NSwitch, NIcon } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed } from "vue";
+import { PhSun as Sun, PhMoon as Moon } from "@phosphor-icons/vue";
 
 const isDark = useDark();
 
