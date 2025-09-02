@@ -116,8 +116,13 @@
           <PhoneTopIcon v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-top-icon" />
           <PhoneLockBottom v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-bottom-icon" />
           
-          <!-- 设备框架 - iPad (将来添加) -->
-          <!-- 设备框架 - Mac (将来添加) -->
+          <!-- 设备框架 - iPad -->
+          <TabletTopBar v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" class="tablet-top-bar" />
+          <TabletDock v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" class="tablet-dock" />
+          
+          <!-- 设备框架 - Mac -->
+          <MacTopBar v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" class="mac-top-bar" />
+          <MacDock v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" class="mac-dock" />
           
           <!-- 壁纸背景 -->
           <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
@@ -493,6 +498,38 @@ const backgroundImageStyle = computed(() => ({
 }
 
 .phone-bottom-icon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.tablet-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.tablet-dock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.mac-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.mac-dock {
   position: absolute;
   bottom: 0;
   left: 0;
