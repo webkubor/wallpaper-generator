@@ -1,0 +1,28 @@
+{
+  "name": "wallpaper-generator",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@phosphor-icons/vue": "^2.2.1",
+    "dayjs": "^1.11.18",
+    "file-saver": "^2.0.5",
+    "html-to-image": "^1.11.13",
+    "sass": "^1.91.0",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vue-router": "^4.5.1",
+    "vue-tsc": "^3.0.5"
+  }
+}
