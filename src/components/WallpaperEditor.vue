@@ -77,11 +77,6 @@
             </div>
           </template>
           <n-space vertical size="small">
-            <n-form-item label="设备类型" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <div class="input-with-icon">
-                <n-select v-model:value="previewSettings.selectedDevice" :options="deviceOptions as any" class="input-with-icon-field" />
-              </div>
-            </n-form-item>
             <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-radio-group v-model:value="previewSettings.selectedDevice">
                 <n-radio-button v-for="device in deviceOptions" :key="device.value" :value="device.value" :label="device.label" />
@@ -117,8 +112,18 @@
     <!-- Center: Preview Area -->
     <div class="preview-area">
         <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
+          <!-- 设备框架 - iPhone -->
+          <PhoneTopIcon v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-top-icon" />
+          <PhoneLockBottom v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-bottom-icon" />
+          
+          <!-- 设备框架 - iPad (将来添加) -->
+          <!-- 设备框架 - Mac (将来添加) -->
+          
+          <!-- 壁纸背景 -->
           <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
-          <div class="watermark" :style="watermarkStyle">
+          
+          <!-- 水印 -->
+          <div class="watermark" :style="watermarkPositionStyle">
             <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
             <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
           </div>
@@ -157,13 +162,25 @@ import { computed, ref } from 'vue';
 import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
-import { useWallpaper } from '../composables/useWallpaper';
+import { useWallpaper, getWatermarkPositionStyle } from '../composables/useWallpaper';
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
   NColorPicker, NSlider, NRadioGroup, NRadioButton, 
   NCollapse, NCollapseItem, NModal, NIcon, NInputNumber
 } from 'naive-ui';
-import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhPaintBrush as PaintBrush, PhDownload as Download, PhGear as Gear, PhPalette as Palette } from "@phosphor-icons/vue";
+import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhPaintBrush as PaintBrush, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
+
+// iPhone 设备组件
+import PhoneTopIcon from './iphone/PhoneTopIcon.vue';
+import PhoneLockBottom from './iphone/PhoneLockBottom.vue';
+
+// iPad 设备组件
+import TabletTopBar from './ipad/TabletTopBar.vue';
+import TabletDock from './ipad/TabletDock.vue';
+
+// Mac 设备组件
+import MacTopBar from './mac/MacTopBar.vue';
+import MacDock from './mac/MacDock.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
 const { 
@@ -243,18 +260,30 @@ const downloadWallpaper = () => {
   }
 };
 
+// 水印样式 - 字体、颜色等基本样式
 const watermarkStyle = computed(() => ({
   fontFamily: watermarkSettings.value.fontFamily,
   fontSize: `${watermarkSettings.value.fontSize}px`,
   color: watermarkSettings.value.color,
   opacity: Math.min(watermarkSettings.value.opacity + 0.2, 1), // 增加基础透明度
-  transform: `rotate(${watermarkSettings.value.rotation}deg) translateX(-50%)`,
   fontWeight: 800,
   textShadow: '0 2px 4px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.5)', // 增强文字阴影效果
   letterSpacing: '1px', // 增加字间距
   textStroke: '1px rgba(0, 0, 0, 0.3)', // 添加文字描边
   WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)', // 兼容 Webkit 浏览器
 }));
+
+// 水印位置样式 - 根据设备类型调整位置
+const watermarkPositionStyle = computed(() => {
+  // 获取基本样式
+  const baseStyle = watermarkStyle.value;
+  
+  // 获取位置样式
+  const positionStyle = getWatermarkPositionStyle(watermarkSettings.value, previewSettings.value.selectedDevice);
+  
+  // 合并样式
+  return { ...baseStyle, ...positionStyle };
+});
 
 const canvasStyle = computed(() => ({
   width: `${currentDevice.value.width}px`,
@@ -447,18 +476,28 @@ const backgroundImageStyle = computed(() => ({
 
 .watermark {
   position: absolute;
-  bottom: 60px;
-  left: 50%;
-  z-index: 50;
   display: flex;
   flex-direction: column;
   align-items: center;
-  word-break: break-word;
-  line-height: 1.2;
-  text-align: center;
-  gap: 10px;
-  transition: all 0.5s ease;
-  animation: pulse 3s ease-in-out infinite;
+  justify-content: center;
+  gap: 8px;
+  animation: pulse 2s infinite ease-in-out; /* 添加脉冲动画效果 */
+}
+
+.phone-top-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.phone-bottom-icon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 @keyframes pulse {

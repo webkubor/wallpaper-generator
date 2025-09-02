@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    MacDock: typeof import('./src/components/mac/MacDock.vue')['default']
+    MacTopBar: typeof import('./src/components/mac/MacTopBar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NGlobalStyle: typeof import('naive-ui')['NGlobalStyle']
@@ -21,6 +23,8 @@ declare module 'vue' {
     PhoneTopIcon: typeof import('./src/components/iphone/PhoneTopIcon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TabletDock: typeof import('./src/components/ipad/TabletDock.vue')['default']
+    TabletTopBar: typeof import('./src/components/ipad/TabletTopBar.vue')['default']
     WallpaperEditor: typeof import('./src/components/WallpaperEditor.vue')['default']
   }
 }

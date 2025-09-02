@@ -96,7 +96,7 @@ export const scalingModes: ScalingMode[] = [
 
 // 默认预览设置
 export const defaultPreviewSettings = {
-  selectedDevice: 'iphone',
+  selectedDevice: 'custom',
   showCombined: false,
   backgroundColor: '#ffffff',
   showDeviceBorder: true,
@@ -159,7 +159,7 @@ export const useWallpaper = () => {
   })
   
   const watermarkPositionStyle = computed(() => {
-    return getWatermarkPositionStyle(watermarkSettings.value)
+    return getWatermarkPositionStyle(watermarkSettings.value, previewSettings.value.selectedDevice)
   })
   
   // 获取选中的设备列表
