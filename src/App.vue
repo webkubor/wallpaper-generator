@@ -20,8 +20,8 @@
         <WallpaperEditor />
       </n-layout-content>
       <n-layout-footer class="footer" bordered>
-        <p>Designed & Developed by webkubor</p>
-        <p>Contact: <a href="mailto:webkubor@163.com">webkubor@163.com</a></p>
+        <p><n-icon :component="Code" class="footer-icon" /> Designed & Developed by webkubor</p>
+        <p><n-icon :component="Envelope" class="footer-icon" /> <a href="mailto:webkubor@163.com">webkubor@163.com</a></p>
       </n-layout-footer>
     </n-layout>
   </n-config-provider>
@@ -35,26 +35,39 @@
 
 .footer {
   text-align: center;
-  padding: 8px;
-  color: var(--n-text-color-disabled);
-  font-size: 12px;
+  padding: 10px 0;
+  color: var(--n-text-color);
+  font-size: 13px;
   height: 40px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--n-color-modal);
+  border-top: 1px solid var(--n-border-color);
 
   a {
-    color: var(--n-text-color-disabled);
+    color: var(--n-primary-color);
     text-decoration: none;
     transition: color 0.3s;
 
     &:hover {
-      color: var(--primary-color);
+      color: var(--n-primary-color-hover);
+      text-decoration: underline;
     }
   }
 
   p {
-    margin: 2px 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .footer-icon {
+    margin-right: 2px;
+    color: var(--n-primary-color);
   }
 }
 
@@ -90,7 +103,7 @@ import WallpaperEditor from '@/components/WallpaperEditor.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed } from "vue";
-import { PhSun as Sun, PhMoon as Moon } from "@phosphor-icons/vue";
+import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope } from "@phosphor-icons/vue";
 
 const isDark = useDark();
 
