@@ -2,76 +2,65 @@
   <div class="wallpaper-editor">
     <!-- Left: Settings Panel -->
     <n-card title="设置" class="settings-panel">
-      <n-space vertical>
-        <n-upload
-          action=""
-          :show-file-list="false"
-          @change="handleImageUpload"
-        >
-          <n-button>上传图片</n-button>
-        </n-upload>
+      <n-collapse default-expanded-names="1,2,3">
+        <n-collapse-item title="基础设置" name="1">
+          <n-space vertical>
+            <n-form-item label="上传背景" label-placement="left">
+              <n-upload action="" :show-file-list="false" @change="handleImageUpload">
+                <n-button>选择图片</n-button>
+              </n-upload>
+            </n-form-item>
+          </n-space>
+        </n-collapse-item>
 
-        <n-input 
-          v-model:value="watermarkSettings.text" 
-          placeholder="输入水印文字"
-        />
+        <n-collapse-item title="水印与文字" name="2">
+          <n-space vertical>
+            <n-form-item label="水印文字" label-placement="left">
+              <n-input v-model:value="watermarkSettings.text" placeholder="输入水印文字" />
+            </n-form-item>
+            <n-form-item label="图片水印" label-placement="left">
+              <n-upload list-type="image-card" :max="1" @change="handleWatermarkUpload">
+                点击上传
+              </n-upload>
+            </n-form-item>
+            <n-form-item label="字体" label-placement="left">
+              <n-select v-model:value="watermarkSettings.fontFamily" :options="fontOptions as any" />
+            </n-form-item>
+            <n-form-item label="颜色" label-placement="left">
+              <n-color-picker v-model:value="watermarkSettings.color" />
+            </n-form-item>
+            <n-form-item label="大小" label-placement="left">
+              <n-slider v-model:value="watermarkSettings.fontSize" :min="12" :max="200" />
+            </n-form-item>
+            <n-form-item label="透明度" label-placement="left">
+              <n-slider v-model:value="watermarkSettings.opacity" :min="0" :max="1" :step="0.1" />
+            </n-form-item>
+            <n-form-item label="旋转" label-placement="left">
+              <n-slider v-model:value="watermarkSettings.rotation" :min="-180" :max="180" />
+            </n-form-item>
+          </n-space>
+        </n-collapse-item>
 
-        <n-form-item label="字体">
-          <n-select v-model:value="watermarkSettings.fontFamily" :options="fontOptions as any" />
-        </n-form-item>
-
-        <n-form-item label="颜色">
-          <n-color-picker v-model:value="watermarkSettings.color" />
-        </n-form-item>
-
-        <n-form-item label="大小">
-          <n-slider v-model:value="watermarkSettings.fontSize" :min="12" :max="200" />
-        </n-form-item>
-
-        <n-form-item label="透明度">
-          <n-slider v-model:value="watermarkSettings.opacity" :min="0" :max="1" :step="0.1" />
-        </n-form-item>
-
-        <n-form-item label="旋转">
-          <n-slider v-model:value="watermarkSettings.rotation" :min="-180" :max="180" />
-        </n-form-item>
-
-        <n-form-item label="边距">
-          <n-input-number v-model:value="watermarkSettings.padding" />
-        </n-form-item>
-
-        <n-form-item label="设备">
-          <n-radio-group v-model:value="previewSettings.selectedDevice">
-            <n-radio-button
-              v-for="device in deviceOptions"
-              :key="device.value"
-              :value="device.value"
-              :label="device.label"
-            />
-          </n-radio-group>
-        </n-form-item>
-
-        <n-form-item label="位置">
-          <n-radio-group v-model:value="watermarkSettings.position">
-            <n-radio-button
-              v-for="pos in positionOptions"
-              :key="pos.value"
-              :value="pos.value"
-              :label="pos.label"
-            />
-          </n-radio-group>
-        </n-form-item>
-
-        <n-button type="primary" @click="downloadWallpaper">下载壁纸</n-button>
-      </n-space>
+        <n-collapse-item title="布局与导出" name="3">
+          <n-space vertical>
+            <n-form-item label="设备" label-placement="left">
+              <n-radio-group v-model:value="previewSettings.selectedDevice">
+                <n-radio-button v-for="device in deviceOptions" :key="device.value" :value="device.value" :label="device.label" />
+              </n-radio-group>
+            </n-form-item>
+            <n-button type="primary" @click="downloadWallpaper" :loading="isDownloading">下载壁纸</n-button>
+          </n-space>
+        </n-collapse-item>
+      </n-collapse>
     </n-card>
 
     <!-- Center: Preview Area -->
     <div class="preview-area">
       <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
         <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" />
-        <div v-if="watermarkSettings.text" class="watermark" :style="watermarkStyle">
-          {{ watermarkSettings.text }}
+        <div class="watermark" :style="watermarkStyle">
+          <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
+          <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
         </div>
       </div>
     </div>
@@ -84,12 +73,14 @@ import html2canvas from 'html2canvas';
 import { useWallpaper } from '../composables/useWallpaper';
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
-  NColorPicker, NSlider, NInputNumber, NRadioGroup, NRadioButton 
+  NColorPicker, NSlider, NInputNumber, NRadioGroup, NRadioButton, 
+  NCollapse, NCollapseItem
 } from 'naive-ui';
 import type { UploadFileInfo } from 'naive-ui';
 
 const { 
   imageUrl, 
+  watermarkImageUrl,
   watermarkSettings,
   previewSettings,
   deviceOptions,
@@ -99,6 +90,7 @@ const {
 } = useWallpaper();
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
+const isDownloading = ref(false);
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {
   if (options.file.file) {
@@ -110,8 +102,19 @@ const handleImageUpload = (options: { file: UploadFileInfo }) => {
   }
 };
 
+const handleWatermarkUpload = (options: { file: UploadFileInfo }) => {
+  if (options.file.file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      watermarkImageUrl.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(options.file.file);
+  }
+};
+
 const downloadWallpaper = () => {
   if (previewCanvasRef.value) {
+    isDownloading.value = true;
     html2canvas(previewCanvasRef.value).then(canvas => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
@@ -119,6 +122,8 @@ const downloadWallpaper = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }).finally(() => {
+      isDownloading.value = false;
     });
   }
 };
@@ -128,29 +133,15 @@ const watermarkStyle = computed(() => ({
   fontSize: `${watermarkSettings.value.fontSize}px`,
   color: watermarkSettings.value.color,
   opacity: watermarkSettings.value.opacity,
-  transform: `rotate(${watermarkSettings.value.rotation}deg)`,
+  transform: `rotate(${watermarkSettings.value.rotation}deg) translateX(-50%)`,
+  fontWeight: 800,
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
 }));
 
-const canvasStyle = computed(() => {
-  const position = watermarkSettings.value.position;
-  const justifyContent: { [key: string]: string } = {
-    'top-left': 'flex-start', 'top-center': 'center', 'top-right': 'flex-end',
-    'center-left': 'flex-start', 'center-center': 'center', 'center-right': 'flex-end',
-    'bottom-left': 'flex-start', 'bottom-center': 'center', 'bottom-right': 'flex-end',
-  };
-  const alignItems: { [key: string]: string } = {
-    'top-left': 'flex-start', 'top-center': 'flex-start', 'top-right': 'flex-start',
-    'center-left': 'center', 'center-center': 'center', 'center-right': 'center',
-    'bottom-left': 'flex-end', 'bottom-center': 'flex-end', 'bottom-right': 'flex-end',
-  };
-  return {
-    width: `${currentDevice.value.width}px`,
-    height: `${currentDevice.value.height}px`,
-    justifyContent: justifyContent[position],
-    alignItems: alignItems[position],
-    padding: `${watermarkSettings.value.padding}px`
-  }
-});
+const canvasStyle = computed(() => ({
+  width: `${currentDevice.value.width}px`,
+  height: `${currentDevice.value.height}px`,
+}));
 
 </script>
 
@@ -164,13 +155,9 @@ const canvasStyle = computed(() => {
 
 .settings-panel {
   width: 350px;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #f7f7f7;
-  /* Dark mode styles */
-  @media (prefers-color-scheme: dark) {
-    background-color: #2c2c2c;
-  }
+  max-height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .preview-area {
@@ -179,13 +166,8 @@ const canvasStyle = computed(() => {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  border-radius: 8px;
-  background-color: #f0f0f0;
   overflow: auto;
-  /* Dark mode styles */
-  @media (prefers-color-scheme: dark) {
-    background-color: #252525;
-  }
+  background-color: var(--n-body-color);
 }
 
 .preview-canvas {
@@ -208,10 +190,20 @@ const canvasStyle = computed(() => {
 }
 
 .watermark {
-  position: relative; /* Change from absolute to relative to be placed by flexbox */
-  z-index: 1;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   word-break: break-word;
   line-height: 1.2;
   text-align: center;
+  gap: 10px;
+}
+
+.watermark-image {
+  height: 30px;
 }
 </style>

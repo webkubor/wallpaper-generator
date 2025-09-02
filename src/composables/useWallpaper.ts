@@ -57,11 +57,11 @@ export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) 
 
 // 默认水印设置
 export const defaultWatermarkSettings: WatermarkSettings = {
-  text: 'Wallpaper',
+  text: 'Design by 司南烛',
   fontSize: 24,
-  color: '#ffffff',
+  color: '#000000',
   opacity: 0.5,
-  fontFamily: 'Arial',
+  fontFamily: 'Chinese3',
   position: 'bottom-right',
   padding: 20,
   rotation: 0
@@ -81,7 +81,8 @@ export const defaultPreviewSettings = {
 
 // 使用壁纸生成器
 export const useWallpaper = () => {
-  const imageUrl = ref('')
+  const imageUrl = ref<string | null>(null);
+  const watermarkImageUrl = ref<string | null>(null);
   const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings})
   const previewSettings = ref({...defaultPreviewSettings})
   
@@ -145,6 +146,7 @@ export const useWallpaper = () => {
   
   return {
     imageUrl,
+    watermarkImageUrl,
     watermarkSettings,
     previewSettings,
     deviceOptions,

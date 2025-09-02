@@ -2,13 +2,17 @@
   <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
     <n-global-style />
     <n-button @click="toggleTheme" class="theme-toggle-button">切换主题</n-button>
-    <div class="container">
-      <WallpaperEditor />
-    </div>
+    <WallpaperEditor />
   </n-config-provider>
 </template>
 
 <style scoped lang="scss">
+:global(body, #app) {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
 .theme-toggle-button {
   position: fixed;
   top: 20px;
