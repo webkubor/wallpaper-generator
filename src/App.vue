@@ -1,7 +1,7 @@
 
 
 <template>
-  <NConfigProvider :theme="currentTheme" :theme-overrides="themeOverrides">
+  <NConfigProvider :theme="isDark ? darkTheme : lightTheme" :theme-overrides="themeOverrides">
     <NMessageProvider>
       <NGlobalStyle />
       <div class="container">
@@ -11,7 +11,7 @@
         </header>
         
         <main>
-          <n-button>222</n-button>
+          <n-button type="primary">测试按钮</n-button>
           <!-- 稍后添加 WallpaperEditor 组件 -->
         </main>
         
@@ -25,25 +25,17 @@
 
 
 <script setup lang="ts">
-
-import {  darkTheme, lightTheme } from "naive-ui";
+import { darkTheme, lightTheme } from "naive-ui";
 import { ref } from "vue";
 
-let localTheme = ref(darkTheme);
+const isDark = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
- let theme = prefersDarkMode ? "dark" : "light";
-
-
-
-let themeOverrides = {
+const themeOverrides = {
   common: {
     primaryColor: "#325BFD",
     primaryColorHover: "#0033E5",
     primaryColorPressed: "#0023C0",
-    primaryColorSuppl: " rgba(0, 51, 229, 0.5)",
-
-    fontWeightStrong: "600",
+    primaryColorSuppl: "rgba(0, 51, 229, 0.5)",
     successColor: "#2FC25B",
     successColorHover: "#53CF74",
     successColorPressed: "#1E9C48",
@@ -58,27 +50,7 @@ let themeOverrides = {
     errorColorHover: "#FF4D4F",
     errorColorPressed: "#CF1322",
     errorColorSuppl: "rgba(208, 48, 80, 0.5)",
-
-    textColorDisabled:"#666666",
-    placeholderColorDisabled:"#666666",
-  },
-  Space: {
-    gapSmall: "4px 8px",
-    gapMedium: "20px 12px", //默认 padding
-    gapLarge: "12px 16px",
-  },
-}
-
-
-if (theme === "dark") {
-  localTheme.value = {
-    ...themeOverrides,
-    ...darkTheme
   }
-} else {
-  localTheme.value = {
-    ...themeOverrides,
-    ...lightTheme
-  }
+
 }
 </script>
