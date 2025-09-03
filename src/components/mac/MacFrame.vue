@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWallpaper } from '../../composables/useWallpaper';
+import { useWallpaper } from '@/composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';

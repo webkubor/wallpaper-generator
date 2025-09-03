@@ -8,7 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BackgroundSettings: typeof import('./src/components/BackgroundSettings.vue')['default']
+    BackgroundSettings: typeof import('./src/components/toolbar/BackgroundSettings.vue')['default']
     CarFrame: typeof import('./src/components/car/CarFrame.vue')['default']
     ComboDevices: typeof import('./src/components/combo/ComboDevices.vue')['default']
     CustomFrame: typeof import('./src/components/custom/CustomFrame.vue')['default']
@@ -53,8 +53,8 @@ declare module 'vue' {
     TabletDock: typeof import('./src/components/ipad/TabletDock.vue')['default']
     TabletFrame: typeof import('./src/components/ipad/TabletFrame.vue')['default']
     TabletTopBar: typeof import('./src/components/ipad/TabletTopBar.vue')['default']
-    TitleSettings: typeof import('./src/components/TitleSettings.vue')['default']
+    TitleSettings: typeof import('./src/components/toolbar/TitleSettings.vue')['default']
     WallpaperEditor: typeof import('./src/components/WallpaperEditor.vue')['default']
-    WatermarkSettings: typeof import('./src/components/WatermarkSettings.vue')['default']
+    WatermarkSettings: typeof import('./src/components/toolbar/WatermarkSettings.vue')['default']
   }
 }

@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWallpaper } from '../../composables/useWallpaper';
+import { useWallpaper } from '@/composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import dayjs from 'dayjs';

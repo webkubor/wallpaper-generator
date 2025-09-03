@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useWallpaper } from '../../composables/useWallpaper';
+import { useWallpaper } from '@/composables/useWallpaper';
 
 const props = defineProps({
   width: {

@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue';
 import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NDivider } from 'naive-ui';
-import { fontOptions as wallpaperFontOptions } from '../composables/useWallpaper';
+import { fontOptions as wallpaperFontOptions } from '@/composables/useWallpaper';
 
 const props = defineProps({
   settings: {

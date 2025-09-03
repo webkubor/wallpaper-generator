@@ -159,7 +159,7 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
-import { useWallpaper, defaultWatermarkSettings, defaultTitleSettings, defaultPreviewSettings } from '../composables/useWallpaper';
+import { useWallpaper, defaultWatermarkSettings, defaultTitleSettings, defaultPreviewSettings } from '@/composables/useWallpaper';
 import { createDragHandler } from '../utils';
 import { type Template } from '../utils/indexedDB';
 
@@ -178,10 +178,10 @@ import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
 import CustomFrame from './custom/CustomFrame.vue';
-import WatermarkSettings from './WatermarkSettings.vue';
-import TitleSettings from './TitleSettings.vue';
+import WatermarkSettings from './toolbar/WatermarkSettings.vue';
+import TitleSettings from './toolbar/TitleSettings.vue';
 import PersonalTemplates from './PersonalTemplates.vue';
-import BackgroundSettings from '@/components/BackgroundSettings.vue';
+import BackgroundSettings from './toolbar/BackgroundSettings.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
 const message = useMessage();
