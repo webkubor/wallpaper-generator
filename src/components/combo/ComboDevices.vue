@@ -29,7 +29,6 @@ import PhoneFrame from '../iphone/PhoneFrame.vue';
   display: flex;
   flex-direction: column;
   overflow: hidden; /* 确保子元素的圆角生效 */
-  border-radius: 12px; /* 为整个容器添加圆角 */
   background-color: transparent !important; /* 强制背景透明 */
 
   /* 强制所有子元素背景透明 */

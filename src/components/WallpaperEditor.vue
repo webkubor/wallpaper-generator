@@ -101,7 +101,7 @@
 
     <!-- Center: Preview Area -->
     <div class="preview-area">
-        <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
+        <div ref="previewCanvasRef" class="preview-canvas" :class="{ 'canvas-styled': previewSettings.selectedDevice !== 'combo' }" :style="canvasStyle">
           <!-- 设备框架 -->
           <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" />
           <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
@@ -419,7 +419,6 @@ const canvasStyle = computed(() => ({
 
 .preview-canvas {
   position: relative;
-  overflow: hidden;
   display: flex;
   transition: all 0.3s ease;
   flex-shrink: 0;
@@ -427,8 +426,14 @@ const canvasStyle = computed(() => ({
   max-height: 100%;
   z-index: 1;
   transform-origin: center center;
-  animation: float 6s ease-in-out infinite;
   background-color: transparent; /* 确保背景透明 */
+}
+
+.canvas-styled {
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  animation: float 6s ease-in-out infinite;
 }
 
 @keyframes float {
