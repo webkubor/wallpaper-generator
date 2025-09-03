@@ -53,6 +53,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsModal: typeof import('./src/components/common/SettingsModal.vue')['default']
+    SettingsToolbar: typeof import('./src/components/SettingsToolbar.vue')['default']
     TabletDock: typeof import('./src/components/ipad/TabletDock.vue')['default']
     TabletFrame: typeof import('./src/components/ipad/TabletFrame.vue')['default']
     TabletTopBar: typeof import('./src/components/ipad/TabletTopBar.vue')['default']
