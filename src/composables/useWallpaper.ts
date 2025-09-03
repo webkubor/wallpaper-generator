@@ -52,8 +52,8 @@ export const deviceTypes: Device[] = [
   { id: 'iphone', name: 'iPhone', width: 300, height: 600, hasFrame: true }, // 更新宽高比
   { id: 'ipad', name: 'iPad', width: 533, height: 400, hasFrame: true }, // 4:3
   { id: 'car', name: '车机', width: 640, height: 360, hasFrame: true }, // 16:9比例
-  { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备预览
-  { id: 'custom', name: '自定义尺寸', width: 400, height: 400, hasFrame: false }  
+  { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备（mac+ipad+iphone）
+  { id: 'custom', name: '自定义尺寸', width: 400, height: 400, hasFrame: false } //纯壁纸
 ]
 
 // 获取设备信息

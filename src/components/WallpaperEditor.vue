@@ -61,9 +61,8 @@
               <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
                 <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
               </n-form-item>
-              <n-button type="primary" size="small" @click="confirmCustomSize">确定</n-button>
+              <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
             </div>
-            <!-- 下载按钮移到App.vue中 -->
           </n-space>
         </n-collapse-item>
       </n-collapse>
@@ -84,6 +83,12 @@
           <MacFrame v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" />
           <CarFrame v-if="currentDevice?.id === 'car' && currentDevice?.hasFrame" />
           <ComboDevices v-if="currentDevice?.id === 'combo' && currentDevice?.hasFrame" />
+          <CustomFrame 
+            v-if="currentDevice?.id === 'custom'"
+            :width="customWidth"
+            :height="customHeight"
+            :imageUrl="imageUrl || ''"
+          />
           
           <!-- 壁纸背景已移至各设备框架内部 -->
           
@@ -150,6 +155,7 @@ import TabletFrame from './ipad/TabletFrame.vue';
 import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
+import CustomFrame from './custom/CustomFrame.vue';
 import WatermarkSettings from './WatermarkSettings.vue';
 import TitleSettings from './TitleSettings.vue';
 import BackgroundSettings from '@/components/BackgroundSettings.vue';
