@@ -119,13 +119,13 @@
 
         <!-- 标题 -->
         <div :style="titleContainerStyle">
-          <div ref="titleRef" class="title-display draggable" :style="titleDragStyle" @mousedown="handleTitleMouseDown">
+          <div ref="titleRef" class="title-display draggable" :style="titleDragStyle" @mousedown="titleDragHandler.onMouseDown">
             <span :style="titleStyle">{{ titleSettings.text }}</span>
           </div>
         </div>
 
         <!-- 水印 -->
-        <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle" @mousedown="handleWatermarkMouseDown">
+        <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle" @mousedown="watermarkDragHandler.onMouseDown">
           <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
@@ -140,6 +140,7 @@ import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '../composables/useWallpaper';
+import { createDragHandler } from '../utils';
 
 import { 
   useMessage,
@@ -292,50 +293,21 @@ const previewAreaStyle = computed(() => {
 });
 
 // 拖拽功能
-let titleStartPos = { x: 0, y: 0 };
-let watermarkStartPos = { x: 0, y: 0 };
+const titleDragHandler = createDragHandler(
+  (x, y) => {
+    titleSettings.value.offsetX = x;
+    titleSettings.value.offsetY = y;
+  },
+  () => ({ x: titleSettings.value.offsetX, y: titleSettings.value.offsetY })
+);
 
-const handleTitleMouseDown = (e: MouseEvent) => {
-  e.preventDefault();
-  titleStartPos = { 
-    x: e.clientX - titleSettings.value.offsetX, 
-    y: e.clientY - titleSettings.value.offsetY 
-  };
-  
-  const handleMouseMove = (e: MouseEvent) => {
-    titleSettings.value.offsetX = e.clientX - titleStartPos.x;
-    titleSettings.value.offsetY = e.clientY - titleStartPos.y;
-  };
-  
-  const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-  
-  document.addEventListener('mousemove', handleMouseMove);
-  document.addEventListener('mouseup', handleMouseUp);
-};
-
-const handleWatermarkMouseDown = (e: MouseEvent) => {
-  e.preventDefault();
-  watermarkStartPos = { 
-    x: e.clientX - watermarkSettings.value.offsetX, 
-    y: e.clientY - watermarkSettings.value.offsetY 
-  };
-  
-  const handleMouseMove = (e: MouseEvent) => {
-    watermarkSettings.value.offsetX = e.clientX - watermarkStartPos.x;
-    watermarkSettings.value.offsetY = e.clientY - watermarkStartPos.y;
-  };
-  
-  const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-  
-  document.addEventListener('mousemove', handleMouseMove);
-  document.addEventListener('mouseup', handleMouseUp);
-};
+const watermarkDragHandler = createDragHandler(
+  (x, y) => {
+    watermarkSettings.value.offsetX = x;
+    watermarkSettings.value.offsetY = y;
+  },
+  () => ({ x: watermarkSettings.value.offsetX, y: watermarkSettings.value.offsetY })
+);
 
 const canvasStyle = computed(() => ({
   width: `${currentDevice.value.width}px`,

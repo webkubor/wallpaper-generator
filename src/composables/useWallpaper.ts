@@ -109,7 +109,7 @@ const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 export const defaultTitleSettings: TitleSettings = {
   text: '默认标题',
-  fontFamily: 'Arial',
+  fontFamily: 'drizzle',
   color: '#ffffff',
   direction: 'vertical',
   offsetX: 0,
@@ -150,7 +150,6 @@ export const useWallpaper = () => {
     { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
     { label: '细雨体', value: 'drizzle' },
     { label: '可爱体', value: 'cute' },
-    { label: '吸血鬼战争', value: 'vampire-wars' },
     { label: 'AI中文02', value: 'AiChinese02' },
     { label: '中文3', value: 'Chinese3' },
   ];
