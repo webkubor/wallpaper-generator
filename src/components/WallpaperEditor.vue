@@ -67,7 +67,7 @@
           <template #header>
             <div class="collapse-header">
               <n-icon :component="Gear" class="header-icon" />
-              <span>设备预览</span>
+              <span>预览</span>
             </div>
           </template>
           <n-space vertical size="small">
@@ -106,6 +106,8 @@
           <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" />
           <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
           <MacFrame v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" />
+          <CarFrame v-if="currentDevice?.id === 'car' && currentDevice?.hasFrame" />
+          <ComboDevices v-if="currentDevice?.id === 'combo' && currentDevice?.hasFrame" />
           
           <!-- 壁纸背景 -->
           <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
@@ -162,6 +164,8 @@ import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT a
 import PhoneFrame from './iphone/PhoneFrame.vue';
 import TabletFrame from './ipad/TabletFrame.vue';
 import MacFrame from './mac/MacFrame.vue';
+import CarFrame from './car/CarFrame.vue';
+import ComboDevices from './combo/ComboDevices.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
 const { 

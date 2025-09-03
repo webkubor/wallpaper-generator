@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CarFrame: typeof import('./src/components/car/CarFrame.vue')['default']
+    ComboDevices: typeof import('./src/components/combo/ComboDevices.vue')['default']
     MacDock: typeof import('./src/components/mac/MacDock.vue')['default']
     MacFrame: typeof import('./src/components/mac/MacFrame.vue')['default']
     MacTopBar: typeof import('./src/components/mac/MacTopBar.vue')['default']
