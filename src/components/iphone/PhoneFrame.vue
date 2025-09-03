@@ -1,5 +1,5 @@
 <template>
-  <div class="phone-frame">
+  <div class="phone-frame" ref="phoneFrameRef">
     <div class="background-image" :style="{ backgroundImage: `url(${wallpaperUrl})` }"></div>
     <div class="notch"></div>
 
@@ -9,11 +9,11 @@
         <PhoneTopIcon />
       </div>
             <div class="center-content">
-        <div class="time-display">
-          {{ currentTime }}
-        </div>
-        <div class="date-display">
+        <div class="date-display" :style="dateStyle">
           {{ currentDate }}
+        </div>
+        <div class="time-display" :style="timeStyle">
+          {{ currentTime }}
         </div>
               </div>
             <div class="bottom-icon">
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { useWallpaper } from '../../composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { useElementSize } from '@vueuse/core';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
@@ -48,6 +49,19 @@ const { imageUrl, watermarkSettings } = useWallpaper();
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
+
+const phoneFrameRef = ref(null);
+const { width: elementWidth } = useElementSize(phoneFrameRef);
+
+const BASE_WIDTH = 390; // 基准宽度
+
+const timeStyle = computed(() => ({
+  fontSize: `${(elementWidth.value / BASE_WIDTH) * 82}px`,
+}));
+
+const dateStyle = computed(() => ({
+  fontSize: `${(elementWidth.value / BASE_WIDTH) * 20}px`,
+}));
 
 
 // 时间显示
@@ -148,24 +162,24 @@ onUnmounted(() => {
 }
 
 .center-content {
+  position: absolute;
+  top: 38.2%; /* 黄金分割点 */
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  margin-top: 100px;
 }
 
 .time-display {
-  font-size: 82px; /* 调整字体大小以更接近真实效果 */
   font-weight: 500; /* 使用中等字重而非粗体 */
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 使用系统UI字体 */
+  margin-top: 2px;
 }
 
 .date-display {
-  font-size: 20px; /* 调整字体大小 */
   font-weight: 500;
-  margin-top: 4px;
   letter-spacing: 0.5px; /* 增加字间距 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 使用系统UI字体 */
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
