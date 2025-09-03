@@ -27,6 +27,8 @@ export interface TitleSettings {
   fontFamily: string;
   color: string;
   direction: 'horizontal' | 'vertical';
+  offsetX: number;
+  offsetY: number;
 }
 
 export interface WatermarkSettings {
@@ -40,6 +42,8 @@ export interface WatermarkSettings {
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
   padding: number;
   rotation: number;
+  offsetX: number;
+  offsetY: number;
 }
 
 
@@ -58,16 +62,18 @@ export const getDeviceById = (id: string): Device | undefined => {
 
 // 水印位置样式计算
 export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) => {
-  // 通用的位置计算逻辑
+  const { rotation, offsetX, offsetY, padding, position } = watermarkSettings;
+  const baseTransform = `rotate(${rotation}deg) translate(${offsetX}px, ${offsetY}px)`;
+
   const positions = {
-    'top-left': { top: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
-    'top-right': { top: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
-    'bottom-left': { bottom: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
-    'bottom-right': { bottom: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
-    'center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) rotate(${watermarkSettings.rotation}deg)` }
+    'top-left': { top: `${padding}px`, left: `${padding}px`, transform: baseTransform },
+    'top-right': { top: `${padding}px`, right: `${padding}px`, transform: baseTransform },
+    'bottom-left': { bottom: `${padding}px`, left: `${padding}px`, transform: baseTransform },
+    'bottom-right': { bottom: `${padding}px`, right: `${padding}px`, transform: baseTransform },
+    'center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) ${baseTransform}` }
   };
 
-  return positions[watermarkSettings.position as keyof typeof positions];
+  return positions[position as keyof typeof positions];
 }
 
 // 默认水印设置
@@ -80,7 +86,9 @@ export const defaultWatermarkSettings: WatermarkSettings = {
   fontFamily: 'Chinese3',
   position: 'bottom-right',
   padding: 20,
-  rotation: 0
+  rotation: 0,
+  offsetX: 0,
+  offsetY: 0
 }
 
 
@@ -104,6 +112,8 @@ export const defaultTitleSettings: TitleSettings = {
   fontFamily: 'Arial',
   color: '#ffffff',
   direction: 'vertical',
+  offsetX: 0,
+  offsetY: 0,
 };
 const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});

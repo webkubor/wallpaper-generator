@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^13.9.0",
+    "@vueuse/gesture": "^2.0.0",
     "fast-average-color": "^9.5.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",

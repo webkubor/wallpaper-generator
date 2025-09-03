@@ -118,12 +118,14 @@
         </div>
 
         <!-- 标题 -->
-        <div class="title-display" :style="titleContainerStyle">
-          <span :style="titleStyle">{{ titleSettings.text }}</span>
+        <div :style="titleContainerStyle">
+          <div ref="titleRef" class="title-display draggable" :style="titleDragStyle">
+            <span :style="titleStyle">{{ titleSettings.text }}</span>
+          </div>
         </div>
 
         <!-- 水印 -->
-        <div class="watermark" :style="watermarkPositionStyle">
+        <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle">
           <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
@@ -134,6 +136,7 @@
 
 <script setup lang="ts">
 import { computed, ref, type CSSProperties } from 'vue';
+import { useDrag } from '@vueuse/gesture';
 import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
@@ -177,6 +180,8 @@ const backgroundSettings = ref({
 });
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
+const titleRef = ref<HTMLElement | null>(null);
+const watermarkRef = ref<HTMLElement | null>(null);
 const isDownloading = ref(false);
 
 const titleStyle = computed(() => ({
@@ -192,14 +197,21 @@ const titleContainerStyle = computed((): CSSProperties => ({
   top: '50%',
   left: '30px',
   transform: 'translateY(-50%)',
-  display: 'flex',
-  flexDirection: titleSettings.value.direction === 'vertical' ? 'column' : 'row',
-  writingMode: titleSettings.value.direction === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '8px',
   zIndex: 2,
 }));
+
+const titleDragStyle = computed((): CSSProperties => {
+  const { direction, offsetX, offsetY } = titleSettings.value;
+  return {
+    transform: `translate(${offsetX}px, ${offsetY}px)`,
+    display: 'flex',
+    flexDirection: direction === 'vertical' ? 'column' : 'row',
+    writingMode: direction === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+  };
+});
 const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
@@ -279,6 +291,16 @@ const previewAreaStyle = computed(() => {
   }
   return {};
 });
+
+useDrag(({ offset: [x, y] }) => {
+  titleSettings.value.offsetX = x;
+  titleSettings.value.offsetY = y;
+}, { target: titleRef, preventWindowScrollY: true });
+
+useDrag(({ offset: [x, y] }) => {
+  watermarkSettings.value.offsetX = x;
+  watermarkSettings.value.offsetY = y;
+}, { target: watermarkRef, preventWindowScrollY: true });
 
 const canvasStyle = computed(() => ({
   width: `${currentDevice.value.width}px`,
@@ -448,6 +470,11 @@ const canvasStyle = computed(() => ({
   width: 100%;
   height: 100%;
   background-color: transparent; /* 确保备用背景透明 */
+}
+
+.draggable {
+  cursor: move;
+  touch-action: none; /* 禁用触摸滚动，优化拖拽体验 */
 }
 
 .watermark {
