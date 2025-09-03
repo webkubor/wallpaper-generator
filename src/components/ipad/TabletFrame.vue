@@ -73,18 +73,20 @@ onUnmounted(() => {
   height: 100%;
   background-color: #f0f0f0;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 0 10px rgba(0,0,0,0.1);
+  /* 阴影效果已由动态样式提供 */
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   transition: all 0.3s ease;
+  /* 添加3D变换效果 */
+  transform-style: preserve-3d;
+  z-index: 20;
+  /* 默认横屏显示 */
+  aspect-ratio: 4/3;
 }
 
-.tablet-frame:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.1);
-}
+/* 悬停效果已移除，只保留静态效果 */
 
 .background-image {
   position: absolute;

@@ -72,8 +72,6 @@ onUnmounted(() => {
   z-index: 20;
 }
 
-/* 悬停效果已移除，只保留静态效果 */
-
 .background-image {
   position: absolute;
   top: 0;

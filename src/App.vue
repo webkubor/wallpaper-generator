@@ -46,7 +46,7 @@
       </n-layout-footer>
       
       <!-- 下载设置模态框 -->
-      <n-modal v-model:show="showDownloadModal" preset="card" style="width: 400px" title="下载设置">
+      <n-modal v-model:show="showDownloadModal" preset="card" style="width: 400px;z-index: 9999;" title="下载设置">
         <n-space vertical>
           <n-form-item label="下载选项">
             <n-radio-group v-model:value="downloadOption">
@@ -59,7 +59,7 @@
           
           <n-space justify="end">
             <n-button @click="showDownloadModal = false">取消</n-button>
-            <n-button type="primary" :loading="isDownloading" @click="downloadWallpaper">下载</n-button>
+            <n-button type="primary" color="#f4d03f" :loading="isDownloading" @click="downloadWallpaper">下载</n-button>
           </n-space>
         </n-space>
       </n-modal>
@@ -123,9 +123,9 @@ const themeOverrides = computed(() => ({
   },
   Card: {
     borderRadius: '16px',
-    color: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-    colorModal: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-    colorPopover: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
+    color: isDark.value ? '#1e1e1e' : '#ffffff',
+    colorModal: isDark.value ? '#1e1e1e' : '#ffffff',
+    colorPopover: isDark.value ? '#1e1e1e' : '#ffffff',
     boxShadow: isDark.value 
       ? '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)' 
       : '0 8px 32px rgba(26, 31, 54, 0.15), 0 4px 16px rgba(26, 31, 54, 0.1)'
