@@ -36,7 +36,6 @@ export interface WatermarkSettings {
 export const deviceTypes: Device[] = [
   { id: 'iphone', name: 'iPhone', width: 300, height: 650, hasFrame: true }, // 宽高比 0.462
   { id: 'ipad', name: 'iPad', width: 575, height: 400, hasFrame: true }, // 横屏
-  { id: 'mac', name: 'Mac', width: 640, height: 400, hasFrame: true }, // 横屏
   { id: 'car', name: '车机', width: 640, height: 360, hasFrame: true }, // 16:9比例
   { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备预览
   { id: 'custom', name: '自定义尺寸', width: 400, height: 400, hasFrame: false }  
@@ -92,7 +91,6 @@ export const defaultWatermarkSettings: WatermarkSettings = {
 export const defaultPreviewSettings = {
   selectedDevice: 'car', // 默认选择车机尺寸
   showCombined: false,
-  backgroundColor: '#ffffff',
   showDeviceBorder: true,
   devices: deviceTypes.map(device => ({
     ...device,
@@ -100,12 +98,14 @@ export const defaultPreviewSettings = {
   }))
 }
 
+// Shared state
+const imageUrl = ref<string | null>(demoWallpaper);
+const watermarkImageUrl = ref<string | null>(null);
+const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
+const previewSettings = ref({...defaultPreviewSettings});
+
 // 使用壁纸生成器
 export const useWallpaper = () => {
-  const imageUrl = ref<string | null>(demoWallpaper);
-  const watermarkImageUrl = ref<string | null>(null);
-  const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings})
-  const previewSettings = ref({...defaultPreviewSettings})
   
   const fontOptions: FontOption[] = [
     { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },

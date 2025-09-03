@@ -152,11 +152,14 @@ import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper, getWatermarkPositionStyle } from '../composables/useWallpaper';
+
 import { 
   NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
   NColorPicker, NSlider, NRadioGroup, NRadioButton, 
-  NCollapse, NCollapseItem, NModal, NIcon, NInputNumber
+  NCollapse, NCollapseItem, NModal, NIcon, NInputNumber,
+  useMessage
 } from 'naive-ui';
+
 import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
 
 // 设备框架组件
@@ -166,6 +169,8 @@ import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
 import type { UploadFileInfo } from 'naive-ui';
+
+const message = useMessage();
 
 const { 
   imageUrl, 
@@ -200,13 +205,16 @@ const confirmCustomSize = () => {
 };
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {
-  if (options.file.file) {
+  const file = options.file.file;
+  if (file && file.type.startsWith('image/')) {
     const reader = new FileReader();
     reader.onload = (e) => {
       cropperSource.value = e.target?.result as string;
       showCropperModal.value = true;
     };
-    reader.readAsDataURL(options.file.file);
+    reader.readAsDataURL(file);
+  } else {
+    message.error('请上传图片文件');
   }
 };
 
@@ -214,16 +222,21 @@ const confirmCrop = () => {
   cropperRef.value.getCropData((data: string) => {
     imageUrl.value = data;
     showCropperModal.value = false;
+    message.success('背景图片上传成功');
   });
 };
 
 const handleWatermarkUpload = (options: { file: UploadFileInfo }) => {
-  if (options.file.file) {
+  const file = options.file.file;
+  if (file && file.type.startsWith('image/')) {
     const reader = new FileReader();
     reader.onload = (e) => {
       watermarkImageUrl.value = e.target?.result as string;
+      message.success('水印上传成功');
     };
-    reader.readAsDataURL(options.file.file);
+    reader.readAsDataURL(file);
+  } else {
+    message.error('请上传图片文件');
   }
 };
 
@@ -362,29 +375,19 @@ const canvasStyle = computed(() => ({
 }
 
 .preview-area {
-  flex: 1;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
   overflow: hidden;
-  background-color: var(--n-body-color);
-  height: 100%;
-  position: relative;
   border-radius: 12px;
+  padding: 20px;
   transition: all 0.3s ease;
-}
-
-.preview-area::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.05) 100%);
-  border-radius: 12px;
-  z-index: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.05) 100%), var(--n-body-color);
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* 将阴影移到这里 */
 }
 
 .preview-container {
@@ -418,8 +421,6 @@ const canvasStyle = computed(() => ({
   position: relative;
   overflow: hidden;
   display: flex;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  border-radius: 12px;
   transition: all 0.3s ease;
   flex-shrink: 0;
   max-width: 100%;
@@ -427,6 +428,7 @@ const canvasStyle = computed(() => ({
   z-index: 1;
   transform-origin: center center;
   animation: float 6s ease-in-out infinite;
+  background-color: transparent; /* 确保背景透明 */
 }
 
 @keyframes float {
@@ -450,7 +452,7 @@ const canvasStyle = computed(() => ({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5; /* 背景色，在留白区域显示 */
+  background-color: transparent; /* 确保备用背景透明 */
 }
 
 .watermark {

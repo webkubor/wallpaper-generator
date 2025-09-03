@@ -39,6 +39,7 @@ const wallpaperUrl = computed(() => imageUrl.value);
   height: 100%;
   object-fit: cover;
   z-index: 1;
+  background-color: transparent; /* 确保背景透明 */
 }
 
 .time-display {

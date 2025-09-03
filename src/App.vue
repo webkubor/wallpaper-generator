@@ -1,7 +1,8 @@
 <template>
   <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
-    <n-global-style />
-    <n-layout>
+    <n-message-provider>
+      <n-global-style />
+      <n-layout>
       <n-layout-header class="header">
         <div class="title-container">
           <img src="/webkubor.svg" class="logo" alt="Logo" />
@@ -24,6 +25,7 @@
         <p><n-icon :component="Envelope" class="footer-icon" /> <a href="mailto:webkubor@163.com">webkubor@163.com</a></p>
       </n-layout-footer>
     </n-layout>
+    </n-message-provider>
   </n-config-provider>
 </template>
 
@@ -100,7 +102,7 @@ h1 {
 
 <script setup lang="ts">
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon } from "naive-ui";
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon, NMessageProvider } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed } from "vue";
 import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope } from "@phosphor-icons/vue";
