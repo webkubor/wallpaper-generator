@@ -1,36 +1,25 @@
 <template>
   <n-divider title-placement="left">预览背景</n-divider>
   <n-form-item label="背景类型">
-    <n-radio-group v-model:value="localSettings.type" @update:value="updateSettings">
+    <n-radio-group v-model:value="backgroundSettings.type">
       <n-radio-button value="perspective">透视</n-radio-button>
       <n-radio-button value="color">纯色</n-radio-button>
     </n-radio-group>
   </n-form-item>
-  <n-form-item v-if="localSettings.type === 'color'" label="背景颜色">
-    <n-color-picker :modes="['hex']" v-model:value="localSettings.color" @update:value="updateSettings" />
+  <n-form-item v-if="backgroundSettings.type === 'color'" label="背景颜色">
+    <n-color-picker :modes="['hex']" v-model:value="backgroundSettings.color" />
   </n-form-item>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from 'vue';
 import { NFormItem, NRadioGroup, NRadioButton, NColorPicker, NDivider } from 'naive-ui';
 
-const props = defineProps({
-  settings: {
-    type: Object,
-    required: true,
-  },
-});
+interface Props {
+  backgroundSettings: any;
+}
 
-const emit = defineEmits(['update:settings']);
+defineProps<Props>();
 
-const localSettings = ref({ ...props.settings });
-
-watch(() => props.settings, (newSettings) => {
-  localSettings.value = { ...newSettings };
-}, { deep: true });
-
-const updateSettings = () => {
-  emit('update:settings', localSettings.value);
-};
+// BackgroundSettings 组件接收 backgroundSettings 作为 props
+// 直接在模板中使用，无需额外的响应式处理
 </script>

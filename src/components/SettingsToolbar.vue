@@ -41,9 +41,9 @@
           </div>
         </template>
         <n-space vertical size="small">
-          <TitleSettings v-model:settings="titleSettings" />
-          <WatermarkSettings v-model:settings="watermarkSettings" />
-          <BackgroundSettings v-model:settings="backgroundSettings" />
+          <TitleSettings />
+          <WatermarkSettings />
+          <BackgroundSettings :background-settings="backgroundSettings" />
         </n-space>
       </n-collapse-item>
 
@@ -56,21 +56,21 @@
         </template>
         <n-space vertical size="small">
           <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-            <n-select v-model:value="previewSettings.selectedDevice" :options="deviceOptions" />
+            <n-select :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
           </n-form-item>
           
           <!-- iPhone 刘海开关 -->
           <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-            <n-switch v-model:value="previewSettings.hasNotch" />
+            <n-switch :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
           </n-form-item>
           
           <!-- 自定义尺寸输入 -->
           <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
             <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-input-number v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
+              <n-input-number :value="customWidth" @update:value="(val) => $emit('update:customWidth', val || 400)" :min="100" :max="3000" placeholder="宽度" />
             </n-form-item>
             <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
+              <n-input-number :value="customHeight" @update:value="(val) => $emit('update:customHeight', val || 400)" :min="100" :max="3000" placeholder="高度" />
             </n-form-item>
             <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
           </div>
@@ -82,7 +82,6 @@
 
 <script setup lang="ts">
 import { 
-  useMessage,
   NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NIcon, NButton, NUpload,
   NSelect, NSwitch, NInputNumber
 } from 'naive-ui';
@@ -99,7 +98,7 @@ interface Props {
   customHeight: number;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const emit = defineEmits<{
   resetConfig: [];
@@ -109,12 +108,8 @@ const emit = defineEmits<{
   'update:customHeight': [value: number];
 }>();
 
-const message = useMessage();
-
 // 直接使用 useWallpaper 获取数据
 const { 
-  watermarkSettings,
-  titleSettings,
   previewSettings,
   deviceOptions
 } = useWallpaper();

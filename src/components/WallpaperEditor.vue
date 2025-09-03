@@ -1,5 +1,4 @@
 <template>
-  <div class="editor-container">
     <div class="wallpaper-editor">
     <!-- Left: Settings Panel -->
     <SettingsToolbar 
@@ -79,7 +78,6 @@
         @load-template="loadTemplate"
       />
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -287,23 +285,15 @@ const resetConfig = () => {
 </script>
 
 <style scoped lang="scss">
-.editor-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  height: calc(100vh - 110px); /* 减去头部(64px)和底部(40px)的高度以及一些间距 */
-  box-sizing: border-box;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
 .wallpaper-editor {
   display: flex;
   flex-direction: row;
   gap: 20px;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 110px); /* 减去头部(64px)和底部(40px)的高度以及一些间距 */
+  padding: 10px;
+  box-sizing: border-box;
+  margin: 0 auto;
   overflow: hidden;
 }
 

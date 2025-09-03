@@ -104,6 +104,18 @@ export const defaultPreviewSettings = {
   }))
 }
 
+// 背景设置接口
+export interface BackgroundSettings {
+  type: 'perspective' | 'color';
+  color: string;
+}
+
+// 默认背景设置
+export const defaultBackgroundSettings: BackgroundSettings = {
+  type: 'perspective',
+  color: '#f0f0f0'
+};
+
 // Shared state
 const imageUrl = ref<string | null>(demoWallpaper);
 const watermarkImageUrl = ref<string | null>(null);
@@ -118,6 +130,7 @@ export const defaultTitleSettings: TitleSettings = {
 };
 const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});
+const backgroundSettings = ref<BackgroundSettings>({...defaultBackgroundSettings});
 
 // 存储图片颜色信息
 const imageColorInfo = ref<{
