@@ -63,6 +63,9 @@ const dateStyle = computed(() => ({
   fontSize: `${(elementWidth.value / BASE_WIDTH) * 20}px`,
 }));
 
+const topIconWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 75}px`);
+const bottomIconSize = computed(() => `${(elementWidth.value / BASE_WIDTH) * 50}px`);
+
 
 // 时间显示
 const currentTime = ref('');
@@ -138,6 +141,13 @@ onUnmounted(() => {
   width: 100%;
   display: flex;
   justify-content: flex-end; /* 修改为右对齐 */
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+.top-icon :deep(svg) {
+  width: v-bind(topIconWidth);
+  height: auto;
 }
 
 .bottom-icon {
@@ -148,6 +158,11 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
+}
+
+.bottom-icon :deep(svg) {
+  width: v-bind(bottomIconSize);
+  height: v-bind(bottomIconSize);
 }
 
 .home-indicator {
