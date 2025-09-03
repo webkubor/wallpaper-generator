@@ -31,16 +31,7 @@
             <template #icon>
               <n-icon :component="Gear" />
             </template>
-            设置
           </n-button>
-          <n-switch v-model:value="isDark">
-            <template #checked-icon>
-              <n-icon :component="Moon" />
-            </template>
-            <template #unchecked-icon>
-              <n-icon :component="Sun" />
-            </template>
-          </n-switch>
         </div>
       </n-layout-header>
       <n-layout-content class="content">
@@ -57,9 +48,26 @@
         </div>
       </n-layout-footer>
       
-      <!-- 下载设置模态框 -->
-      <n-modal v-model:show="showDownloadModal" preset="card" style="width: 400px;z-index: 9999;" title="下载设置">
+      <!-- 系统设置模态框 -->
+      <n-modal v-model:show="showDownloadModal" preset="card" style="width: 400px;z-index: 9999;" title="系统设置">
         <n-space vertical>
+          <n-form-item label="主题模式">
+            <n-switch v-model:value="isDark">
+              <template #checked-icon>
+                <n-icon :component="Moon" />
+              </template>
+              <template #unchecked-icon>
+                <n-icon :component="Sun" />
+              </template>
+              <template #checked>
+                深色模式
+              </template>
+              <template #unchecked>
+                浅色模式
+              </template>
+            </n-switch>
+          </n-form-item>
+          
           <n-form-item label="下载选项">
             <n-radio-group v-model:value="downloadOption">
               <n-space vertical>

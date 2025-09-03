@@ -2,19 +2,10 @@
   <div class="template-section">
     <div class="personal-templates">
       <div class="template-toggle" @click="templatesExpanded = !templatesExpanded">
-        <div class="toggle-content">
-          <div class="toggle-left">
-            <n-icon :component="ImageSquare" class="toggle-icon" />
-            <span class="toggle-text">个人模板</span>
-          </div>
-          <div class="toggle-right">
-            <span class="template-count">{{ templates.length }}</span>
-            <n-icon 
-              :component="templatesExpanded ? ChevronUp : ChevronDown" 
-              class="chevron-icon"
-            />
-          </div>
-        </div>
+        <n-icon 
+          :component="templatesExpanded ? ChevronLeft : ChevronRight" 
+          class="chevron-icon"
+        />
       </div>
       
       <div v-show="templatesExpanded" class="template-content">
@@ -68,7 +59,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { NIcon, NButton, useMessage } from 'naive-ui';
-import { PhImageSquare as ImageSquare, PhTrash as Trash, PhDownload as Download, PhCaretUp as ChevronUp, PhCaretDown as ChevronDown } from "@phosphor-icons/vue";
+import { PhCaretLeft as ChevronLeft, PhCaretRight as ChevronRight, PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
 import { templateDB, type Template } from '../utils/indexedDB';
 
 // Props
@@ -121,80 +112,44 @@ defineExpose({
 <style scoped lang="scss">
 /* 个人模板样式 */
 .template-section {
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .personal-templates {
-  background: var(--n-card-color);
-  border-radius: 12px;
-  border: 1px solid var(--n-border-color);
-  overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .template-toggle {
-  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-bottom: 1px solid transparent;
+  margin: 0 auto;
   
   &:hover {
     background: var(--n-color-hover);
-  }
-}
-
-.toggle-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.toggle-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  
-  .toggle-icon {
-    color: var(--n-primary-color);
-    font-size: 18px;
-  }
-  
-  .toggle-text {
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--n-text-color);
-  }
-}
-
-.toggle-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  
-  .template-count {
-    background: var(--n-primary-color);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 14px;
-    font-size: 12px;
-    font-weight: 600;
-    min-width: 24px;
-    text-align: center;
-    line-height: 1;
+    transform: scale(1.1);
   }
   
   .chevron-icon {
     color: var(--n-text-color-disabled);
-    font-size: 16px;
-    transition: transform 0.3s ease;
+    font-size: 14px;
+    transition: all 0.3s ease;
   }
 }
 
 .template-content {
-  border-top: 1px solid var(--n-border-color);
+  margin-top: 12px;
   padding: 20px;
-  background: var(--n-color-hover);
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 12px;
 }
 
 .template-grid {
