@@ -308,44 +308,6 @@ const resetConfig = () => {
 }
 
 
-.input-with-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-  left: 8px;
-  z-index: 1;
-  color: var(--n-text-color-disabled);
-}
-
-.input-with-icon-field {
-  width: 100%;
-}
-
-.color-picker-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.color-icon {
-  color: var(--n-primary-color);
-}
-
-.download-button {
-  margin-top: 10px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.download-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
 
 .preview-area {
   position: relative;
@@ -375,27 +337,6 @@ const resetConfig = () => {
   z-index: 0;
 }
 
-.preview-container {
-  padding: 10px;
-  overflow: hidden;
-  background-color: var(--n-body-color);
-  height: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-.preview-content {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
 
 .cropper-container {
   width: 100%;
@@ -550,17 +491,5 @@ const resetConfig = () => {
   background: transparent;
 }
 
-/* 工具栏组件样式 */
-.toolbar-section {
-  margin-bottom: 16px;
-  padding: 12px;
-  border-radius: 8px;
-  background: var(--n-color-hover);
-  border: 1px solid var(--n-border-color);
-}
-
-.toolbar-section:last-child {
-  margin-bottom: 0;
-}
 
 </style>
