@@ -8,7 +8,7 @@
           <img src="/webkubor.svg" class="logo" alt="Logo" />
           <h1>壁纸生成器</h1>
         </div>
-        <n-switch v-model:value="isDark" @update:value="toggleTheme">
+        <n-switch v-model:value="isDark">
           <template #checked-icon>
             <n-icon :component="Moon" />
           </template>
@@ -109,31 +109,13 @@ import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope } 
 
 const isDark = useDark();
 
-const toggleTheme = () => {
-  isDark.value = !isDark.value;
-};
 
-const themeOverrides = computed(() => {
-  if (isDark.value) {
-    // 深色模式下的组件主题色
-    return {
-      common: {
-        primaryColor: '#66b1ff',
-        primaryColorHover: '#8cc5ff',
-        primaryColorPressed: '#5299e0',
-        primaryColorSuppl: 'rgba(102, 177, 255, 0.5)'
-      }
-    };
-  } else {
-    // 浅色模式下的组件主题色
-    return {
-      common: {
-        primaryColor: '#325BFD',
-        primaryColorHover: '#0033E5',
-        primaryColorPressed: '#0023C0',
-        primaryColorSuppl: 'rgba(0, 51, 229, 0.5)'
-      }
-    };
+const themeOverrides = computed(() => ({
+  common: {
+    primaryColor: isDark.value ? '#66b1ff' : '#325BFD',
+    primaryColorHover: isDark.value ? '#8cc5ff' : '#0033E5',
+    primaryColorPressed: isDark.value ? '#5299e0' : '#0023C0',
+    primaryColorSuppl: isDark.value ? 'rgba(102, 177, 255, 0.5)' : 'rgba(0, 51, 229, 0.5)'
   }
-});
+}));
 </script>
