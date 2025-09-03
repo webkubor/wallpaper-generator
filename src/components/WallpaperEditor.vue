@@ -2,7 +2,18 @@
   <div class="editor-container">
     <div class="wallpaper-editor">
     <!-- Left: Settings Panel -->
-    <n-card title="设置" class="settings-panel" hoverable bordered content-style="padding: 10px; height: 100%; overflow: auto;">
+    <n-card class="settings-panel" hoverable bordered content-style="padding: 10px; height: 100%; overflow: auto;">
+      <template #header>
+        <div class="settings-header">
+          <span>设置</span>
+          <n-button type="warning" size="small" @click="resetConfig">
+            <template #icon>
+              <n-icon :component="ArrowCounterClockwise" />
+            </template>
+            重置
+          </n-button>
+        </div>
+      </template>
       <n-collapse default-expanded-names="1,3" style="height: 100%; overflow: auto;">
         <n-collapse-item name="1">
           <template #header>
@@ -142,7 +153,7 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
-import { useWallpaper } from '../composables/useWallpaper';
+import { useWallpaper, defaultWatermarkSettings, defaultTitleSettings, defaultPreviewSettings } from '../composables/useWallpaper';
 import { createDragHandler } from '../utils';
 
 import { 
@@ -151,7 +162,7 @@ import {
   NSelect, NSwitch
 } from 'naive-ui';
 
-import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhGear as Gear } from "@phosphor-icons/vue";
+import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise } from "@phosphor-icons/vue";
 
 // 设备框架组件
 import PhoneFrame from './iphone/PhoneFrame.vue';
@@ -309,6 +320,23 @@ const canvasStyle = computed(() => ({
   width: `${currentDevice.value.width}px`,
   height: `${currentDevice.value.height}px`,
 }));
+
+// 重置配置函数
+const resetConfig = () => {
+  // 重置所有设置为默认值
+  Object.assign(watermarkSettings.value, JSON.parse(JSON.stringify(defaultWatermarkSettings)));
+  Object.assign(titleSettings.value, JSON.parse(JSON.stringify(defaultTitleSettings)));
+  Object.assign(previewSettings.value, JSON.parse(JSON.stringify(defaultPreviewSettings)));
+  
+  backgroundSettings.value = {
+    type: 'perspective',
+    color: '#7D6A6A5E',
+  };
+  customWidth.value = 400;
+  customHeight.value = 400;
+  
+  message.success('配置已重置为默认值');
+};
 
 
 </script>
@@ -583,6 +611,18 @@ const canvasStyle = computed(() => ({
   .n-form-item {
     flex: 1;
     margin-bottom: 0;
+  }
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  
+  span {
+    font-weight: 600;
+    font-size: 16px;
   }
 }
 </style>

@@ -9,6 +9,12 @@
           <h1 class="main-title">✨ 壁纸生成器</h1>
         </div>
         <div class="header-actions">
+          <n-button type="info" class="save-config-button" @click="saveConfig">
+            <template #icon>
+              <n-icon :component="FloppyDisk" />
+            </template>
+            保存配置
+          </n-button>
           <n-button type="primary" color="#f4d03f" class="download-button" @click="downloadWallpaper">
             <template #icon>
               <n-icon :component="Download" />
@@ -72,8 +78,9 @@ import WallpaperEditor from '@/components/WallpaperEditor.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon, NMessageProvider, NButton, NModal, NSpace, NFormItem, NRadio, NRadioGroup } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
-import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
+import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope, PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk } from "@phosphor-icons/vue";
 import html2canvas from 'html2canvas';
+import { useWallpaper } from './composables/useWallpaper';
 
 const isDark = useDark();
 const isDownloading = ref(false);
@@ -82,6 +89,27 @@ const downloadOption = ref('withBackground'); // 默认包含背景
 const wallpaperEditorRef = ref<{
   previewAreaRef: HTMLElement | null
 } | null>(null);
+
+// 获取壁纸配置
+const { watermarkSettings, titleSettings, previewSettings } = useWallpaper();
+
+// 保存配置函数
+const saveConfig = () => {
+  try {
+    const config = {
+      watermarkSettings: watermarkSettings.value,
+      titleSettings: titleSettings.value,
+      previewSettings: previewSettings.value,
+      downloadOption: downloadOption.value,
+      timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('wallpaper-config', JSON.stringify(config));
+    console.log('配置保存成功！', config);
+  } catch (error) {
+    console.error('保存配置时出错:', error);
+  }
+};
 
 // 下载壁纸函数
 const downloadWallpaper = () => {
