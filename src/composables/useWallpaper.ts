@@ -143,16 +143,21 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
 // 监听 imageUrl 的变化，并在变化时更新文本颜色
 watch(imageUrl, updateTextColorBasedOnImage, { immediate: true });
 
+// 定义统一的字体选项，供整个应用使用
+export const fontOptions: FontOption[] = [
+  { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
+  { label: '细雨体', value: 'drizzle' },
+  { label: '可爱体', value: 'cute' },
+  { label: 'AI中文02', value: 'AiChinese02' },
+  { label: '中文3', value: 'Chinese3' },
+  { label: '默认字体', value: 'system-ui, sans-serif' },
+  { label: '衬线字体', value: 'serif' },
+  { label: '无衬线字体', value: 'sans-serif' },
+  { label: '等宽字体', value: 'monospace' },
+];
+
 // 使用壁纸生成器
 export const useWallpaper = () => {
-  
-  const fontOptions: FontOption[] = [
-    { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
-    { label: '细雨体', value: 'drizzle' },
-    { label: '可爱体', value: 'cute' },
-    { label: 'AI中文02', value: 'AiChinese02' },
-    { label: '中文3', value: 'Chinese3' },
-  ];
 
   const positionOptions = [
     { label: '左上', value: 'top-left' },

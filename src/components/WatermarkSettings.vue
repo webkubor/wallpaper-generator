@@ -55,6 +55,11 @@ const localSettings = ref({ ...props.settings });
 
 const fontOptions = [
   { label: '默认字体', value: 'system-ui, sans-serif' },
+  { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
+  { label: '细雨体', value: 'drizzle' },
+  { label: '可爱体', value: 'cute' },
+  { label: 'AI中文02', value: 'AiChinese02' },
+  { label: '中文3', value: 'Chinese3' },
   { label: '衬线字体', value: 'serif' },
   { label: '无衬线字体', value: 'sans-serif' },
   { label: '等宽字体', value: 'monospace' },

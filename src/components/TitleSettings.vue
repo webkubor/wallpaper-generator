@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue';
 import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NDivider } from 'naive-ui';
+import { fontOptions } from '../composables/useWallpaper';
 
 const props = defineProps({
   settings: {
@@ -31,14 +32,6 @@ const props = defineProps({
 const emit = defineEmits(['update:settings']);
 
 const localSettings = ref({ ...props.settings });
-
-const fontOptions = [
-  { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
-  { label: '细雨体', value: 'drizzle' },
-  { label: '可爱体', value: 'cute' },
-  { label: 'AI中文02', value: 'AiChinese02' },
-  { label: '中文3', value: 'Chinese3' },
-];
 
 watch(() => props.settings, (newSettings) => {
   localSettings.value = { ...newSettings };
