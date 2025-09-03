@@ -35,7 +35,7 @@ export interface WatermarkSettings {
 
 
 export const deviceTypes: Device[] = [
-  { id: 'iphone', name: 'iPhone', width: 300, height: 650, hasFrame: true }, // 宽高比 0.462
+  { id: 'iphone', name: 'iPhone', width: 300, height: 600, hasFrame: true }, // 更新宽高比
   { id: 'ipad', name: 'iPad', width: 575, height: 400, hasFrame: true }, // 横屏
   { id: 'car', name: '车机', width: 640, height: 360, hasFrame: true }, // 16:9比例
   { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备预览
@@ -48,30 +48,16 @@ export const getDeviceById = (id: string): Device | undefined => {
 }
 
 // 水印位置样式计算
-export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings, deviceId: string) => {
-  // 获取设备信息
-  const device = getDeviceById(deviceId);
-  const hasFrame = device?.hasFrame || false;
-  
-  // 如果是有框架的设备，水印位置在框架下方
-  if (hasFrame && deviceId !== 'custom') {
-    return { bottom: '-40px', left: '50%', transform: `translateX(-50%) rotate(${watermarkSettings.rotation}deg)` };
-  }
-  
-  // 自定义设备或无框架设备使用原有的位置计算
+export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) => {
+  // 通用的位置计算逻辑
   const positions = {
-    'top-left': { top: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px' },
-    'top-right': { top: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px' },
-    'bottom-left': { bottom: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px' },
-    'bottom-right': { bottom: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px' },
+    'top-left': { top: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
+    'top-right': { top: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
+    'bottom-left': { bottom: watermarkSettings.padding + 'px', left: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
+    'bottom-right': { bottom: watermarkSettings.padding + 'px', right: watermarkSettings.padding + 'px', transform: `rotate(${watermarkSettings.rotation}deg)` },
     'center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) rotate(${watermarkSettings.rotation}deg)` }
-  }
-  
-  // 自定义设备默认使用底部中间位置
-  if (deviceId === 'custom') {
-    return { bottom: watermarkSettings.padding + 'px', left: '50%', transform: `translateX(-50%) rotate(${watermarkSettings.rotation}deg)` };
-  }
-  
+  };
+
   return positions[watermarkSettings.position as keyof typeof positions];
 }
 
@@ -168,9 +154,11 @@ export const useWallpaper = () => {
     return watermarkSettings.value.text
   })
   
-  const watermarkPositionStyle = computed(() => {
-    return getWatermarkPositionStyle(watermarkSettings.value, previewSettings.value.selectedDevice)
-  })
+  const watermarkPositionStyle = ref(getWatermarkPositionStyle(watermarkSettings.value));
+  
+  watch(watermarkSettings, () => {
+    watermarkPositionStyle.value = getWatermarkPositionStyle(watermarkSettings.value);
+  }, { deep: true, immediate: true });
   
   // 获取选中的设备列表
   const selectedDevices = computed(() => {

@@ -103,12 +103,6 @@
           
           <!-- 壁纸背景已移至各设备框架内部 -->
           
-          <!-- 水印 -->
-          <div class="watermark" :style="watermarkPositionStyle">
-            <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
-            <span v-if="watermarkSettings.text">{{ watermarkSettings.text }}</span>
-          </div>
-
           <!-- Cropper Modal -->
           <n-modal v-model:show="showCropperModal" preset="card" style="width: 80vw; height: 80vh;" title="裁剪图片">
             <div class="cropper-container">
@@ -132,6 +126,12 @@
               </n-space>
             </template>
           </n-modal>
+        </div>
+
+        <!-- 水印 -->
+        <div class="watermark" :style="watermarkPositionStyle">
+          <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
+          <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>
     </div>
@@ -266,17 +266,8 @@ const watermarkStyle = computed(() => ({
   WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)', // 兼容 Webkit 浏览器
 }));
 
-// 水印位置样式 - 根据设备类型调整位置
-const watermarkPositionStyle = computed(() => {
-  // 获取基本样式
-  const baseStyle = watermarkStyle.value;
-  
-  // 获取位置样式
-  const positionStyle = getWatermarkPositionStyle(watermarkSettings.value, previewSettings.value.selectedDevice);
-  
-  // 合并样式
-  return { ...baseStyle, ...positionStyle };
-});
+// 水印位置样式
+const watermarkPositionStyle = computed(() => getWatermarkPositionStyle(watermarkSettings.value));
 
 const previewAreaStyle = computed(() => {
   if (backgroundSettings.value.type === 'color') {
