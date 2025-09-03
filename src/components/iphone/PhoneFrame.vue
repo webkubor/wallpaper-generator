@@ -3,7 +3,9 @@
        ref="phoneFrameRef" 
        :style="dynamicShadowStyle">
     <div class="background-image" :style="{ backgroundImage: `url(${wallpaperUrl})` }"></div>
-    <div class="notch"></div>
+    <div class="notch">
+      <div class="notch-camera"></div>
+    </div>
 
     <!-- 锁屏界面元素 -->
     <div class="lock-screen-overlay" :style="{ color: watermarkSettings.color }">
@@ -115,6 +117,20 @@ onUnmounted(() => {
   z-index: 20;
 }
 
+.notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 35%;
+  height: 35px;
+  background-color: #000;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  z-index: 20; /* 提高z-index使其在最上层 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
 
 .background-image {
   position: absolute;
@@ -127,6 +143,9 @@ onUnmounted(() => {
   border-radius: 12px;
   background-size: cover;
   background-position: center;
+  /* 添加顶部内边距，为刘海留出空间 */
+  padding-top: 35px;
+  box-sizing: border-box;
 }
 
 .lock-screen-overlay {
@@ -139,16 +158,15 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   color: white;
-  padding: 10px 20px; /* 顶部10px，左右20px内边距 */
+  padding: 35px 20px 10px 20px; /* 增加顶部内边距，为刘海留出空间 */
   box-sizing: border-box;
-  z-index: 2; /* 确保覆盖层在最上层 */
+  z-index: 3; /* 确保覆盖层在背景之上，但在刘海之下 */
 }
 
 .top-icon {
   width: 100%;
   display: flex;
   justify-content: flex-end; /* 修改为右对齐 */
-  padding-right: 16px;
   box-sizing: border-box;
 }
 
@@ -195,6 +213,17 @@ onUnmounted(() => {
   letter-spacing: 0.5px; /* 增加字间距 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 使用系统UI字体 */
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.notch-camera {
+  position: absolute;
+  top: 8px;
+  right: 30%;
+  width: 8px;
+  height: 8px;
+  background-color: #1a1a1a;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(255,255,255,0.2);
 }
 
 </style>
