@@ -8,11 +8,16 @@
       <div class="top-icon">
         <PhoneTopIcon />
       </div>
-      <div class="time-display">
-        {{ currentTime }}
+            <div class="center-content">
+        <div class="time-display">
+          {{ currentTime }}
+        </div>
+        <div class="date-display">
+          {{ currentDate }}
+        </div>
       </div>
       <div class="bottom-icon">
-        <PhoneLockBottom />
+        <PhoneLockBottom width="100%" />
       </div>
     </div>
 
@@ -40,11 +45,18 @@ const wallpaperUrl = computed(() => imageUrl.value);
 
 // 时间显示
 const currentTime = ref('');
+const currentDate = ref('');
 let timer: number;
 
 const updateTime = () => {
   const now = new Date();
-  currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  };
+  currentDate.value = now.toLocaleDateString('zh-CN', options);
+  currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 };
 
 onMounted(() => {
@@ -119,9 +131,24 @@ onUnmounted(() => {
   justify-content: center;
 }
 
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-bottom: 200px;
+}
+
 .time-display {
   font-size: 64px;
   font-weight: bold;
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.date-display {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 </style>
