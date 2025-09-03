@@ -3,37 +3,12 @@
     <n-message-provider>
       <n-global-style />
       <n-layout>
-      <n-layout-header class="header">
-        <div class="title-container">
-          <img src="/webkubor.svg" class="logo" alt="Logo" />
-          <h1 class="main-title">✨ 壁纸生成器</h1>
-          <n-button type="warning" size="small" class="save-template-button" @click="saveAsTemplate">
-            <template #icon>
-              <n-icon :component="Star" />
-            </template>
-            保存为模板
-          </n-button>
-        </div>
-        <div class="header-actions">
-          <n-button type="info" class="save-config-button" @click="saveConfig">
-            <template #icon>
-              <n-icon :component="FloppyDisk" />
-            </template>
-            保存配置
-          </n-button>
-          <n-button type="primary" color="#f4d03f" class="download-button" @click="downloadWallpaper">
-            <template #icon>
-              <n-icon :component="Download" />
-            </template>
-            导出
-          </n-button>
-          <n-button @click="showDownloadModal = true" class="settings-button">
-            <template #icon>
-              <n-icon :component="Gear" />
-            </template>
-          </n-button>
-        </div>
-      </n-layout-header>
+      <Header 
+        @save-template="saveAsTemplate"
+        @save-config="saveConfig"
+        @download="downloadWallpaper"
+        @open-settings="showDownloadModal = true"
+      />
       <n-layout-content class="content">
         <WallpaperEditor ref="wallpaperEditorRef" />
       </n-layout-content>
@@ -54,10 +29,10 @@
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
 import Footer from '@/components/common/Footer.vue';
 import SettingsModal from '@/components/common/SettingsModal.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NIcon, NMessageProvider, NButton } from "naive-ui";
+import Header from '@/components/common/Header.vue';
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent, NMessageProvider } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
-import { PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
 import html2canvas from 'html2canvas';
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
@@ -212,61 +187,4 @@ const themeOverrides = computed(() => ({
 }
 
 
-.header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    
-    .download-button {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(244, 208, 63, 0.3);
-      }
-    }
-    
-    .settings-button {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-  
-  .title-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    
-    .logo {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-    }
-    
-    .main-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin: 0;
-      font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
-      color: var(--n-text-color);
-    }
-  }
-}
 </style>

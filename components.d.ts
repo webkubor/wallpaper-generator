@@ -13,6 +13,7 @@ declare module 'vue' {
     ComboDevices: typeof import('./src/components/combo/ComboDevices.vue')['default']
     CustomFrame: typeof import('./src/components/custom/CustomFrame.vue')['default']
     Footer: typeof import('./src/components/common/Footer.vue')['default']
+    Header: typeof import('./src/components/common/Header.vue')['default']
     HomeIndicator: typeof import('./src/components/common/HomeIndicator.vue')['default']
     MacDock: typeof import('./src/components/mac/MacDock.vue')['default']
     MacFrame: typeof import('./src/components/mac/MacFrame.vue')['default']
