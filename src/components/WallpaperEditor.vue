@@ -145,6 +145,12 @@
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>
+      
+      <!-- 个人模板列表 -->
+      <PersonalTemplates 
+        ref="personalTemplatesRef"
+        @load-template="loadTemplate"
+      />
     </div>
   </div>
 </template>
@@ -155,6 +161,7 @@ import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper, defaultWatermarkSettings, defaultTitleSettings, defaultPreviewSettings } from '../composables/useWallpaper';
 import { createDragHandler } from '../utils';
+import { type Template } from '../utils/indexedDB';
 
 import { 
   useMessage,
@@ -173,6 +180,7 @@ import ComboDevices from './combo/ComboDevices.vue';
 import CustomFrame from './custom/CustomFrame.vue';
 import WatermarkSettings from './WatermarkSettings.vue';
 import TitleSettings from './TitleSettings.vue';
+import PersonalTemplates from './PersonalTemplates.vue';
 import BackgroundSettings from '@/components/BackgroundSettings.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
@@ -196,10 +204,6 @@ const backgroundSettings = ref({
 
 const previewAreaRef = ref<HTMLElement | null>(null);
 
-// 暴露previewAreaRef给父组件
-defineExpose({
-  previewAreaRef
-});
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
@@ -320,6 +324,28 @@ const canvasStyle = computed(() => ({
   width: `${currentDevice.value.width}px`,
   height: `${currentDevice.value.height}px`,
 }));
+
+// 个人模板组件引用
+const personalTemplatesRef = ref<{ loadTemplates: () => Promise<void> } | null>(null);
+
+// 加载模板配置
+const loadTemplate = (template: Template) => {
+  try {
+    Object.assign(watermarkSettings.value, template.config.watermarkSettings);
+    Object.assign(titleSettings.value, template.config.titleSettings);
+    Object.assign(previewSettings.value, template.config.previewSettings);
+    message.success(`已加载模板: ${template.name}`);
+  } catch (error) {
+    console.error('加载模板失败:', error);
+    message.error('加载模板失败');
+  }
+};
+
+// 暴露函数给父组件
+defineExpose({
+  previewAreaRef,
+  loadTemplates: () => personalTemplatesRef.value?.loadTemplates()
+});
 
 // 重置配置函数
 const resetConfig = () => {
@@ -625,4 +651,5 @@ const resetConfig = () => {
     font-size: 16px;
   }
 }
+
 </style>

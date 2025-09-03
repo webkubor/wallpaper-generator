@@ -7,6 +7,12 @@
         <div class="title-container">
           <img src="/webkubor.svg" class="logo" alt="Logo" />
           <h1 class="main-title">✨ 壁纸生成器</h1>
+          <n-button type="warning" size="small" class="save-template-button" @click="saveAsTemplate">
+            <template #icon>
+              <n-icon :component="Star" />
+            </template>
+            保存为模板
+          </n-button>
         </div>
         <div class="header-actions">
           <n-button type="info" class="save-config-button" @click="saveConfig">
@@ -19,13 +25,13 @@
             <template #icon>
               <n-icon :component="Download" />
             </template>
-            下载壁纸
+            导出
           </n-button>
           <n-button @click="showDownloadModal = true" class="settings-button">
             <template #icon>
               <n-icon :component="Gear" />
             </template>
-            下载设置
+            设置
           </n-button>
           <n-switch v-model:value="isDark">
             <template #checked-icon>
@@ -78,20 +84,70 @@ import WallpaperEditor from '@/components/WallpaperEditor.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon, NMessageProvider, NButton, NModal, NSpace, NFormItem, NRadio, NRadioGroup } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
-import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope, PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk } from "@phosphor-icons/vue";
+import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope, PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
 import html2canvas from 'html2canvas';
 import { useWallpaper } from './composables/useWallpaper';
+import { templateDB, type Template } from './utils/indexedDB';
 
 const isDark = useDark();
 const isDownloading = ref(false);
 const showDownloadModal = ref(false);
 const downloadOption = ref('withBackground'); // 默认包含背景
 const wallpaperEditorRef = ref<{
-  previewAreaRef: HTMLElement | null
+  previewAreaRef: HTMLElement | null;
+  loadTemplates?: () => Promise<void>;
 } | null>(null);
 
 // 获取壁纸配置
 const { watermarkSettings, titleSettings, previewSettings } = useWallpaper();
+
+// 保存为模板函数
+const saveAsTemplate = async () => {
+  if (!wallpaperEditorRef.value?.previewAreaRef) {
+    console.error('预览区域未找到');
+    return;
+  }
+
+  try {
+    // 生成预览图片
+    const previewArea = wallpaperEditorRef.value.previewAreaRef;
+    const canvas = await html2canvas(previewArea, {
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      scale: 0.5, // 降低分辨率以节省存储空间
+      logging: false
+    });
+    
+    const previewImage = canvas.toDataURL('image/jpeg', 0.8);
+    
+    // 生成模板名称（可以后续改为用户输入）
+    const templateName = `模板_${new Date().toLocaleString('zh-CN')}`;
+    
+    const template: Template = {
+      id: Date.now().toString(),
+      name: templateName,
+      config: {
+        watermarkSettings: JSON.parse(JSON.stringify(watermarkSettings.value)),
+        titleSettings: JSON.parse(JSON.stringify(titleSettings.value)),
+        previewSettings: JSON.parse(JSON.stringify(previewSettings.value)),
+        downloadOption: downloadOption.value,
+      },
+      previewImage,
+      timestamp: new Date().toISOString()
+    };
+    
+    await templateDB.saveTemplate(template);
+    console.log('模板保存成功！', template);
+    
+    // 通知 WallpaperEditor 刷新模板列表
+    if (wallpaperEditorRef.value?.loadTemplates) {
+      await wallpaperEditorRef.value.loadTemplates();
+    }
+  } catch (error) {
+    console.error('保存模板时出错:', error);
+  }
+};
 
 // 保存配置函数
 const saveConfig = () => {

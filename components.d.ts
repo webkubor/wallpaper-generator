@@ -41,6 +41,7 @@ declare module 'vue' {
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NUpload: typeof import('naive-ui')['NUpload']
+    PersonalTemplates: typeof import('./src/components/PersonalTemplates.vue')['default']
     PhoneCameraIcon: typeof import('./src/components/iphone/PhoneCameraIcon.vue')['default']
     PhoneFlashlightIcon: typeof import('./src/components/iphone/PhoneFlashlightIcon.vue')['default']
     PhoneFrame: typeof import('./src/components/iphone/PhoneFrame.vue')['default']
