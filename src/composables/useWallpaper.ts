@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import demoWallpaper from '../assets/demo.png'
+import { FastAverageColor } from 'fast-average-color'
 
 // 类型定义
 export interface Device {
@@ -103,6 +104,28 @@ const imageUrl = ref<string | null>(demoWallpaper);
 const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 const previewSettings = ref({...defaultPreviewSettings});
+
+// 实例化颜色分析器
+const fac = new FastAverageColor();
+
+// 根据图片颜色动态更新文本颜色
+const updateTextColorBasedOnImage = async (url: string | null) => {
+  if (!url) {
+    watermarkSettings.value.color = defaultWatermarkSettings.color; // 如果没有图片，重置为默认颜色
+    return;
+  }
+  try {
+    const color = await fac.getColorAsync(url);
+    // 如果背景色偏暗，文本颜色设为白色，否则设为黑色
+    watermarkSettings.value.color = color.isDark ? '#FFFFFF' : '#000000';
+  } catch (e) {
+    console.error('颜色分析失败:', e);
+    watermarkSettings.value.color = defaultWatermarkSettings.color; // 出错时使用默认颜色
+  }
+};
+
+// 监听 imageUrl 的变化，并在变化时更新文本颜色
+watch(imageUrl, updateTextColorBasedOnImage, { immediate: true });
 
 // 使用壁纸生成器
 export const useWallpaper = () => {
