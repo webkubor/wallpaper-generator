@@ -33,18 +33,7 @@
             </div>
           </template>
           <n-space vertical size="small">
-            <n-form-item label="水印文字" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-input v-model:value="watermarkSettings.text" placeholder="输入水印文字">
-                <template #prefix>
-                  <n-icon :component="TextT" />
-                </template>
-              </n-input>
-            </n-form-item>
-            <n-form-item label="图片水印" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-upload list-type="image-card" :max="1" @change="handleWatermarkUpload">
-                <span>点击上传</span>
-              </n-upload>
-            </n-form-item>
+            <TitleSettings v-model:settings="titleSettings" />
             <WatermarkSettings v-model:settings="watermarkSettings" />
 
             <BackgroundSettings v-model:settings="backgroundSettings" />
@@ -128,6 +117,11 @@
           </n-modal>
         </div>
 
+        <!-- 标题 -->
+        <div class="title-display" :style="titleContainerStyle">
+          <span :style="titleStyle">{{ titleSettings.text }}</span>
+        </div>
+
         <!-- 水印 -->
         <div class="watermark" :style="watermarkPositionStyle">
           <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
@@ -139,15 +133,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, type CSSProperties } from 'vue';
 import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
-import { useWallpaper, getWatermarkPositionStyle } from '../composables/useWallpaper';
+import { useWallpaper } from '../composables/useWallpaper';
 
 import { 
   useMessage,
-  NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NInput, NIcon, NButton, NUpload, NModal, NInputNumber,
+  NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NIcon, NButton, NUpload, NModal, NInputNumber,
   NSelect
 } from 'naive-ui';
 
@@ -159,7 +153,8 @@ import TabletFrame from './ipad/TabletFrame.vue';
 import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
-import WatermarkSettings from '@/components/WatermarkSettings.vue';
+import WatermarkSettings from './WatermarkSettings.vue';
+import TitleSettings from './TitleSettings.vue';
 import BackgroundSettings from '@/components/BackgroundSettings.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
@@ -169,9 +164,11 @@ const {
   imageUrl, 
   watermarkImageUrl,
   watermarkSettings,
+  titleSettings,
   previewSettings,
   deviceOptions,
-  currentDevice
+  currentDevice,
+  watermarkPositionStyle
 } = useWallpaper();
 
 const backgroundSettings = ref({
@@ -181,6 +178,28 @@ const backgroundSettings = ref({
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const isDownloading = ref(false);
+
+const titleStyle = computed(() => ({
+  fontFamily: titleSettings.value.fontFamily,
+  color: titleSettings.value.color,
+  fontSize: '24px',
+  fontWeight: 500,
+  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+}));
+
+const titleContainerStyle = computed((): CSSProperties => ({
+  position: 'absolute',
+  top: '50%',
+  left: '30px',
+  transform: 'translateY(-50%)',
+  display: 'flex',
+  flexDirection: titleSettings.value.direction === 'vertical' ? 'column' : 'row',
+  writingMode: titleSettings.value.direction === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
+  zIndex: 2,
+}));
 const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
@@ -223,19 +242,6 @@ const confirmCrop = () => {
   });
 };
 
-const handleWatermarkUpload = (options: { file: UploadFileInfo }) => {
-  const file = options.file.file;
-  if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      watermarkImageUrl.value = e.target?.result as string;
-      message.success('水印上传成功');
-    };
-    reader.readAsDataURL(file);
-  } else {
-    message.error('请上传图片文件');
-  }
-};
 
 const downloadWallpaper = () => {
   if (previewCanvasRef.value) {
@@ -266,8 +272,6 @@ const watermarkStyle = computed(() => ({
   WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)', // 兼容 Webkit 浏览器
 }));
 
-// 水印位置样式
-const watermarkPositionStyle = computed(() => getWatermarkPositionStyle(watermarkSettings.value));
 
 const previewAreaStyle = computed(() => {
   if (backgroundSettings.value.type === 'color') {
@@ -502,6 +506,14 @@ const canvasStyle = computed(() => ({
   left: 0;
   width: 100%;
   z-index: 10;
+}
+
+.title-display {
+  transition: all 0.3s ease;
+}
+
+.title-display[style*="vertical-rl"] {
+  letter-spacing: 0.1em;
 }
 
 @keyframes pulse {

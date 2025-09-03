@@ -1,6 +1,10 @@
 <template>
-    <svg width="55" height="15" viewBox="0 0 55 15" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(-310, -20)">
+    <svg width="75" height="15" viewBox="0 0 75 15" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(-290, -20)">
+        <rect x="293" y="30" width="3" height="4" rx="0.5"></rect>
+        <rect x="297" y="28" width="3" height="6" rx="0.5"></rect>
+        <rect x="301" y="26" width="3" height="8" rx="0.5"></rect>
+        <rect x="305" y="24" width="3" height="10" rx="0.5" opacity="0.5"></rect>
       <rect opacity="0.35" x="337.172" y="22.5" width="24" height="12" rx="3" stroke="#FFFFFF" fill="transparent"></rect>
       <path opacity="0.4" d="M362.672 26.666V30.666C363.477 30.3272 364 29.5391 364 28.666C364 27.7929 363.477 27.0048 362.672 26.666Z"></path>
       <rect x="338.672" y="24" width="21" height="9" rx="1.33333"></rect>

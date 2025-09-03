@@ -22,8 +22,17 @@ export interface PositionOption {
   label: string;
 }
 
-export interface WatermarkSettings {
+export interface TitleSettings {
   text: string;
+  fontFamily: string;
+  color: string;
+  direction: 'horizontal' | 'vertical';
+}
+
+export interface WatermarkSettings {
+  type: 'text' | 'image';
+  text: string;
+  imageUrl?: string;
   fontSize: number;
   color: string;
   opacity: number;
@@ -63,6 +72,7 @@ export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) 
 
 // 默认水印设置
 export const defaultWatermarkSettings: WatermarkSettings = {
+  type: 'text',
   text: 'Design by 司南烛',
   fontSize: 24,
   color: '#000000',
@@ -89,6 +99,13 @@ export const defaultPreviewSettings = {
 const imageUrl = ref<string | null>(demoWallpaper);
 const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
+export const defaultTitleSettings: TitleSettings = {
+  text: '默认标题',
+  fontFamily: 'Arial',
+  color: '#ffffff',
+  direction: 'vertical',
+};
+const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});
 
 // 实例化颜色分析器
@@ -190,6 +207,7 @@ export const useWallpaper = () => {
     selectedDevices,
     watermarkText,
     watermarkPositionStyle,
+    titleSettings,
     handleDeviceToggle,
     deviceTypes,
   }

@@ -15,7 +15,7 @@
         <div class="date-display">
           {{ currentDate }}
         </div>
-      </div>
+              </div>
             <div class="bottom-icon">
         <PhoneFlashlightIcon />
         <PhoneCameraIcon />
@@ -39,12 +39,13 @@ const props = defineProps({
     type: String,
     default: '100%',
   },
-});
+  });
 
 const { imageUrl, watermarkSettings } = useWallpaper();
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
+
 
 // 时间显示
 const currentTime = ref('');
@@ -115,7 +116,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* 恢复空间分布布局 */
   color: white;
   padding: 10px 20px; /* 顶部10px，左右20px内边距 */
   box-sizing: border-box;
@@ -130,7 +130,7 @@ onUnmounted(() => {
 
 .bottom-icon {
   position: absolute;
-  bottom: 52px;
+  bottom: 35px;
   width: 100%;
   padding: 0 32px;
   display: flex;
@@ -145,7 +145,7 @@ onUnmounted(() => {
   transform: translateX(-50%);
   width: 134px;
   height: 5px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: 100px;
 }
 
@@ -154,19 +154,23 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-bottom: 200px;
+  margin-top: 100px;
 }
 
 .time-display {
-  font-size: 64px;
-  font-weight: bold;
+  font-size: 82px; /* 调整字体大小以更接近真实效果 */
+  font-weight: 500; /* 使用中等字重而非粗体 */
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 使用系统UI字体 */
 }
 
 .date-display {
-  font-size: 18px;
+  font-size: 20px; /* 调整字体大小 */
   font-weight: 500;
   margin-top: 4px;
+  letter-spacing: 0.5px; /* 增加字间距 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 使用系统UI字体 */
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
+
 </style>
