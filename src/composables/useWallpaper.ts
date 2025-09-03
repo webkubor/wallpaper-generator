@@ -97,6 +97,7 @@ export const defaultPreviewSettings = {
   selectedDevice: 'car', // 默认选择车机尺寸
   showCombined: false,
   showDeviceBorder: true,
+  hasNotch: true, // iPhone 刘海开关，默认开启
   devices: deviceTypes.map(device => ({
     ...device,
     selected: false

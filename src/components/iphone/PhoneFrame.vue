@@ -2,13 +2,13 @@
   <div class="phone-frame wallpaper-content" 
        ref="phoneFrameRef" 
        :style="dynamicShadowStyle">
-    <div class="background-image" :style="{ backgroundImage: `url(${wallpaperUrl})` }"></div>
-    <div class="notch">
+    <div class="background-image" :style="backgroundImageStyle"></div>
+    <div v-if="hasNotch" class="notch">
       <div class="notch-camera"></div>
     </div>
 
     <!-- 锁屏界面元素 -->
-    <div class="lock-screen-overlay" :style="{ color: watermarkSettings.color }">
+    <div class="lock-screen-overlay" :style="lockScreenOverlayStyle">
       <div class="top-icon">
         <PhoneTopIcon />
       </div>
@@ -43,10 +43,14 @@ import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
 import PhoneCameraIcon from './PhoneCameraIcon.vue';
 import HomeIndicator from '../common/HomeIndicator.vue';
 
-defineProps({
+const props = defineProps({
   width: {
     type: String,
     default: '100%',
+  },
+  hasNotch: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -75,6 +79,21 @@ const dateStyle = computed(() => ({
 
 const topIconWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 75}px`);
 const bottomIconSize = computed(() => `${(elementWidth.value / BASE_WIDTH) * 50}px`);
+
+// 根据刘海开关动态计算顶部内边距
+const topPadding = computed(() => props.hasNotch ? '35px' : '10px');
+
+// 动态背景图像样式
+const backgroundImageStyle = computed(() => ({
+  backgroundImage: `url(${wallpaperUrl.value})`,
+  paddingTop: topPadding.value,
+}));
+
+// 动态锁屏覆盖层样式
+const lockScreenOverlayStyle = computed(() => ({
+  color: watermarkSettings.value.color,
+  paddingTop: topPadding.value,
+}));
 
 
 
@@ -143,8 +162,6 @@ onUnmounted(() => {
   border-radius: 12px;
   background-size: cover;
   background-position: center;
-  /* 添加顶部内边距，为刘海留出空间 */
-  padding-top: 35px;
   box-sizing: border-box;
 }
 
@@ -158,7 +175,7 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   color: white;
-  padding: 35px 20px 10px 20px; /* 增加顶部内边距，为刘海留出空间 */
+  padding: 10px 20px 10px 20px; /* 基础内边距，顶部内边距由计算属性控制 */
   box-sizing: border-box;
   z-index: 3; /* 确保覆盖层在背景之上，但在刘海之下 */
 }

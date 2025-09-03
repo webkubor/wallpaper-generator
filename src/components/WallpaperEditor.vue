@@ -52,6 +52,10 @@
               <n-select v-model:value="previewSettings.selectedDevice" :options="deviceOptions" />
             </n-form-item>
             
+            <!-- iPhone 刘海开关 -->
+            <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
+              <n-switch v-model:value="previewSettings.hasNotch" />
+            </n-form-item>
             
             <!-- 自定义尺寸输入 -->
             <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
@@ -78,7 +82,7 @@
       />
         <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
           <!-- 设备框架 -->
-          <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" />
+          <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" :has-notch="previewSettings.hasNotch" />
           <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
           <MacFrame v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" />
           <CarFrame v-if="currentDevice?.id === 'car' && currentDevice?.hasFrame" />
@@ -144,7 +148,7 @@ import { createDragHandler } from '../utils';
 import { 
   useMessage,
   NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NIcon, NButton, NUpload, NModal, NInputNumber,
-  NSelect
+  NSelect, NSwitch
 } from 'naive-ui';
 
 import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhGear as Gear } from "@phosphor-icons/vue";
