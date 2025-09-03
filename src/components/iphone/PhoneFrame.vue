@@ -1,5 +1,7 @@
 <template>
-  <div class="phone-frame wallpaper-content" ref="phoneFrameRef">
+  <div class="phone-frame wallpaper-content" 
+       ref="phoneFrameRef" 
+       :style="dynamicShadowStyle">
     <div class="background-image" :style="{ backgroundImage: `url(${wallpaperUrl})` }"></div>
     <div class="notch"></div>
 
@@ -39,14 +41,19 @@ import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
 import PhoneCameraIcon from './PhoneCameraIcon.vue';
 import HomeIndicator from '../common/HomeIndicator.vue';
 
-const props = defineProps({
+defineProps({
   width: {
     type: String,
     default: '100%',
   },
-  });
+});
 
-const { imageUrl, watermarkSettings } = useWallpaper();
+const { imageUrl, watermarkSettings, shadowEffect } = useWallpaper();
+
+// 根据壁纸颜色生成静态阴影样式
+const dynamicShadowStyle = computed(() => ({
+  boxShadow: shadowEffect.value.normalShadow
+}));
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
@@ -93,23 +100,21 @@ onUnmounted(() => {
 <style scoped>
 .phone-frame {
   position: relative;
-  width: v-bind('props.width');
-  height: 100%;
-  background-color: #1c1c1e;
-  border-radius: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 0 8px rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  background-size: cover;
-  background-position: center;
+  width: v-bind(width);
+  height: auto;
+  aspect-ratio: 390 / 844;
+  border-radius: 25px;
+  background-color: #000;
+  padding: 15px;
+  /* 阴影效果已由动态样式提供 */
+  overflow: hidden;
+  box-sizing: border-box;
+  /* 3D变换效果 */
+  transform-style: preserve-3d;
+  transition: all 0.3s ease-in-out;
+  z-index: 20;
 }
 
-.phone-frame:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2), inset 0 0 8px rgba(0,0,0,0.6);
-}
 
 .background-image {
   position: absolute;

@@ -118,14 +118,22 @@ export const defaultTitleSettings: TitleSettings = {
 const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});
 
+// 存储图片颜色信息
+const imageColorInfo = ref<{
+  isDark: boolean;
+  rgba: { r: number; g: number; b: number; a: number };
+  hex: string;
+} | null>(null);
+
 // 实例化颜色分析器
 const fac = new FastAverageColor();
 
-// 根据图片颜色动态更新文本颜色
+// 根据图片颜色动态更新文本颜色和阴影效果
 const updateTextColorBasedOnImage = async (url: string | null) => {
   if (!url) {
     watermarkSettings.value.color = defaultWatermarkSettings.color;
     titleSettings.value.color = defaultTitleSettings.color;
+    imageColorInfo.value = null;
     return;
   }
   try {
@@ -133,10 +141,23 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
     const newColor = color.isDark ? '#ffffff' : '#000000';
     watermarkSettings.value.color = newColor;
     titleSettings.value.color = newColor;
+    
+    // 存储图片颜色信息供阴影效果使用
+    imageColorInfo.value = {
+      isDark: color.isDark,
+      rgba: {
+        r: color.value[0],
+        g: color.value[1],
+        b: color.value[2],
+        a: color.value[3] / 255
+      },
+      hex: color.hex
+    };
   } catch (e) {
     console.error(e);
     watermarkSettings.value.color = defaultWatermarkSettings.color;
     titleSettings.value.color = defaultTitleSettings.color;
+    imageColorInfo.value = null;
   }
 };
 
@@ -211,6 +232,60 @@ export const useWallpaper = () => {
     return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[1]
   })
   
+  // 根据图片颜色生成适合的阴影效果
+  const shadowEffect = computed(() => {
+    if (!imageColorInfo.value) {
+      // 默认阴影效果（深色）
+      return {
+        normalShadow: '0 10px 30px rgba(0,0,0,0.15), inset 0 0 8px rgba(0,0,0,0.6)',
+        hoverShadow: `
+          inset 0 1px 2px rgba(255, 255, 255, 0.8),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+          5px 5px 4px rgba(0, 0, 0, 0.03),
+          10px 10px 8px rgba(0, 0, 0, 0.04),
+          20px 20px 16px rgba(0, 0, 0, 0.05),
+          40px 40px 32px rgba(0, 0, 0, 0.06),
+          120px 120px 100px rgba(0, 0, 0, 0.09)
+        `,
+        isDark: true
+      };
+    }
+
+    const { isDark } = imageColorInfo.value;
+    
+    if (isDark) {
+      // 图片是深色的，使用浅色阴影
+      return {
+        normalShadow: `0 10px 30px rgba(255,255,255,0.1), inset 0 0 8px rgba(255,255,255,0.3)`,
+        hoverShadow: `
+          inset 0 1px 2px rgba(255, 255, 255, 0.8),
+          inset 0 -1px 2px rgba(255, 255, 255, 0.4),
+          5px 5px 4px rgba(255, 255, 255, 0.02),
+          10px 10px 8px rgba(255, 255, 255, 0.03),
+          20px 20px 16px rgba(255, 255, 255, 0.04),
+          40px 40px 32px rgba(255, 255, 255, 0.05),
+          120px 120px 100px rgba(255, 255, 255, 0.07)
+        `,
+        isDark: true
+      };
+    } else {
+      // 图片是浅色的，使用深色阴影
+      return {
+        normalShadow: `0 10px 30px rgba(0,0,0,0.15), inset 0 0 8px rgba(0,0,0,0.6)`,
+        hoverShadow: `
+          inset 0 1px 2px rgba(255, 255, 255, 0.8),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+          5px 5px 4px rgba(0, 0, 0, 0.03),
+          10px 10px 8px rgba(0, 0, 0, 0.04),
+          20px 20px 16px rgba(0, 0, 0, 0.05),
+          40px 40px 32px rgba(0, 0, 0, 0.06),
+          120px 120px 100px rgba(0, 0, 0, 0.09)
+        `,
+        isDark: false
+      };
+    }
+  });
+
   return {
     imageUrl,
     watermarkImageUrl,
@@ -227,5 +302,6 @@ export const useWallpaper = () => {
     titleSettings,
     handleDeviceToggle,
     deviceTypes,
+    shadowEffect,  // 导出阴影效果
   }
 }

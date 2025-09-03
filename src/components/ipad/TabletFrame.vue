@@ -1,5 +1,7 @@
   <template>
-  <div class="tablet-frame wallpaper-content" ref="tabletFrameRef">
+  <div class="tablet-frame wallpaper-content" 
+       ref="tabletFrameRef"
+       :style="dynamicShadowStyle">
     <!-- 壁纸背景 -->
     <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     
@@ -24,7 +26,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
-const { imageUrl, titleSettings } = useWallpaper();
+const { imageUrl, titleSettings, shadowEffect } = useWallpaper();
 
 const tabletFrameRef = ref(null);
 const { width: elementWidth } = useElementSize(tabletFrameRef);
@@ -33,6 +35,11 @@ const BASE_WIDTH = 533; // 基准宽度
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
+
+// 根据壁纸颜色生成静态阴影样式
+const dynamicShadowStyle = computed(() => ({
+  boxShadow: shadowEffect.value.normalShadow
+}));
 
 const textColorStyle = computed(() => ({
   color: titleSettings.value.color,

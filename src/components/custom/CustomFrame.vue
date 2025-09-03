@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useWallpaper } from '../../composables/useWallpaper';
 
 const props = defineProps({
   width: {
@@ -30,9 +31,17 @@ const props = defineProps({
   }
 });
 
+const { shadowEffect } = useWallpaper();
+
+// 根据壁纸颜色生成静态阴影样式
+const dynamicShadowStyle = computed(() => ({
+  boxShadow: shadowEffect.value.normalShadow
+}));
+
 const frameStyle = computed(() => ({
   width: `${props.width}px`,
   height: `${props.height}px`,
+  ...dynamicShadowStyle.value
 }));
 </script>
 
@@ -41,8 +50,11 @@ const frameStyle = computed(() => ({
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* 阴影效果已由动态样式提供 */
   background-color: #f5f5f5;
+  /* 3D变换效果 */
+  transform-style: preserve-3d;
+  z-index: 20;
   
   .custom-content {
     position: relative;

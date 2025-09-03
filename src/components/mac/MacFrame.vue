@@ -1,7 +1,7 @@
 <template>
-  <div class="mac-frame wallpaper-content">
+  <div class="mac-frame wallpaper-content" :style="dynamicShadowStyle">
     <!-- 壁纸背景 -->
-    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image " />
+    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     
     <!-- 时间和日期显示 -->
     <div class="time-display" :style="textColorStyle">
@@ -20,7 +20,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
-const { imageUrl, titleSettings } = useWallpaper();
+const { imageUrl, titleSettings, shadowEffect } = useWallpaper();
+
+// 根据壁纸颜色生成静态阴影样式
+const dynamicShadowStyle = computed(() => ({
+  boxShadow: shadowEffect.value.normalShadow
+}));
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
@@ -56,18 +61,18 @@ onUnmounted(() => {
   height: 100%;
   background-color: #e0e0e0;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 0 12px rgba(0,0,0,0.1);
+  /* 阴影效果已由动态样式提供 */
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   transition: all 0.3s ease;
+  /* 3D变换效果 */
+  transform-style: preserve-3d;
+  z-index: 20;
 }
 
-.mac-frame:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2), inset 0 0 12px rgba(0,0,0,0.1);
-}
+/* 悬停效果已移除，只保留静态效果 */
 
 .background-image {
   position: absolute;
