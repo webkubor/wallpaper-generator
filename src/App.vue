@@ -6,7 +6,7 @@
       <n-layout-header class="header">
         <div class="title-container">
           <img src="/webkubor.svg" class="logo" alt="Logo" />
-          <h1>壁纸生成器</h1>
+          <h1 class="main-title">✨ 壁纸生成器</h1>
         </div>
         <n-switch v-model:value="isDark">
           <template #checked-icon>
@@ -74,30 +74,33 @@
 }
 
 .header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  height: 64px;
+  
+  .title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+    
+    .main-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--n-text-color);
+    }
+  }
 }
-
-.title-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
-}
-
-h1 {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-}
-
 </style>
 
 <script setup lang="ts">
