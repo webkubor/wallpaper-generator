@@ -20,6 +20,7 @@
         <PhoneFlashlightIcon />
         <PhoneCameraIcon />
       </div>
+      <div class="home-indicator"></div>
     </div>
 
     <slot></slot>
@@ -128,9 +129,24 @@ onUnmounted(() => {
 }
 
 .bottom-icon {
+  position: absolute;
+  bottom: 52px;
   width: 100%;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  background-color: white;
+  border-radius: 100px;
 }
 
 .center-content {
