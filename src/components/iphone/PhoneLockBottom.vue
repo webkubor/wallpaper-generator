@@ -1,5 +1,5 @@
 <template>
-    <svg :width="props.width" height="52" viewBox="0 0 272 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="filter-none">
+    <svg :width="props.width" height="52" viewBox="0 0 272 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="filter-none" preserveAspectRatio="none">
         <g filter="url(#filter0_b_424_1527)">
             <g clip-path="url(#clip0_424_1527)">
                 <rect width="50" height="50" rx="25" transform="matrix(1 0 0 -1 0 50)" fill="black"

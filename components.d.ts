@@ -37,6 +37,8 @@ declare module 'vue' {
     NSlider: typeof import('naive-ui')['NSlider']
     NSpace: typeof import('naive-ui')['NSpace']
     NUpload: typeof import('naive-ui')['NUpload']
+    PhoneCameraIcon: typeof import('./src/components/iphone/PhoneCameraIcon.vue')['default']
+    PhoneFlashlightIcon: typeof import('./src/components/iphone/PhoneFlashlightIcon.vue')['default']
     PhoneFrame: typeof import('./src/components/iphone/PhoneFrame.vue')['default']
     PhoneLockBottom: typeof import('./src/components/iphone/PhoneLockBottom.vue')['default']
     PhoneTopIcon: typeof import('./src/components/iphone/PhoneTopIcon.vue')['default']

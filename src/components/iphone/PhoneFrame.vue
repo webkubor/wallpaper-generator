@@ -16,8 +16,9 @@
           {{ currentDate }}
         </div>
       </div>
-      <div class="bottom-icon">
-        <PhoneLockBottom width="100%" />
+            <div class="bottom-icon">
+        <PhoneFlashlightIcon />
+        <PhoneCameraIcon />
       </div>
     </div>
 
@@ -29,7 +30,8 @@
 import { useWallpaper } from '../../composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import PhoneTopIcon from './PhoneTopIcon.vue';
-import PhoneLockBottom from './PhoneLockBottom.vue';
+import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
+import PhoneCameraIcon from './PhoneCameraIcon.vue';
 
 const props = defineProps({
   width: {
@@ -128,7 +130,7 @@ onUnmounted(() => {
 .bottom-icon {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .center-content {
