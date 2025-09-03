@@ -1,5 +1,8 @@
 <template>
   <div class="mac-frame">
+    <!-- 壁纸背景 -->
+    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
+    
     <!-- 时间和日期显示 -->
     <div class="time-display">
       <div class="lock-date">星期三，9月3日</div>
@@ -11,7 +14,13 @@
 </template>
 
 <script setup lang="ts">
-// 显示时间和日期
+import { useWallpaper } from '../../composables/useWallpaper';
+import { computed } from 'vue';
+
+const { imageUrl } = useWallpaper();
+
+// 使用计算属性保持响应性
+const wallpaperUrl = computed(() => imageUrl.value);
 </script>
 
 <style scoped>
@@ -20,6 +29,16 @@
   width: 100%;
   color: #FFFFFF;
   height: 100%;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
 .time-display {

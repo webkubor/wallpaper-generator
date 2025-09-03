@@ -109,8 +109,7 @@
           <CarFrame v-if="currentDevice?.id === 'car' && currentDevice?.hasFrame" />
           <ComboDevices v-if="currentDevice?.id === 'combo' && currentDevice?.hasFrame" />
           
-          <!-- 壁纸背景 -->
-          <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
+          <!-- 壁纸背景已移至各设备框架内部 -->
           
           <!-- 水印 -->
           <div class="watermark" :style="watermarkPositionStyle">
@@ -274,10 +273,6 @@ const canvasStyle = computed(() => ({
   height: `${currentDevice.value.height}px`,
 }));
 
-// 背景图片样式固定为 cover
-const backgroundImageStyle = computed(() => ({
-  objectFit: 'cover' as 'cover',
-}));
 
 </script>
 

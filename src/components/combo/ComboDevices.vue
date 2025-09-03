@@ -33,24 +33,27 @@ import PhoneFrame from '../iphone/PhoneFrame.vue';
 .mac-row {
   flex: 1;
   width: 100%;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .mobile-row {
   flex: 1;
   width: 100%;
   display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .mac-device {
-  width: 100%;
+  width: 95%;
   height: 100%;
 }
 
 .tablet-device {
   flex: 2;
   height: 100%;
-  margin-right: 10px;
 }
 
 .phone-device {

@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import demoWallpaper from '../assets/demo.png'
 
 // 类型定义
 export interface Device {
@@ -89,7 +90,7 @@ export const defaultWatermarkSettings: WatermarkSettings = {
 
 // 默认预览设置
 export const defaultPreviewSettings = {
-  selectedDevice: 'custom',
+  selectedDevice: 'car', // 默认选择车机尺寸
   showCombined: false,
   backgroundColor: '#ffffff',
   showDeviceBorder: true,
@@ -101,7 +102,7 @@ export const defaultPreviewSettings = {
 
 // 使用壁纸生成器
 export const useWallpaper = () => {
-  const imageUrl = ref<string | null>(null);
+  const imageUrl = ref<string | null>(demoWallpaper);
   const watermarkImageUrl = ref<string | null>(null);
   const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings})
   const previewSettings = ref({...defaultPreviewSettings})

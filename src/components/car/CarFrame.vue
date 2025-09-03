@@ -1,17 +1,20 @@
 <template>
   <div class="car-frame">
-    <!-- 车机时间显示 -->
-    <div class="car-screen-info">
-      <div class="car-date">星期三，9月3日</div>
-      <div class="car-time">14:30</div>
-    </div>
-    
+    <!-- 壁纸背景 -->
+    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
+    <!-- 空白车机壁纸，只有边框 -->
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-// 车机壁纸组件
+import { useWallpaper } from '../../composables/useWallpaper';
+import { computed } from 'vue';
+
+const { imageUrl } = useWallpaper();
+
+// 使用计算属性保持响应性
+const wallpaperUrl = computed(() => imageUrl.value);
 </script>
 
 <style scoped>
@@ -25,28 +28,15 @@
   background-clip: padding-box;
   overflow: hidden;
   aspect-ratio: 16/9;
-  color: #FFFFFF;
 }
 
-.car-screen-info {
+.background-image {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  top: 0;
+  left: 0;
   width: 100%;
-  z-index: 10;
-}
-
-.car-time {
-  font-size: 60px;
-  font-weight: 500;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.car-date {
-  font-size: 19px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  margin-bottom: 5px;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 </style>
