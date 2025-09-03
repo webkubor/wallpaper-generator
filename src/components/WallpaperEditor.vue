@@ -75,7 +75,7 @@
     </n-card>
 
     <!-- Center: Preview Area -->
-    <div class="preview-area" :style="previewAreaStyle">
+    <div ref="previewAreaRef" class="preview-area" :style="previewAreaStyle">
       <img 
         v-if="backgroundSettings.type === 'perspective' && imageUrl"
         :src="imageUrl" 
@@ -179,6 +179,7 @@ const backgroundSettings = ref({
   color: '#7D6A6A5E', // 更新纯色背景的默认值
 });
 
+const previewAreaRef = ref<HTMLElement | null>(null);
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
@@ -256,9 +257,15 @@ const confirmCrop = () => {
 
 
 const downloadWallpaper = () => {
-  if (previewCanvasRef.value) {
+  if (previewAreaRef.value) {
     isDownloading.value = true;
-    html2canvas(previewCanvasRef.value).then(canvas => {
+    html2canvas(previewAreaRef.value, {
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      scale: 2,
+      logging: false
+    }).then(canvas => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
       link.download = 'wallpaper.png';
