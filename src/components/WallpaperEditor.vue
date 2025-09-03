@@ -63,12 +63,7 @@
               </n-form-item>
               <n-button type="primary" size="small" @click="confirmCustomSize">确定</n-button>
             </div>
-            <n-button type="primary" @click="downloadWallpaper" class="download-button">
-                <template #icon>
-                  <n-icon :component="Download" />
-                </template>
-                下载壁纸
-              </n-button>
+            <!-- 下载按钮移到App.vue中 -->
           </n-space>
         </n-collapse-item>
       </n-collapse>
@@ -136,7 +131,6 @@
 
 <script setup lang="ts">
 import { computed, ref, type CSSProperties } from 'vue';
-import html2canvas from 'html2canvas';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '../composables/useWallpaper';
@@ -148,7 +142,7 @@ import {
   NSelect
 } from 'naive-ui';
 
-import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
+import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhGear as Gear } from "@phosphor-icons/vue";
 
 // 设备框架组件
 import PhoneFrame from './iphone/PhoneFrame.vue';
@@ -180,10 +174,15 @@ const backgroundSettings = ref({
 });
 
 const previewAreaRef = ref<HTMLElement | null>(null);
+
+// 暴露previewAreaRef给父组件
+defineExpose({
+  previewAreaRef
+});
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
-const isDownloading = ref(false);
+// 下载状态已移至App.vue
 
 const titleStyle = computed(() => ({
   fontFamily: titleSettings.value.fontFamily,
@@ -256,27 +255,7 @@ const confirmCrop = () => {
 };
 
 
-const downloadWallpaper = () => {
-  if (previewAreaRef.value) {
-    isDownloading.value = true;
-    html2canvas(previewAreaRef.value, {
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
-      scale: 2,
-      logging: false
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'wallpaper.png';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }).finally(() => {
-      isDownloading.value = false;
-    });
-  }
-};
+// 下载功能已移至App.vue
 
 // 水印样式 - 字体、颜色等基本样式
 const watermarkStyle = computed(() => ({

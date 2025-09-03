@@ -93,7 +93,6 @@ export const defaultWatermarkSettings: WatermarkSettings = {
 }
 
 
-// 默认预览设置
 export const defaultPreviewSettings = {
   selectedDevice: 'car', // 默认选择车机尺寸
   showCombined: false,

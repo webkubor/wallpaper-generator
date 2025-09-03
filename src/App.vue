@@ -8,17 +8,25 @@
           <img src="/webkubor.svg" class="logo" alt="Logo" />
           <h1 class="main-title">✨ 壁纸生成器</h1>
         </div>
-        <n-switch v-model:value="isDark">
-          <template #checked-icon>
-            <n-icon :component="Moon" />
-          </template>
-          <template #unchecked-icon>
-            <n-icon :component="Sun" />
-          </template>
-        </n-switch>
+        <div class="header-actions">
+          <n-button type="primary" color="#f4d03f" class="download-button" @click="downloadWallpaper">
+            <template #icon>
+              <n-icon :component="Download" />
+            </template>
+            下载壁纸
+          </n-button>
+          <n-switch v-model:value="isDark">
+            <template #checked-icon>
+              <n-icon :component="Moon" />
+            </template>
+            <template #unchecked-icon>
+              <n-icon :component="Sun" />
+            </template>
+          </n-switch>
+        </div>
       </n-layout-header>
       <n-layout-content class="content">
-        <WallpaperEditor />
+        <WallpaperEditor ref="wallpaperEditorRef" />
       </n-layout-content>
       <n-layout-footer class="footer" bordered>
         <div class="footer-content">
@@ -119,6 +127,23 @@
   justify-content: space-between;
   align-items: center;
   
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    .download-button {
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 208, 63, 0.3);
+      }
+    }
+  }
+  
   .title-container {
     display: flex;
     align-items: center;
@@ -142,12 +167,42 @@
 
 <script setup lang="ts">
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon, NMessageProvider } from "naive-ui";
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutContent, NLayoutFooter, NSwitch, NIcon, NMessageProvider, NButton } from "naive-ui";
 import { useDark } from "@vueuse/core";
-import { computed } from "vue";
-import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope } from "@phosphor-icons/vue";
+import { computed, ref } from "vue";
+import { PhSun as Sun, PhMoon as Moon, PhCode as Code, PhEnvelope as Envelope, PhDownload as Download } from "@phosphor-icons/vue";
+import html2canvas from 'html2canvas';
 
 const isDark = useDark();
+const isDownloading = ref(false);
+const wallpaperEditorRef = ref<{
+  previewAreaRef: HTMLElement | null
+} | null>(null);
+
+// 下载壁纸函数
+const downloadWallpaper = () => {
+  if (wallpaperEditorRef.value && wallpaperEditorRef.value.previewAreaRef) {
+    isDownloading.value = true;
+    const previewArea = wallpaperEditorRef.value.previewAreaRef;
+    
+    html2canvas(previewArea, {
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      scale: 2,
+      logging: false
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'wallpaper.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).finally(() => {
+      isDownloading.value = false;
+    });
+  }
+};
 
 
 const themeOverrides = computed(() => ({
