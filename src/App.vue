@@ -112,10 +112,34 @@ const isDark = useDark();
 
 const themeOverrides = computed(() => ({
   common: {
-    primaryColor: isDark.value ? '#66b1ff' : '#325BFD',
-    primaryColorHover: isDark.value ? '#8cc5ff' : '#0033E5',
-    primaryColorPressed: isDark.value ? '#5299e0' : '#0023C0',
-    primaryColorSuppl: isDark.value ? 'rgba(102, 177, 255, 0.5)' : 'rgba(0, 51, 229, 0.5)'
+    primaryColor: isDark.value ? '#ffd700' : '#1a1f36',
+    primaryColorHover: isDark.value ? '#ffed4e' : '#2d3348',
+    primaryColorPressed: isDark.value ? '#e6c200' : '#0f1419',
+    primaryColorSuppl: isDark.value ? 'rgba(255, 215, 0, 0.5)' : 'rgba(26, 31, 54, 0.5)'
+  },
+  Card: {
+    borderRadius: '16px',
+    color: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
+    colorModal: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
+    colorPopover: isDark.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
+    boxShadow: isDark.value 
+      ? '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)' 
+      : '0 8px 32px rgba(26, 31, 54, 0.15), 0 4px 16px rgba(26, 31, 54, 0.1)'
+  },
+  Button: {
+    borderRadius: '12px',
+    colorPrimary: isDark.value 
+      ? 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)' 
+      : 'linear-gradient(135deg, #1a1f36 0%, #2d3348 100%)',
+    colorHoverPrimary: isDark.value 
+      ? 'linear-gradient(135deg, #ffed4e 0%, #fff176 100%)' 
+      : 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)',
+    colorPressedPrimary: isDark.value 
+      ? 'linear-gradient(135deg, #e6c200 0%, #ffd700 100%)' 
+      : 'linear-gradient(135deg, #0f1419 0%, #1a1f36 100%)'
+  },
+  Collapse: {
+    titleFontWeight: '600'
   }
 }));
 </script>

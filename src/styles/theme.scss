@@ -1,12 +1,70 @@
+// 主题色变量
 :root {
-    --primary-color: #325BFD;
-    --primary-color-hover: #0033E5;
-  }
+  // 主色调 - 深邃墨蓝色系
+  --primary-color: #1a1f36;
+  --primary-light: #2d3348;
+  --primary-dark: #0f1419;
   
-  /* 暗色模式下的主题色 */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --primary-color: #66b1ff;
-      --primary-color-hover: #8cc5ff;
-    }
+  // 辅助色 - 温暖金色系
+  --accent-color: #d4af37;
+  --accent-light: #f4d03f;
+  --accent-dark: #b7950b;
+  
+  // 中性色系 - 高级灰调
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
+  
+  // 功能色
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+  
+  // 阴影和效果
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  // 渐变
+  --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-light) 100%);
+  --gradient-overlay: linear-gradient(135deg, rgba(26, 31, 54, 0.8) 0%, rgba(45, 51, 72, 0.6) 100%);
+  
+  // 毛玻璃效果
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(26, 31, 54, 0.15), 0 4px 16px rgba(26, 31, 54, 0.1);
+}
+
+// 暗色模式
+[data-theme="dark"] {
+  --primary-color: #ffd700;
+  --primary-light: #ffed4e;
+  --primary-dark: #e6c200;
+  
+  // 暗色模式下的毛玻璃效果
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+  
+  // 暗色模式渐变
+  --gradient-primary: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  --gradient-overlay: linear-gradient(135deg, rgba(255, 215, 0, 0.8) 0%, rgba(255, 237, 78, 0.6) 100%);
+}
+
+/* 暗色模式下的主题色 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #66b1ff;
+    --primary-color-hover: #8cc5ff;
   }
+}
