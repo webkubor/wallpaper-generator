@@ -114,16 +114,19 @@ const fac = new FastAverageColor();
 // 根据图片颜色动态更新文本颜色
 const updateTextColorBasedOnImage = async (url: string | null) => {
   if (!url) {
-    watermarkSettings.value.color = defaultWatermarkSettings.color; // 如果没有图片，重置为默认颜色
+    watermarkSettings.value.color = defaultWatermarkSettings.color;
+    titleSettings.value.color = defaultTitleSettings.color;
     return;
   }
   try {
     const color = await fac.getColorAsync(url);
-    // 如果背景色偏暗，文本颜色设为白色，否则设为黑色
-    watermarkSettings.value.color = color.isDark ? '#FFFFFF' : '#000000';
+    const newColor = color.isDark ? '#ffffff' : '#000000';
+    watermarkSettings.value.color = newColor;
+    titleSettings.value.color = newColor;
   } catch (e) {
-    console.error('颜色分析失败:', e);
-    watermarkSettings.value.color = defaultWatermarkSettings.color; // 出错时使用默认颜色
+    console.error(e);
+    watermarkSettings.value.color = defaultWatermarkSettings.color;
+    titleSettings.value.color = defaultTitleSettings.color;
   }
 };
 

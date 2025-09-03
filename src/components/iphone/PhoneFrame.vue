@@ -30,6 +30,9 @@
 <script setup lang="ts">
 import { useWallpaper } from '../../composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
 import PhoneTopIcon from './PhoneTopIcon.vue';
 import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
 import PhoneCameraIcon from './PhoneCameraIcon.vue';
@@ -53,14 +56,9 @@ const currentDate = ref('');
 let timer: number;
 
 const updateTime = () => {
-  const now = new Date();
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  };
-  currentDate.value = now.toLocaleDateString('zh-CN', options);
-  currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  const now = dayjs();
+  currentDate.value = now.format('dddd, M月D日');
+  currentTime.value = now.format('HH:mm');
 };
 
 onMounted(() => {

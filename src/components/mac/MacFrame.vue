@@ -4,9 +4,9 @@
     <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     
     <!-- 时间和日期显示 -->
-    <div class="time-display">
-      <div class="lock-date">星期三，9月3日</div>
-      <div class="lock-time">14:30</div>
+    <div class="time-display" :style="textColorStyle">
+      <div class="lock-date">{{ lockDate }}</div>
+      <div class="lock-time">{{ lockTime }}</div>
     </div>
     
     <slot></slot>
@@ -15,12 +15,38 @@
 
 <script setup lang="ts">
 import { useWallpaper } from '../../composables/useWallpaper';
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
 
-const { imageUrl } = useWallpaper();
+const { imageUrl, titleSettings } = useWallpaper();
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
+
+const textColorStyle = computed(() => ({
+  color: titleSettings.value.color,
+}));
+
+const lockTime = ref('');
+const lockDate = ref('');
+let timer: number;
+
+const updateTime = () => {
+  const now = dayjs();
+  lockDate.value = now.format('dddd, M月D日');
+  lockTime.value = now.format('HH:mm');
+};
+
+onMounted(() => {
+  updateTime();
+  timer = window.setInterval(updateTime, 1000);
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
+});
 </script>
 
 <style scoped>
@@ -34,6 +60,7 @@ const wallpaperUrl = computed(() => imageUrl.value);
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
