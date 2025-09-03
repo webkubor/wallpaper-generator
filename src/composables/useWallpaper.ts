@@ -15,6 +15,7 @@ export interface Device {
 export interface FontOption {
   label: string;
   value: string;
+  type?: string; // 添加type字段以兼容SelectMixedOption
 }
 
 export interface PositionOption {

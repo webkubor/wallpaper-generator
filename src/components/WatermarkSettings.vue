@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue';
 import { NFormItem, NSelect, NColorPicker, NSlider, NDivider, NRadioGroup, NRadioButton, NInput, NUpload, NButton, type UploadFileInfo } from 'naive-ui';
+import { fontOptions as wallpaperFontOptions } from '../composables/useWallpaper';
 
 const props = defineProps({
   settings: {
@@ -53,17 +54,11 @@ const emit = defineEmits(['update:settings']);
 
 const localSettings = ref({ ...props.settings });
 
-const fontOptions = [
-  { label: '默认字体', value: 'system-ui, sans-serif' },
-  { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
-  { label: '细雨体', value: 'drizzle' },
-  { label: '可爱体', value: 'cute' },
-  { label: 'AI中文02', value: 'AiChinese02' },
-  { label: '中文3', value: 'Chinese3' },
-  { label: '衬线字体', value: 'serif' },
-  { label: '无衬线字体', value: 'sans-serif' },
-  { label: '等宽字体', value: 'monospace' },
-];
+// 将导入的字体选项转换为符合naive-ui的SelectOption格式
+const fontOptions = wallpaperFontOptions.map(font => ({
+  label: font.label,
+  value: font.value
+}));
 
 watch(() => props.settings, (newSettings) => {
   localSettings.value = { ...newSettings };
