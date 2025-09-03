@@ -42,17 +42,11 @@
             </n-form-item>
             <n-form-item label="图片水印" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
               <n-upload list-type="image-card" :max="1" @change="handleWatermarkUpload">
-                <div style="margin-bottom: 8px;">
-                  <n-icon :size="24" :component="PaintBrush" />
-                </div>
                 <span>点击上传</span>
               </n-upload>
             </n-form-item>
-            <n-form-item label="字体" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <div class="input-with-icon">
-                <n-icon :component="TextT" class="input-icon" />
+            <n-form-item label="水印字体" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
                 <n-select v-model:value="watermarkSettings.fontFamily" :options="fontOptions as any" class="input-with-icon-field" />
-              </div>
             </n-form-item>
             <n-form-item label="颜色" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
                 <n-color-picker v-model:value="watermarkSettings.color" />
@@ -83,20 +77,16 @@
               </n-radio-group>
             </n-form-item>
             
-            <n-form-item label="缩放模式" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-radio-group v-model:value="previewSettings.scalingMode">
-                <n-radio-button v-for="mode in scalingModeOptions" :key="mode.value" :value="mode.value" :label="mode.label" />
-              </n-radio-group>
-            </n-form-item>
             
             <!-- 自定义尺寸输入 -->
             <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
               <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-                <n-input-number v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" @update:value="updateCustomSize" />
+                <n-input-number v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
               </n-form-item>
               <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-                <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" @update:value="updateCustomSize" />
+                <n-input-number v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
               </n-form-item>
+              <n-button type="primary" size="small" @click="confirmCustomSize">确定</n-button>
             </div>
             <n-button type="primary" @click="downloadWallpaper" class="download-button">
                 <template #icon>
@@ -112,17 +102,10 @@
     <!-- Center: Preview Area -->
     <div class="preview-area">
         <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
-          <!-- 设备框架 - iPhone -->
-          <PhoneTopIcon v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-top-icon" />
-          <PhoneLockBottom v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" class="phone-bottom-icon" />
-          
-          <!-- 设备框架 - iPad -->
-          <TabletTopBar v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" class="tablet-top-bar" />
-          <TabletDock v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" class="tablet-dock" />
-          
-          <!-- 设备框架 - Mac -->
-          <MacTopBar v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" class="mac-top-bar" />
-          <MacDock v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" class="mac-dock" />
+          <!-- 设备框架 -->
+          <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" />
+          <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
+          <MacFrame v-if="currentDevice?.id === 'mac' && currentDevice?.hasFrame" />
           
           <!-- 壁纸背景 -->
           <img v-if="imageUrl" :src="imageUrl" alt="background" class="background-image" :style="backgroundImageStyle" />
@@ -173,19 +156,12 @@ import {
   NColorPicker, NSlider, NRadioGroup, NRadioButton, 
   NCollapse, NCollapseItem, NModal, NIcon, NInputNumber
 } from 'naive-ui';
-import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhPaintBrush as PaintBrush, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
+import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
 
-// iPhone 设备组件
-import PhoneTopIcon from './iphone/PhoneTopIcon.vue';
-import PhoneLockBottom from './iphone/PhoneLockBottom.vue';
-
-// iPad 设备组件
-import TabletTopBar from './ipad/TabletTopBar.vue';
-import TabletDock from './ipad/TabletDock.vue';
-
-// Mac 设备组件
-import MacTopBar from './mac/MacTopBar.vue';
-import MacDock from './mac/MacDock.vue';
+// 设备框架组件
+import PhoneFrame from './iphone/PhoneFrame.vue';
+import TabletFrame from './ipad/TabletFrame.vue';
+import MacFrame from './mac/MacFrame.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
 const { 
@@ -195,7 +171,6 @@ const {
   previewSettings,
   deviceOptions,
   fontOptions,
-  scalingModeOptions,
   currentDevice
 } = useWallpaper();
 
@@ -209,8 +184,8 @@ const cropperRef = ref<any>(null);
 const customWidth = ref(400);
 const customHeight = ref(400);
 
-// 更新自定义尺寸
-const updateCustomSize = () => {
+// 确认自定义尺寸
+const confirmCustomSize = () => {
   if (previewSettings.value.selectedDevice === 'custom') {
     // 找到自定义尺寸设备并更新其尺寸
     const customDeviceIndex = previewSettings.value.devices.findIndex(device => device.id === 'custom');
@@ -295,9 +270,9 @@ const canvasStyle = computed(() => ({
   height: `${currentDevice.value.height}px`,
 }));
 
-// 根据用户选择的缩放模式动态调整背景图片样式
+// 背景图片样式固定为 cover
 const backgroundImageStyle = computed(() => ({
-  objectFit: previewSettings.value.scalingMode as 'contain' | 'cover',
+  objectFit: 'cover' as 'cover',
 }));
 
 </script>

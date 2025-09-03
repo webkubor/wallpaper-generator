@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     MacDock: typeof import('./src/components/mac/MacDock.vue')['default']
+    MacFrame: typeof import('./src/components/mac/MacFrame.vue')['default']
     MacTopBar: typeof import('./src/components/mac/MacTopBar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
@@ -19,11 +20,13 @@ declare module 'vue' {
     NLayoutContent: typeof import('naive-ui')['NLayoutContent']
     NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
+    PhoneFrame: typeof import('./src/components/iphone/PhoneFrame.vue')['default']
     PhoneLockBottom: typeof import('./src/components/iphone/PhoneLockBottom.vue')['default']
     PhoneTopIcon: typeof import('./src/components/iphone/PhoneTopIcon.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TabletDock: typeof import('./src/components/ipad/TabletDock.vue')['default']
+    TabletFrame: typeof import('./src/components/ipad/TabletFrame.vue')['default']
     TabletTopBar: typeof import('./src/components/ipad/TabletTopBar.vue')['default']
     WallpaperEditor: typeof import('./src/components/WallpaperEditor.vue')['default']
   }
