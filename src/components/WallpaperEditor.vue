@@ -652,4 +652,58 @@ const resetConfig = () => {
   }
 }
 
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .wallpaper-editor {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .settings-panel {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
+  
+  .preview-area {
+    height: calc(100vh - 400px);
+    min-height: 400px;
+  }
+}
+
+/* 拖拽状态样式 */
+.dragging {
+  cursor: grabbing !important;
+  user-select: none;
+  z-index: 1000;
+}
+
+.draggable:hover {
+  cursor: grab;
+  opacity: 0.8;
+}
+
+/* 设备框架通用样式 */
+.device-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* 工具栏组件样式 */
+.toolbar-section {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--n-color-hover);
+  border: 1px solid var(--n-border-color);
+}
+
+.toolbar-section:last-child {
+  margin-bottom: 0;
+}
+
 </style>
