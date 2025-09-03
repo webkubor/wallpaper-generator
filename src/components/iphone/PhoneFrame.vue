@@ -20,7 +20,7 @@
         <PhoneFlashlightIcon />
         <PhoneCameraIcon />
       </div>
-      <div class="home-indicator"></div>
+      <HomeIndicator :container-width="elementWidth" :base-width="BASE_WIDTH" />
     </div>
 
     <slot></slot>
@@ -37,6 +37,7 @@ dayjs.locale('zh-cn');
 import PhoneTopIcon from './PhoneTopIcon.vue';
 import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
 import PhoneCameraIcon from './PhoneCameraIcon.vue';
+import HomeIndicator from '../common/HomeIndicator.vue';
 
 const props = defineProps({
   width: {
@@ -65,6 +66,7 @@ const dateStyle = computed(() => ({
 
 const topIconWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 75}px`);
 const bottomIconSize = computed(() => `${(elementWidth.value / BASE_WIDTH) * 50}px`);
+
 
 
 // 时间显示
@@ -165,16 +167,6 @@ onUnmounted(() => {
   height: v-bind(bottomIconSize);
 }
 
-.home-indicator {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 134px;
-  height: 5px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 100px;
-}
 
 .center-content {
   position: absolute;

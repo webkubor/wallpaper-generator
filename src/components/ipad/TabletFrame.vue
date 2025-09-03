@@ -1,5 +1,5 @@
   <template>
-  <div class="tablet-frame">
+  <div class="tablet-frame" ref="tabletFrameRef">
     <!-- 壁纸背景 -->
     <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     
@@ -10,6 +10,7 @@
     </div>
 
     
+    <HomeIndicator :container-width="elementWidth" :base-width="BASE_WIDTH" />
     <slot></slot>
   </div>
 </template>
@@ -17,11 +18,18 @@
 <script setup lang="ts">
 import { useWallpaper } from '../../composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { useElementSize } from '@vueuse/core';
+import HomeIndicator from '../common/HomeIndicator.vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
 const { imageUrl, titleSettings } = useWallpaper();
+
+const tabletFrameRef = ref(null);
+const { width: elementWidth } = useElementSize(tabletFrameRef);
+
+const BASE_WIDTH = 533; // 基准宽度
 
 // 使用计算属性保持响应性
 const wallpaperUrl = computed(() => imageUrl.value);
@@ -83,10 +91,10 @@ onUnmounted(() => {
 
 .lock-screen-info {
   position: absolute;
-  top: 25%;
-  left: 0;
-  width: 100%;
-  text-align: center;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  text-align: left;
   z-index: 10;
 }
 
