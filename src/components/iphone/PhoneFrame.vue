@@ -1,5 +1,5 @@
 <template>
-  <div class="phone-frame" ref="phoneFrameRef">
+  <div class="phone-frame wallpaper-content" ref="phoneFrameRef">
     <div class="background-image" :style="{ backgroundImage: `url(${wallpaperUrl})` }"></div>
     <div class="notch"></div>
 

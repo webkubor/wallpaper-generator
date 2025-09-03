@@ -1,5 +1,5 @@
 <template>
-  <div class="car-frame">
+  <div class="car-frame wallpaper-content">
     <!-- 壁纸背景 -->
     <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     <!-- 空白车机壁纸，只有边框 -->

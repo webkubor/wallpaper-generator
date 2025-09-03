@@ -1,5 +1,5 @@
   <template>
-  <div class="tablet-frame" ref="tabletFrameRef">
+  <div class="tablet-frame wallpaper-content" ref="tabletFrameRef">
     <!-- 壁纸背景 -->
     <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
     

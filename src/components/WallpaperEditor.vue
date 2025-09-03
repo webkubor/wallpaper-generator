@@ -480,6 +480,7 @@ const canvasStyle = computed(() => ({
   position: absolute;
   display: flex;
   flex-direction: column;
+  z-index: 100; /* 增加z-index确保水印层级高于其他元素 */
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -536,6 +537,7 @@ const canvasStyle = computed(() => ({
 
 .title-display {
   transition: all 0.3s ease;
+  z-index: 100; /* 增加z-index与水印层级一致 */
 }
 
 .title-display[style*="vertical-rl"] {

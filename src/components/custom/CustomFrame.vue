@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-frame" :style="frameStyle">
+  <div class="custom-frame wallpaper-content" :style="frameStyle">
     <div class="custom-content">
       <img 
         v-if="imageUrl" 

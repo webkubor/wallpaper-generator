@@ -1,7 +1,7 @@
 <template>
-  <div class="mac-frame">
+  <div class="mac-frame wallpaper-content">
     <!-- 壁纸背景 -->
-    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image" />
+    <img v-if="wallpaperUrl" :src="wallpaperUrl" alt="background" class="background-image " />
     
     <!-- 时间和日期显示 -->
     <div class="time-display" :style="textColorStyle">
