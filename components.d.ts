@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BackgroundSettings: typeof import('./src/components/BackgroundSettings.vue')['default']
     CarFrame: typeof import('./src/components/car/CarFrame.vue')['default']
     ComboDevices: typeof import('./src/components/combo/ComboDevices.vue')['default']
     MacDock: typeof import('./src/components/mac/MacDock.vue')['default']
@@ -19,6 +20,7 @@ declare module 'vue' {
     NCollapseItem: typeof import('naive-ui')['NCollapseItem']
     NColorPicker: typeof import('naive-ui')['NColorPicker']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDivider: typeof import('naive-ui')['NDivider']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NGlobalStyle: typeof import('naive-ui')['NGlobalStyle']
     NIcon: typeof import('naive-ui')['NIcon']
@@ -44,5 +46,6 @@ declare module 'vue' {
     TabletFrame: typeof import('./src/components/ipad/TabletFrame.vue')['default']
     TabletTopBar: typeof import('./src/components/ipad/TabletTopBar.vue')['default']
     WallpaperEditor: typeof import('./src/components/WallpaperEditor.vue')['default']
+    WatermarkSettings: typeof import('./src/components/WatermarkSettings.vue')['default']
   }
 }

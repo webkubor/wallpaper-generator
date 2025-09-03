@@ -28,23 +28,8 @@ import PhoneFrame from '../iphone/PhoneFrame.vue';
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* 确保子元素的圆角生效 */
-  background-color: transparent !important; /* 强制背景透明 */
-
-  /* 强制所有子元素背景透明 */
-  * {
-    background-color: transparent !important;
-  }
-}
-
-/* 覆盖子组件的样式，移除它们的独立背景和边框 */
-.mac-device,
-.tablet-device,
-.phone-device {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important; /* 移除子组件的圆角 */
+  overflow: hidden;
+  background-color: transparent;
 }
 
 .mac-row {

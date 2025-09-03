@@ -29,7 +29,7 @@
           <template #header>
             <div class="collapse-header">
               <n-icon :component="TextT" class="header-icon" />
-              <span>水印与文字</span>
+              <span>定制设置</span>
             </div>
           </template>
           <n-space vertical size="small">
@@ -45,21 +45,9 @@
                 <span>点击上传</span>
               </n-upload>
             </n-form-item>
-            <n-form-item label="水印字体" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-                <n-select v-model:value="watermarkSettings.fontFamily" :options="fontOptions as any" class="input-with-icon-field" />
-            </n-form-item>
-            <n-form-item label="颜色" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-                <n-color-picker v-model:value="watermarkSettings.color" />
-            </n-form-item>
-            <n-form-item label="大小" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-slider v-model:value="watermarkSettings.fontSize" :min="12" :max="200" />
-            </n-form-item>
-            <n-form-item label="透明度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-slider v-model:value="watermarkSettings.opacity" :min="0" :max="1" :step="0.1" />
-            </n-form-item>
-            <n-form-item label="旋转" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-slider v-model:value="watermarkSettings.rotation" :min="-180" :max="180" />
-            </n-form-item>
+            <WatermarkSettings v-model:settings="watermarkSettings" />
+
+            <BackgroundSettings v-model:settings="backgroundSettings" />
           </n-space>
         </n-collapse-item>
 
@@ -72,9 +60,7 @@
           </template>
           <n-space vertical size="small">
             <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
-              <n-radio-group v-model:value="previewSettings.selectedDevice">
-                <n-radio-button v-for="device in deviceOptions" :key="device.value" :value="device.value" :label="device.label" />
-              </n-radio-group>
+              <n-select v-model:value="previewSettings.selectedDevice" :options="deviceOptions" />
             </n-form-item>
             
             
@@ -100,8 +86,14 @@
     </n-card>
 
     <!-- Center: Preview Area -->
-    <div class="preview-area">
-        <div ref="previewCanvasRef" class="preview-canvas" :class="{ 'canvas-styled': previewSettings.selectedDevice !== 'combo' }" :style="canvasStyle">
+    <div class="preview-area" :style="previewAreaStyle">
+      <img 
+        v-if="backgroundSettings.type === 'perspective' && imageUrl"
+        :src="imageUrl" 
+        class="perspective-bg"
+        alt="Perspective Background"
+      />
+        <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
           <!-- 设备框架 -->
           <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" />
           <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
@@ -154,10 +146,9 @@ import 'vue-cropper/dist/index.css'
 import { useWallpaper, getWatermarkPositionStyle } from '../composables/useWallpaper';
 
 import { 
-  NCard, NSpace, NUpload, NButton, NInput, NFormItem, NSelect, 
-  NColorPicker, NSlider, NRadioGroup, NRadioButton, 
-  NCollapse, NCollapseItem, NModal, NIcon, NInputNumber,
-  useMessage
+  useMessage,
+  NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NInput, NIcon, NButton, NUpload, NModal, NInputNumber,
+  NSelect
 } from 'naive-ui';
 
 import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhDownload as Download, PhGear as Gear } from "@phosphor-icons/vue";
@@ -168,6 +159,8 @@ import TabletFrame from './ipad/TabletFrame.vue';
 import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
+import WatermarkSettings from '@/components/WatermarkSettings.vue';
+import BackgroundSettings from '@/components/BackgroundSettings.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
 const message = useMessage();
@@ -178,9 +171,13 @@ const {
   watermarkSettings,
   previewSettings,
   deviceOptions,
-  fontOptions,
   currentDevice
 } = useWallpaper();
+
+const backgroundSettings = ref({
+  type: 'perspective',
+  color: '#7D6A6A5E', // 更新纯色背景的默认值
+});
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const isDownloading = ref(false);
@@ -279,6 +276,13 @@ const watermarkPositionStyle = computed(() => {
   
   // 合并样式
   return { ...baseStyle, ...positionStyle };
+});
+
+const previewAreaStyle = computed(() => {
+  if (backgroundSettings.value.type === 'color') {
+    return { background: backgroundSettings.value.color };
+  }
+  return {};
 });
 
 const canvasStyle = computed(() => ({
@@ -384,10 +388,22 @@ const canvasStyle = computed(() => ({
   padding: 20px;
   transition: all 0.3s ease;
   z-index: 1;
-  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.05) 100%), var(--n-body-color);
+  background: var(--n-body-color);
   width: 100%;
   height: 100%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* 将阴影移到这里 */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.perspective-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(10px) brightness(0.8); /* 降低模糊度，提高亮度 */
+  transform: scale(1.1);
+  z-index: 0;
 }
 
 .preview-container {
@@ -429,27 +445,6 @@ const canvasStyle = computed(() => ({
   background-color: transparent; /* 确保背景透明 */
 }
 
-.canvas-styled {
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  border-radius: 12px;
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  }
-  50% {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-  }
-  100% {
-    transform: translateY(0px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  }
-}
 
 .background-image {
   position: absolute;

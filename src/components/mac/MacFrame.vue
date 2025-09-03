@@ -27,8 +27,19 @@ const wallpaperUrl = computed(() => imageUrl.value);
 .mac-frame {
   position: relative;
   width: 100%;
-  color: #FFFFFF;
   height: 100%;
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 0 12px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.mac-frame:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2), inset 0 0 12px rgba(0,0,0,0.1);
 }
 
 .background-image {

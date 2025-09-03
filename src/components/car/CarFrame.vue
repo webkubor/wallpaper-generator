@@ -22,21 +22,25 @@ const wallpaperUrl = computed(() => imageUrl.value);
   position: relative;
   width: 100%;
   height: 100%;
-  border: 12px solid #555555;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 5px rgba(0, 0, 0, 0.3);
-  background-clip: padding-box;
+  border-radius: 18px;
+  /* 更具光泽感的高级灰渐变 */
+  background: linear-gradient(145deg, #dcdcdc, #888888);
+  /* 最终减小 padding 以获得纤细边框 */
+  padding: 5px;
+  /* 增强光泽感的最终阴影 */
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.6), /* 强化顶部高光 */
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3),    /* 深化底部阴影 */
+    0 10px 20px rgba(0, 0, 0, 0.3);          /* 外部阴影 */
   overflow: hidden;
   aspect-ratio: 16/9;
 }
 
 .background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
+  border-radius: 13px; /* 匹配最终的边框厚度 */
+  display: block;
 }
 </style>
