@@ -5,7 +5,7 @@
       :background-settings="backgroundSettings"
       v-model:custom-width="customWidth"
       v-model:custom-height="customHeight"
-      @reset-config="resetConfig"
+      @reset-config="handleResetConfig"
       @image-upload="handleImageUpload"
       @confirm-custom-size="confirmCustomSize"
     />
@@ -59,7 +59,7 @@
         </div>
 
         <!-- 标题 -->
-        <div :style="titleContainerStyle">
+        <div v-if="titleSettings.show" :style="titleContainerStyle">
           <div ref="titleRef" class="title-display draggable" :style="titleDragStyle" @mousedown="titleDragHandler.onMouseDown">
             <span :style="titleStyle">{{ titleSettings.text }}</span>
           </div>
@@ -84,7 +84,7 @@
 import { computed, ref, type CSSProperties } from 'vue';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
-import { useWallpaper, defaultWatermarkSettings, defaultTitleSettings, defaultPreviewSettings } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/composables/useWallpaper';
 import { createDragHandler } from '../utils';
 import { type Template } from '../utils/indexedDB';
 
@@ -113,7 +113,8 @@ const {
   titleSettings,
   previewSettings,
   currentDevice,
-  watermarkPositionStyle
+  watermarkPositionStyle,
+  resetConfig
 } = useWallpaper();
 
 const backgroundSettings = ref({
@@ -264,19 +265,18 @@ defineExpose({
   loadTemplates: () => personalTemplatesRef.value?.loadTemplates()
 });
 
-// 重置配置函数
-const resetConfig = () => {
-  // 重置所有设置为默认值
-  Object.assign(watermarkSettings.value, JSON.parse(JSON.stringify(defaultWatermarkSettings)));
-  Object.assign(titleSettings.value, JSON.parse(JSON.stringify(defaultTitleSettings)));
-  Object.assign(previewSettings.value, JSON.parse(JSON.stringify(defaultPreviewSettings)));
-  
+// 包装resetConfig函数以添加本地逻辑
+const handleResetConfig = async () => {
+  // 重置本地状态
   backgroundSettings.value = {
     type: 'perspective',
     color: '#7D6A6A5E',
   };
   customWidth.value = 400;
   customHeight.value = 400;
+  
+  // 调用useWallpaper中的resetConfig
+  await resetConfig();
   
   message.success('配置已重置为默认值');
 };

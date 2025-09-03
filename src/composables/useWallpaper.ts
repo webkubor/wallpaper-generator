@@ -24,6 +24,7 @@ export interface PositionOption {
 }
 
 export interface TitleSettings {
+  show: boolean;
   text: string;
   fontFamily: string;
   color: string;
@@ -121,6 +122,7 @@ const imageUrl = ref<string | null>(demoWallpaper);
 const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 export const defaultTitleSettings: TitleSettings = {
+  show: false,
   text: '默认标题',
   fontFamily: 'drizzle',
   color: '#ffffff',
@@ -190,6 +192,17 @@ export const fontOptions: FontOption[] = [
   { label: '无衬线字体', value: 'sans-serif' },
   { label: '等宽字体', value: 'monospace' },
 ];
+
+// 重置配置函数
+const resetConfig = async () => {
+  // 重置所有设置为默认值
+  Object.assign(watermarkSettings.value, JSON.parse(JSON.stringify(defaultWatermarkSettings)));
+  Object.assign(titleSettings.value, JSON.parse(JSON.stringify(defaultTitleSettings)));
+  Object.assign(previewSettings.value, JSON.parse(JSON.stringify(defaultPreviewSettings)));
+  
+  // 重新计算当前图片的颜色信息
+  await updateTextColorBasedOnImage(imageUrl.value);
+};
 
 // 使用壁纸生成器
 export const useWallpaper = () => {
@@ -317,5 +330,7 @@ export const useWallpaper = () => {
     handleDeviceToggle,
     deviceTypes,
     shadowEffect,  // 导出阴影效果
+    updateTextColorBasedOnImage,  // 导出颜色更新函数
+    resetConfig,  // 导出重置配置函数
   }
 }

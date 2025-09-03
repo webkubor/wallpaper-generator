@@ -41,7 +41,10 @@
           </div>
         </template>
         <n-space vertical size="small">
-          <TitleSettings />
+          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 8px;">
+            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
+          </n-form-item>
+          <TitleSettings v-if="titleSettings.show" />
           <WatermarkSettings />
           <BackgroundSettings :background-settings="backgroundSettings" />
         </n-space>
@@ -111,7 +114,8 @@ const emit = defineEmits<{
 // 直接使用 useWallpaper 获取数据
 const { 
   previewSettings,
-  deviceOptions
+  deviceOptions,
+  titleSettings
 } = useWallpaper();
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {
