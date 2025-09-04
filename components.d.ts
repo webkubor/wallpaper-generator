@@ -17,6 +17,7 @@ declare module 'vue' {
     HomeIndicator: typeof import('./src/components/common/HomeIndicator.vue')['default']
     MacFrame: typeof import('./src/components/mac/MacFrame.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
+    NDivider: typeof import('naive-ui')['NDivider']
     NSpace: typeof import('naive-ui')['NSpace']
     PersonalTemplates: typeof import('./src/components/PersonalTemplates.vue')['default']
     PhoneCameraIcon: typeof import('./src/components/iphone/PhoneCameraIcon.vue')['default']
