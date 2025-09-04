@@ -1,7 +1,8 @@
 <template>
-    <div class="wallpaper-editor">
-    <!-- Left: Settings Panel -->
+  <div class="wallpaper-editor">
+    <!-- Left: Settings Panel (Desktop only) -->
     <SettingsToolbar 
+      v-if="!isMobile"
       :background-settings="backgroundSettings"
       v-model:custom-width="customWidth"
       v-model:custom-height="customHeight"
@@ -15,7 +16,7 @@
     <div ref="previewAreaRef" class="preview-area" :style="previewAreaStyle">
       <img 
         v-if="backgroundSettings.type === 'perspective' && imageUrl"
-        :src="imageUrl" 
+        :src="imageUrl || undefined" 
         class="perspective-bg"
         alt="Perspective Background"
       />
@@ -68,16 +69,135 @@
 
         <!-- 水印 -->
         <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle" @mousedown="watermarkDragHandler.onMouseDown">
-          <img v-if="watermarkImageUrl" :src="watermarkImageUrl" class="watermark-image" />
+          <img v-if="watermarkImageUrl" :src="(watermarkImageUrl as string)" class="watermark-image" />
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>
-      
+
+    <!-- Mobile action bar and drawer -->
+    <div v-if="isMobile" class="mobile-action-bar">
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('upload')">
+            <n-icon :component="UploadSimple" />
+          </n-button>
+        </template>
+        上传
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('preview')">
+            <n-icon :component="ImageSquare" />
+          </n-button>
+        </template>
+        预览/设备
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('title')">
+            <n-icon :component="TextT" />
+          </n-button>
+        </template>
+        标题
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('watermark')">
+            <n-icon :component="Droplets" />
+          </n-button>
+        </template>
+        水印
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('background')">
+            <n-icon :component="Gear" />
+          </n-button>
+        </template>
+        背景
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="openDrawer('templates')">
+            <n-icon :component="BookmarkSimple" />
+          </n-button>
+        </template>
+        收藏
+      </n-tooltip>
+      <n-tooltip placement="top" trigger="hover">
+        <template #trigger>
+          <n-button quaternary circle @click="handleResetConfig">
+            <n-icon :component="ArrowCounterClockwise" />
+          </n-button>
+        </template>
+        重置
+      </n-tooltip>
     </div>
+
+    <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow" :title="mobileDrawerTitle">
+      <div class="mobile-drawer-body compact">
+          <!-- 上传 -->
+          <template v-if="mobileActivePanel === 'upload'">
+            <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => handleImageUpload(file)">
+              <n-button size="small" block>
+                <template #icon>
+                  <n-icon :component="UploadSimple" />
+                </template>
+                选择图片
+              </n-button>
+            </n-upload>
+          </template>
+
+          <!-- 预览/设备 -->
+          <template v-else-if="mobileActivePanel === 'preview'">
+            <n-form-item label="设备" size="small">
+              <n-select size="small" :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
+            </n-form-item>
+            <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" size="small">
+              <n-switch size="small" :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
+            </n-form-item>
+            <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
+              <n-form-item label="宽度" size="small">
+                <n-input-number size="small" v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
+              </n-form-item>
+              <n-form-item label="高度" size="small">
+                <n-input-number size="small" v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
+              </n-form-item>
+              <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
+            </div>
+          </template>
+
+          <!-- 标题设置 -->
+          <template v-else-if="mobileActivePanel === 'title'">
+            <n-form-item label="显示标题" size="small">
+              <n-switch size="small" :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
+            </n-form-item>
+            <TitleSettings v-if="titleSettings.show" />
+          </template>
+
+          <!-- 水印设置 -->
+          <template v-else-if="mobileActivePanel === 'watermark'">
+            <WatermarkSettings />
+          </template>
+
+          <!-- 背景设置 -->
+          <template v-else-if="mobileActivePanel === 'background'">
+            <BackgroundSettings :background-settings="backgroundSettings" />
+          </template>
+
+          <!-- 个人收藏 -->
+          <template v-else-if="mobileActivePanel === 'templates'">
+            <PersonalTemplates @load-template="loadTemplate" />
+          </template>
+      </div>
+    </MobileBottomSheet>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, type CSSProperties } from 'vue';
+// 尺寸与移动端判定从自定义 hooks 获取
+import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '@/composables/useWallpaper';
@@ -85,7 +205,16 @@ import { createDragHandler } from '../utils/dragUtils';
 import { type Template } from '../utils/indexedDB';
 
 import { 
-  NModal
+  NModal,
+  NButton,
+  NTooltip,
+  NIcon,
+  NUpload,
+  NFormItem,
+  NSelect,
+  NSwitch,
+  NInputNumber,
+  NSpace
 } from 'naive-ui';
 
 // 设备框架组件
@@ -96,7 +225,13 @@ import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
 import CustomFrame from './custom/CustomFrame.vue';
 import SettingsToolbar from './SettingsToolbar.vue';
+import WatermarkSettings from './toolbar/WatermarkSettings.vue';
+import TitleSettings from './toolbar/TitleSettings.vue';
+import BackgroundSettings from './toolbar/BackgroundSettings.vue';
+import PersonalTemplates from './PersonalTemplates.vue';
 import type { UploadFileInfo } from 'naive-ui';
+import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise } from '@phosphor-icons/vue';
+import MobileBottomSheet from './common/MobileBottomSheet.vue';
 
 
 const { 
@@ -148,9 +283,43 @@ const titleDragStyle = computed((): CSSProperties => {
     gap: '8px',
   };
 });
+
+// 设备下拉选项
+const deviceOptions = computed(() => {
+  try {
+    return previewSettings.value.devices.map((d: any) => ({ label: d.name, value: d.id }));
+  } catch {
+    return [] as Array<{ label: string; value: string }>; 
+  }
+});
 const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
+
+// 小屏判断与移动端抽屉开关（统一从 hooks 提供）
+const { isMobile, mobileDrawerShow } = useMobile();
+
+// 移动端抽屉
+type MobilePanel = 'upload' | 'preview' | 'title' | 'watermark' | 'background' | 'templates';
+const mobileActivePanel = ref<MobilePanel>('upload');
+const mobileDrawerTitle = computed(() => {
+  const map: Record<MobilePanel, string> = {
+    upload: '上传背景',
+    preview: '预览与设备',
+    title: '标题设置',
+    watermark: '水印设置',
+    background: '背景设置',
+    templates: '个人收藏'
+  };
+  return map[mobileActivePanel.value];
+});
+
+const openDrawer = (panel: MobilePanel) => {
+  // 桌面端不打开移动端弹窗
+  if (!isMobile.value) return;
+  mobileActivePanel.value = panel;
+  mobileDrawerShow.value = true;
+};
 
 
 // 确认自定义尺寸
@@ -279,8 +448,6 @@ const handleResetConfig = async () => {
   overflow: hidden;
 }
 
-
-
 .preview-area {
   position: relative;
   display: flex;
@@ -309,7 +476,6 @@ const handleResetConfig = async () => {
   z-index: 0;
 }
 
-
 .cropper-container {
   width: 100%;
   height: 100%;
@@ -327,8 +493,6 @@ const handleResetConfig = async () => {
   background-color: transparent; /* 确保背景透明 */
 }
 
-
-
 .draggable {
   cursor: move;
   touch-action: none; /* 禁用触摸滚动，优化拖拽体验 */
@@ -344,7 +508,6 @@ const handleResetConfig = async () => {
   gap: 8px;
   animation: pulse 2s infinite ease-in-out; /* 添加脉冲动画效果 */
 }
-
 
 .title-display {
   transition: all 0.3s ease;
@@ -371,8 +534,6 @@ const handleResetConfig = async () => {
   height: 30px;
 }
 
-
-
 /* 响应式布局 */
 @media (max-width: 1200px) {
   .wallpaper-editor {
@@ -380,11 +541,33 @@ const handleResetConfig = async () => {
     gap: 16px;
   }
   
-  
   .preview-area {
     height: calc(100vh - 400px);
     min-height: 400px;
   }
+}
+
+@media (max-width: 768px) {
+  .preview-area {
+    height: calc(100vh - 220px);
+    min-height: 320px;
+  }
+}
+
+/* 移动端底部工具栏 */
+.mobile-action-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 999px;
+  padding: 6px 8px;
+  display: flex;
+  gap: 6px;
+  z-index: 2000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 /* 拖拽状态样式 */
@@ -399,7 +582,34 @@ const handleResetConfig = async () => {
   opacity: 0.8;
 }
 
+/* 移动端抽屉紧凑样式 */
+.mobile-drawer-body.compact {
+  display: grid;
+  gap: 8px;
+}
 
+/* 缩小表单项的垂直间距 */
+:deep(.n-form-item) {
+  margin-bottom: 8px;
+}
 
+/* 缩小 label 字号与内边距 */
+:deep(.n-form-item .n-form-item-label) {
+  font-size: 12px;
+  padding-bottom: 4px;
+}
 
+/* 选择器与数字输入宽度拉满 */
+:deep(.n-select),
+:deep(.n-input-number) {
+  width: 100%;
+}
+
+/* 自定义尺寸区域布局更紧凑 */
+.custom-size-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
 </style>

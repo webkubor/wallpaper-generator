@@ -16,6 +16,7 @@ declare module 'vue' {
     Header: typeof import('./src/components/common/Header.vue')['default']
     HomeIndicator: typeof import('./src/components/common/HomeIndicator.vue')['default']
     MacFrame: typeof import('./src/components/mac/MacFrame.vue')['default']
+    MobileBottomSheet: typeof import('./src/components/common/MobileBottomSheet.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NDivider: typeof import('naive-ui')['NDivider']
     NSpace: typeof import('naive-ui')['NSpace']

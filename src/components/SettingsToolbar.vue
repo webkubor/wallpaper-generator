@@ -96,7 +96,7 @@
       </n-collapse-item>
       
       <!-- 个人收藏模板 -->
-      <n-collapse-item name="4">
+      <n-collapse-item name="4" class="personal-templates-section">
         <template #header>
           <div class="collapse-header">
             <n-icon :component="ImageSquare" class="header-icon" />
@@ -302,6 +302,52 @@ const handleLoadTemplate = (template: any) => {
   .n-form-item {
     flex: 1;
     margin-bottom: 0;
+  }
+}
+
+/* 中等屏（<= 1024px）：收窄侧栏 */
+@media (max-width: 1024px) {
+  .settings-panel {
+    width: 320px;
+  }
+}
+
+/* 小屏（<= 768px）：侧栏全宽并置顶 */
+@media (max-width: 768px) {
+  .settings-panel {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  /* 隐藏创作面板的大标题，仅保留重置按钮 */
+  .settings-header {
+    padding: 0;
+    .header-left {
+      .settings-title { display: none; }
+    }
+  }
+
+  /* 隐藏与操作无关的个人收藏区域 */
+  .personal-templates-section {
+    display: none;
+  }
+
+  .custom-size-inputs {
+    flex-direction: column;
+    .n-form-item { width: 100%; }
+    .n-button { align-self: flex-start; }
+  }
+}
+
+/* 极小屏（<= 480px）：进一步压缩间距和触控优化 */
+@media (max-width: 480px) {
+  .settings-panel {
+    border-radius: 10px;
+  }
+  .settings-header {
+    padding: 2px 0;
+    .settings-title { font-size: 15px; }
   }
 }
 </style>

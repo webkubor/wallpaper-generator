@@ -126,4 +126,51 @@ defineEmits<{
     }
   }
 }
+
+/* 平板与小屏（<= 768px）适配 */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .title-container {
+      display: none; /* 移动端隐藏大标题与副标题 */
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: flex-end;
+      gap: 8px;
+
+      .n-button {
+        padding: 0 10px;
+        height: 32px;
+      }
+    }
+  }
+}
+
+/* 极小屏（<= 480px）适配 */
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 12px;
+
+    .header-actions {
+      justify-content: space-between;
+      .save-config-button,
+      .download-button,
+      .settings-button {
+        font-size: 12px;
+        padding: 0 8px;
+        height: 30px;
+      }
+      /* 将“保存为模板”图标按钮更靠近标题区域显示为图标即可 */
+      :deep(.save-template-button) {
+        padding: 0 6px;
+        height: 28px;
+      }
+    }
+  }
+}
 </style>

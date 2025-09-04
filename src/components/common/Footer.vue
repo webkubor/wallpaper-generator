@@ -140,4 +140,36 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
     transform: scale(1.1);
   }
 }
+
+/* 平板与小屏（<= 768px）适配 */
+@media (max-width: 768px) {
+  .footer {
+    padding: 12px 16px;
+    .footer-content {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .footer-left {
+      .creator-info {
+        .creator-text { font-size: 13px; }
+      }
+    }
+    .footer-right {
+      width: 100%;
+      .social-links {
+        justify-content: flex-start;
+        .social-link { width: 32px; height: 32px; }
+        .social-icon { width: 16px; height: 16px; }
+      }
+    }
+  }
+}
+
+/* 极小屏（<= 480px）适配 */
+@media (max-width: 480px) {
+  .footer {
+    display: none; /* 移动端隐藏与操作无关的页脚 */
+  }
+}
 </style>
