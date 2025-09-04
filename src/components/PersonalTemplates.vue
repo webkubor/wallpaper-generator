@@ -66,7 +66,7 @@ defineProps<{
 
 // Emits
 defineEmits<{
-  loadTemplate: [template: Template];
+  (event: 'loadTemplate', template: Template): void;
 }>();
 
 // 响应式数据

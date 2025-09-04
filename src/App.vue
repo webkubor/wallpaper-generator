@@ -23,6 +23,12 @@
         :isDownloading="isDownloading"
         @download="downloadWallpaper"
       />
+      
+      <!-- 分享卡片弹窗 -->
+      <ShareCard 
+        v-model:show="showShareCard"
+        :wallpaper-image="currentWallpaperImage"
+      />
     </n-layout>
     </n-message-provider>
   </n-config-provider>
@@ -32,6 +38,7 @@ import WallpaperEditor from '@/components/WallpaperEditor.vue';
 import Footer from '@/components/common/Footer.vue';
 import SettingsModal from '@/components/common/SettingsModal.vue';
 import Header from '@/components/common/Header.vue';
+import ShareCard from '@/components/common/ShareCard.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent, NMessageProvider } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
@@ -42,6 +49,8 @@ import { templateDB, type Template } from './utils/indexedDB';
 const isDark = useDark();
 const isDownloading = ref(false);
 const showDownloadModal = ref(false);
+const showShareCard = ref(false);
+const currentWallpaperImage = ref('');
 const downloadOption = ref('withBackground'); // 默认包含背景
 const fileNamePrefix = ref('wallpaper'); // 文件名前缀
 const fileNameMode = ref('timestamp'); // 命名模式：timestamp 或 imageName
@@ -147,12 +156,10 @@ const downloadWallpaper = () => {
       ? previewArea // 整个预览区（包含背景）
       : previewArea.querySelector('.wallpaper-content') || previewArea.querySelector('.preview-canvas') || previewArea; // 仅壁纸区域
     
-    html2canvas(targetElement as HTMLElement, {
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
+    html2canvas(targetElement, {
+      backgroundColor: downloadOption.value === 'withBackground' ? null : 'transparent',
       scale: 2,
-      logging: false
+      useCORS: true
     }).then(canvas => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
@@ -160,6 +167,10 @@ const downloadWallpaper = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      // 导出成功后显示分享卡片
+      currentWallpaperImage.value = imageUrl.value || '';
+      showShareCard.value = true;
     }).finally(() => {
       isDownloading.value = false;
     });
