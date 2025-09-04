@@ -50,11 +50,11 @@ export interface WatermarkSettings {
 
 
 export const deviceTypes: Device[] = [
-  { id: 'iphone', name: 'iPhone', width: 300, height: 600, hasFrame: true }, // 更新宽高比
-  { id: 'ipad', name: 'iPad', width: 533, height: 400, hasFrame: true }, // 4:3
-  { id: 'car', name: '车机', width: 640, height: 360, hasFrame: true }, // 16:9比例
+  { id: 'iphone', name: 'iPhone', width: 390, height: 780, hasFrame: true }, // iPhone 比例
+  { id: 'ipad', name: 'iPad', width: 693, height: 520, hasFrame: true }, // iPad 4:3 比例
+  { id: 'car', name: '车机', width: 832, height: 468, hasFrame: true }, // 车机 16:9 比例
   { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备（mac+ipad+iphone）
-  { id: 'custom', name: '自定义尺寸', width: 400, height: 400, hasFrame: false } //纯壁纸
+  { id: 'custom', name: '自定义尺寸', width: 832, height: 468, hasFrame: false } 
 ]
 
 // 获取设备信息
@@ -95,7 +95,7 @@ export const defaultWatermarkSettings: WatermarkSettings = {
 
 
 export const defaultPreviewSettings = {
-  selectedDevice: 'car', // 默认选择车机尺寸
+  selectedDevice: 'custom', // 默认选择自定义尺寸
   showCombined: false,
   showDeviceBorder: true,
   hasNotch: true, // iPhone 刘海开关，默认开启
@@ -137,8 +137,8 @@ const previewSettings = ref({...defaultPreviewSettings});
 const backgroundSettings = ref<BackgroundSettings>({...defaultBackgroundSettings});
 
 // 自定义尺寸状态
-const customWidth = ref(400);
-const customHeight = ref(400);
+const customWidth = ref(832);
+const customHeight = ref(468);
 
 // 存储图片颜色信息
 const imageColorInfo = ref<{
@@ -202,8 +202,8 @@ const resetConfig = async () => {
   Object.assign(backgroundSettings.value, JSON.parse(JSON.stringify(defaultBackgroundSettings)));
   
   // 重置自定义尺寸
-  customWidth.value = 400;
-  customHeight.value = 400;
+  customWidth.value = 832;
+  customHeight.value = 468;
   
   // 重新计算当前图片的颜色信息
   await updateTextColorBasedOnImage(imageUrl.value);
