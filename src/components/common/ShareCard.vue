@@ -69,18 +69,17 @@
             ></button>
           </div>
         </div>
-        
-        <n-button circle  secondary @click="refreshCard">
-          <template #icon>
-            <PhArrowsClockwise color="#f4d03f" />
-          </template>
-        </n-button>
       </div>
 
       <!-- 自定义底部 -->
       <div class="modal-footer">
         <n-space justify="end" :size="12">
-          <n-button  color="#f4d03f" dashed @click="handleDownloadCard">
+          <n-button circle secondary @click="refreshCard">
+            <template #icon>
+              <PhArrowsClockwise color="#f4d03f" />
+            </template>
+          </n-button>
+          <n-button color="#f4d03f" dashed @click="handleDownloadCard">
             <template #icon>
               <PhDownload />
             </template>
