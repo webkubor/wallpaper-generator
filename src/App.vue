@@ -61,6 +61,11 @@ const wallpaperEditorRef = ref<{
 const { watermarkSettings, titleSettings, previewSettings, imageUrl } = useWallpaper();
 
 
+window.$message.success('这是一条成功消息');
+window.$message.warning('这是一条警告消息');
+window.$message.error('这是一条错误消息');
+window.$message.info('这是一条信息消息');
+
 
 // 保存为模板函数
 const saveAsTemplate = async () => {

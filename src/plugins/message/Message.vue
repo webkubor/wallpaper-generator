@@ -28,8 +28,6 @@
 <script lang="ts" setup>
 import { PhCheckCircle, PhWarningCircle, PhXCircle } from '@phosphor-icons/vue';
 import { messageState } from './state';
-
-// 直接使用集中管理的消息状态
 const messages = messageState.messages;
 </script>
 
@@ -48,6 +46,7 @@ const messages = messageState.messages;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
 .message-item {
@@ -58,23 +57,86 @@ const messages = messageState.messages;
   padding: 10px 18px;
   border-radius: 14px;
   margin-top: 12px;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  transition: all 0.2s ease;
   font-weight: 500;
-  box-shadow: 0 6px 24px 0 rgba(0,0,0,0.13);
-  border: none;
+  letter-spacing: 0.3px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 // ===== 普通消息类型样式 =====
-.message-success  { background: #f1faed !important; color: #222 !important; }
-.message-warning  { background: #fff8f1 !important; color: #222 !important; }
-.message-error    { background: #fff0f6 !important; color: #222 !important; }
-.message-info     { background: #e8f3ff !important; color: #174a6c !important; }
+.message-success  { 
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.95), rgba(220, 252, 231, 0.9)) !important; 
+  color: #15803d !important; 
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 6px 16px rgba(34, 197, 94, 0.12),
+    0 2px 6px rgba(34, 197, 94, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+.message-warning  { 
+  background: linear-gradient(135deg, rgba(255, 251, 235, 0.95), rgba(254, 243, 199, 0.9)) !important; 
+  color: #a16207 !important; 
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 6px 16px rgba(245, 158, 11, 0.12),
+    0 2px 6px rgba(245, 158, 11, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.message-error    { 
+  background: linear-gradient(135deg, rgba(254, 242, 242, 0.95), rgba(254, 202, 202, 0.9)) !important; 
+  color: #b91c1c !important; 
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 6px 16px rgba(239, 68, 68, 0.12),
+    0 2px 6px rgba(239, 68, 68, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+.message-info     { 
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(219, 234, 254, 0.9)) !important; 
+  color: #1d4ed8 !important; 
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 6px 16px rgba(59, 130, 246, 0.12),
+    0 2px 6px rgba(59, 130, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(59, 130, 246, 0.2);
+}
 
-.message-item:hover {
-  transform: translateY(-2px);
+/* 消息进入和退出动画 */
+.message-enter-active,
+.message-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.message-enter-from {
+  opacity: 0;
+  transform: translateY(-30px) scale(0.9);
+}
+
+.message-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.message-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.message-leave-to {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
 }
 
 .message-icon {
@@ -91,42 +153,20 @@ const messages = messageState.messages;
   flex-direction: column;
   word-break: break-word;
   white-space: normal;
-  line-height: 1.6;
+  line-height: 1.5;
   min-height: 20px;
   justify-content: center;
   padding-left: 2px;
   padding-right: 2px;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  
+  span {
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
 }
 
-// ===== 标签样式 =====
-.msg-label {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 6px;
-  padding: 1px 8px;
-  margin-right: 8px;
-  letter-spacing: 1px;
-  vertical-align: middle;
-}
-.msg-label-success { background: #e8f7e5; color: #388e3c; }
-.msg-label-warning { background: #fff3e0; color: #e65100; }
-.msg-label-error   { background: #fde7ef; color: #c2185b; }
-.msg-label-info    { background: #e3f2fd; color: #1565c0; }
 
-/* 过渡动画样式 */
-.message-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.message-leave-active {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.message-enter-from, .message-leave-to {
-  opacity: 0;
-  transform: translateY(-15px) scale(0.95);
-}
 
 /* 响应式设计 */
 @media (min-width: 1024px) {
