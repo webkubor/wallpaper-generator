@@ -42,9 +42,9 @@ import ShareCard from '@/components/common/ShareCard.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent, NMessageProvider } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
-import html2canvas from 'html2canvas';
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
+import { captureWallpaper } from './utils/captureUtils';
 
 const isDark = useDark();
 const isDownloading = ref(false);
@@ -72,12 +72,11 @@ const saveAsTemplate = async () => {
   try {
     // 生成预览图片
     const previewArea = wallpaperEditorRef.value.previewAreaRef;
-    const canvas = await html2canvas(previewArea, {
+    const { captureElement } = await import('./utils/captureUtils');
+    const canvas = await captureElement(previewArea, {
       backgroundColor: null,
       useCORS: true,
-      allowTaint: true,
-      scale: 0.5, // 降低分辨率以节省存储空间
-      logging: false
+      scale: 1
     });
     
     const previewImage = canvas.toDataURL('image/jpeg', 0.8);
@@ -146,34 +145,25 @@ const generateFileName = () => {
 };
 
 // 下载壁纸函数
-const downloadWallpaper = () => {
+const downloadWallpaper = async () => {
   if (wallpaperEditorRef.value && wallpaperEditorRef.value.previewAreaRef) {
     isDownloading.value = true;
-    const previewArea = wallpaperEditorRef.value.previewAreaRef;
     
-    // 根据选项决定下载整个预览区还是仅壁纸区域
-    const targetElement = downloadOption.value === 'withBackground' 
-      ? previewArea // 整个预览区（包含背景）
-      : previewArea.querySelector('.wallpaper-content') || previewArea.querySelector('.preview-canvas') || previewArea; // 仅壁纸区域
-    
-    html2canvas(targetElement, {
-      backgroundColor: downloadOption.value === 'withBackground' ? null : 'transparent',
-      scale: 2,
-      useCORS: true
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = generateFileName();
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    try {
+      await captureWallpaper(
+        wallpaperEditorRef.value.previewAreaRef,
+        downloadOption.value as 'withBackground' | 'withoutBackground',
+        generateFileName()
+      );
       
       // 导出成功后显示分享卡片
       currentWallpaperImage.value = imageUrl.value || '';
       showShareCard.value = true;
-    }).finally(() => {
+    } catch (error) {
+      console.error('导出失败:', error);
+    } finally {
       isDownloading.value = false;
-    });
+    }
   }
 };
 

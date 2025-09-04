@@ -1,5 +1,5 @@
 <template>
-  <n-modal v-model:show="show" preset="card" style="width: 400px;" title="分享卡片">
+  <n-modal :show="show" @update:show="$emit('update:show', $event)" preset="card" style="width: 400px;" title="分享卡片">
     <div class="share-card" ref="shareCardRef">
       <!-- 日期 -->
       <div class="card-date">{{ currentDate }}</div>
@@ -30,8 +30,8 @@
 import { ref, computed, watch } from 'vue';
 import { NModal, NButton, NSpace } from 'naive-ui';
 import { useQuotes } from '../../hooks/useQuotes';
+import { captureAndDownload, generateTimestampFilename } from '../../utils/captureUtils';
 import dayjs from 'dayjs';
-import html2canvas from 'html2canvas';
 
 interface Props {
   show: boolean;
@@ -65,18 +65,15 @@ const handleDownloadCard = async () => {
   if (!shareCardRef.value) return;
   
   try {
-    const canvas = await html2canvas(shareCardRef.value, {
-      backgroundColor: '#ffffff',
-      scale: 2,
-      useCORS: true
-    });
-    
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL('image/png');
-    link.download = `share-card-${dayjs().format('YYYYMMDD-HHmmss')}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    await captureAndDownload(
+      shareCardRef.value,
+      generateTimestampFilename('share-card'),
+      {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true
+      }
+    );
   } catch (error) {
     console.error('下载卡片失败:', error);
   }
