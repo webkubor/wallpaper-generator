@@ -1,17 +1,20 @@
 <template>
   <n-layout-header class="header">
     <div class="title-container">
-      <img src="/webkubor.svg" class="logo" alt="Logo" />
       <div class="title-content">
         <h1 class="main-title">✨ 氛围壁纸工坊</h1>
         <p class="subtitle">风有归处，心有颜色。</p>
       </div>
-      <n-button tertiary size="small" class="save-template-button" @click="$emit('saveTemplate')">
-        <template #icon>
-          <n-icon :component="Star" />
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <n-button tertiary size="small" class="save-template-button" @click="$emit('saveTemplate')">
+            <template #icon>
+              <n-icon :component="Star" />
+            </template>
+          </n-button>
         </template>
-        保存为模板
-      </n-button>
+        保存为个人模板
+      </n-tooltip>
     </div>
     <div class="header-actions">
       <n-button color="#f4d03f" strong secondary class="save-config-button" @click="$emit('saveConfig')">

@@ -1,14 +1,82 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#1a1f36"/>
-<stop offset="100%" stop-color="#2d3348"/>
-</linearGradient>
-<linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#d4af37"/>
-<stop offset="100%" stop-color="#ffd700"/>
-</linearGradient>
+  <!-- 主金色渐变 -->
+  <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffd700"/>
+    <stop offset="30%" stop-color="#ffed4e"/>
+    <stop offset="70%" stop-color="#f4d03f"/>
+    <stop offset="100%" stop-color="#d4af37"/>
+  </linearGradient>
+  
+  <!-- 深金色渐变 -->
+  <linearGradient id="darkGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#b8860b"/>
+    <stop offset="100%" stop-color="#8b6914"/>
+  </linearGradient>
+  
+  <!-- 发光金色 -->
+  <linearGradient id="glowGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#fff176"/>
+    <stop offset="100%" stop-color="#ffd54f"/>
+  </linearGradient>
+  
+  <!-- 发光效果 -->
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+    <feMerge> 
+      <feMergeNode in="coloredBlur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+  
+  <!-- 强发光效果 -->
+  <filter id="strongGlow">
+    <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+    <feMerge> 
+      <feMergeNode in="coloredBlur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
 </defs>
-<path fill="url(#grad1)" d="M64 0L128 64L64 128L0 64L64 0Z"/>
-<path fill="url(#grad2)" d="M96 32L64 64L32 32L64 0L96 32Z" transform="translate(0, 32)"/>
+
+<!-- 外层八角星背景 -->
+<g filter="url(#strongGlow)">
+  <path d="M64,8 L76,36 L104,36 L82,54 L94,82 L64,64 L34,82 L46,54 L24,36 L52,36 Z" 
+        fill="url(#goldGradient)" opacity="0.8"/>
+</g>
+
+<!-- 中层空心圆环 -->
+<circle cx="64" cy="64" r="45" fill="none" stroke="url(#goldGradient)" stroke-width="6" opacity="0.9"/>
+<circle cx="64" cy="64" r="35" fill="none" stroke="url(#glowGoldGradient)" stroke-width="2" opacity="0.7"/>
+
+<!-- 内层六角形 -->
+<g filter="url(#glow)">
+  <path d="M64,28 L84,40 L84,56 L64,68 L44,56 L44,40 Z" 
+        fill="url(#goldGradient)" stroke="url(#darkGoldGradient)" stroke-width="2"/>
+</g>
+
+<!-- 中心钻石形状 -->
+<g filter="url(#glow)">
+  <path d="M64,44 L72,52 L64,60 L56,52 Z" 
+        fill="url(#glowGoldGradient)" stroke="url(#goldGradient)" stroke-width="1"/>
+</g>
+
+<!-- 装饰小三角 -->
+<g fill="url(#goldGradient)" opacity="0.8">
+  <path d="M64,20 L68,28 L60,28 Z"/>
+  <path d="M64,76 L68,84 L60,84 Z"/>
+  <path d="M92,64 L100,68 L100,60 Z"/>
+  <path d="M36,64 L28,68 L28,60 Z"/>
+</g>
+
+<!-- 角落装饰星星 -->
+<g filter="url(#glow)" fill="url(#glowGoldGradient)" opacity="0.9">
+  <path d="M20,20 L22,24 L26,24 L23,27 L24,31 L20,28 L16,31 L17,27 L14,24 L18,24 Z"/>
+  <path d="M108,20 L110,24 L114,24 L111,27 L112,31 L108,28 L104,31 L105,27 L102,24 L106,24 Z"/>
+  <path d="M20,108 L22,112 L26,112 L23,115 L24,119 L20,116 L16,119 L17,115 L14,112 L18,112 Z"/>
+  <path d="M108,108 L110,112 L114,112 L111,115 L112,119 L108,116 L104,119 L105,115 L102,112 L106,112 Z"/>
+</g>
+
+<!-- 中心高光点 -->
+<circle cx="64" cy="64" r="3" fill="rgba(255,255,255,0.9)" filter="url(#glow)"/>
 </svg>
