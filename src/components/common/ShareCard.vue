@@ -21,7 +21,7 @@
       </div>
 
       <!-- 卡片内容 -->
-      <div class="modal-content">
+      <div class="modal-content" >
         <div class="share-card" ref="shareCardRef" :class="`template-${currentTemplate}`" :style="{ backgroundColor: selectedColor, fontFamily: currentFont.value, color: textColor }">
           <!-- 日期标签 -->
           <div class="card-date-tag">
@@ -38,12 +38,10 @@
           
           <!-- 壁纸展示区 -->
           <div class="card-wallpaper">
-            <div class="wallpaper-frame">
-              <img v-if="wallpaperImage" :src="wallpaperImage" alt="壁纸" class="wallpaper-image" />
-              <div v-else class="wallpaper-placeholder">
-                <div class="placeholder-icon">🖼️</div>
-                <div class="placeholder-text">壁纸预览</div>
-              </div>
+            <img v-if="wallpaperImage" :src="wallpaperImage" alt="壁纸" class="wallpaper-image" />
+            <div v-else class="wallpaper-placeholder">
+              <div class="placeholder-icon">🖼️</div>
+              <div class="placeholder-text">壁纸预览</div>
             </div>
           </div>
           
@@ -72,24 +70,23 @@
           </div>
         </div>
         
-        <button class="refresh-btn" @click="refreshCard">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-            <path d="M13.65 2.35C12.2 0.9 10.2 0 8 0C3.58 0 0 3.58 0 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L9 5h7V-2l-2.35 2.35z" fill="currentColor"/>
-          </svg>
-        </button>
+        <n-button circle  secondary @click="refreshCard">
+          <template #icon>
+            <PhArrowsClockwise color="#f4d03f" />
+          </template>
+        </n-button>
       </div>
 
       <!-- 自定义底部 -->
       <div class="modal-footer">
-        <button class="footer-btn secondary" @click="handleClose">
-          <span>关闭</span>
-        </button>
-        <button class="footer-btn primary" @click="handleDownloadCard">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 1V11M8 11L11 8M8 11L5 8M2 13H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span>下载卡片</span>
-        </button>
+        <n-space justify="end" :size="12">
+          <n-button  color="#f4d03f" dashed @click="handleDownloadCard">
+            <template #icon>
+              <PhDownload />
+            </template>
+            下载卡片
+          </n-button>
+        </n-space>
       </div>
     </div>
   </n-modal>
@@ -97,7 +94,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { NModal } from 'naive-ui';
+import { NModal, NButton, NSpace } from 'naive-ui';
+import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
 import dayjs from 'dayjs';
 import html2canvas from 'html2canvas';
 import { getContrastTextColor } from '../../utils/colorUtils';
@@ -147,10 +145,13 @@ watch(selectedColor, updateTextColor, { immediate: true });
 // 刷新卡片内容和模板
 const refreshCard = () => {
   currentQuote.value = getRandomQuote();
-  // 切换模板：1 -> 2, 2 -> 1
-  currentTemplate.value = currentTemplate.value === 1 ? 2 : 1;
+  // 切换模板：1 -> 2 -> 3 -> 1
+  currentTemplate.value = currentTemplate.value === 1 ? 2 : currentTemplate.value === 2 ? 3 : 1;
   // 随机切换字体
   currentFont.value = getRandomFont();
+  // 随机选择背景颜色
+  const randomColorIndex = Math.floor(Math.random() * cardColors.length);
+  selectedColor.value = cardColors[randomColorIndex];
 };
 
 // 当弹窗打开时生成随机文案
@@ -259,6 +260,7 @@ const handleDownloadCard = async () => {
 }
 
 .share-card {
+  width: 100%;
   background: #ffffff;
   border-radius: 12px;
   padding: 24px;
@@ -329,60 +331,57 @@ const handleDownloadCard = async () => {
   }
   
   .card-wallpaper {
-    height: 200px; // 固定高度，避免flex导致的超出
+    height: 200px;
     margin-bottom: 20px;
     z-index: 1;
     position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+      inset 0 1px 2px rgba(0, 0, 0, 0.03),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     
-    .wallpaper-frame {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    
+    .wallpaper-image {
       width: 100%;
       height: 100%;
-      border-radius: 16px;
-      overflow: hidden;
+      object-fit: cover;
+      border-radius: 12px;
+      filter: saturate(0.95) brightness(0.98);
+    }
+    
+    .wallpaper-placeholder {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      box-shadow: 
-        inset 0 2px 4px rgba(0, 0, 0, 0.06),
-        0 4px 12px rgba(0, 0, 0, 0.08);
+      gap: 12px;
+      color: #8e9aaf;
       
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 16px;
-        pointer-events: none;
+      .placeholder-icon {
+        font-size: 32px;
+        opacity: 0.6;
       }
       
-      .wallpaper-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 16px;
-      }
-      
-      .wallpaper-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        color: #8e9aaf;
-        
-        .placeholder-icon {
-          font-size: 32px;
-          opacity: 0.6;
-        }
-        
-        .placeholder-text {
-          font-size: 14px;
-          font-weight: 500;
-          letter-spacing: 0.5px;
-        }
+      .placeholder-text {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
       }
     }
   }
@@ -412,50 +411,9 @@ const handleDownloadCard = async () => {
 }
 
 .modal-footer {
-  display: flex;
-  gap: 12px;
   padding: 16px 24px 20px;
   background: #ffffff;
   border-top: 1px solid rgba(0, 0, 0, 0.04);
-  
-  .footer-btn {
-    flex: 1;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    
-    &.secondary {
-      background: #f5f5f5;
-      color: #666;
-      
-      &:hover {
-        background: #e8e8e8;
-        color: #333;
-      }
-    }
-    
-    &.primary {
-      background: #007AFF;
-      color: #ffffff;
-      
-      &:hover {
-        background: #0056CC;
-        transform: translateY(-1px);
-      }
-      
-      &:active {
-        transform: translateY(0);
-      }
-    }
-  }
 }
 
 .card-controls {
@@ -469,85 +427,56 @@ const handleDownloadCard = async () => {
   .color-palette {
     flex: 1;
     overflow: hidden;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     
     .color-options {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       
       .color-btn {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         flex-shrink: 0;
-        border: 2px solid transparent;
-        border-radius: 8px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all 0.2s ease;
         position: relative;
+        box-shadow: 
+          0 2px 4px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
         
         &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transform: translateY(-2px);
+          box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.9);
         }
         
         &.active {
-          border-color: #007AFF;
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
-          
-          &::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #007AFF;
-            font-size: 14px;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-          }
+          border-color: #f4d03f;
+          border-width: 3px;
+          transform: translateY(-2px);
+          box-shadow: 
+            0 4px 16px rgba(244, 208, 63, 0.25),
+            0 2px 8px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
       }
     }
   }
   
-  .refresh-btn {
-    width: 36px;
-    height: 36px;
+  :deep(.n-button.n-button--circle) {
+    margin-left: 16px;
     flex-shrink: 0;
-    margin-left: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #f0f0f0;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    &:hover {
-      background: #e0e0e0;
-      color: #333;
-      transform: translateY(-1px);
-    }
-    
-    svg {
-      animation: none;
-      width: 16px;
-      height: 16px;
-    }
-    
-    &:active svg {
-      animation: spin 0.4s ease-in-out;
-    }
   }
 }
 
@@ -605,12 +534,21 @@ const handleDownloadCard = async () => {
     }
   }
   
-  .card-wallpaper .wallpaper-frame {
-    border-radius: 0;
-    box-shadow: none;
+  .card-wallpaper {
+    border-radius: 8px;
+    box-shadow: 
+      inset 0 1px 1px rgba(0, 0, 0, 0.02),
+      0 1px 4px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
     
     &::before {
-      display: none;
+      opacity: 0.3;
+      border-radius: 8px;
+    }
+    
+    .wallpaper-image {
+      border-radius: 8px;
+      filter: saturate(0.9) brightness(0.96);
     }
     
     .wallpaper-placeholder {
@@ -632,6 +570,144 @@ const handleDownloadCard = async () => {
       font-weight: 300;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+  }
+}
+
+// 模板3样式 - 极简国风美学
+.share-card.template-3 {
+  background: #fefefe;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  padding: 32px;
+  
+  .card-date-tag {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    margin-bottom: 0;
+    
+    .date-dot {
+      display: none;
+    }
+    
+    span {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: #999;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+  }
+  
+  .card-quote-section {
+    margin-bottom: 40px;
+    margin-top: 20px;
+    
+    .quote-mark {
+      display: none;
+    }
+    
+    .card-quote {
+      font-size: 22px;
+      line-height: 1.8;
+      font-weight: 400;
+      text-align: center;
+      padding: 0;
+      letter-spacing: 1px;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, currentColor, transparent);
+        opacity: 0.3;
+      }
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, currentColor, transparent);
+        opacity: 0.3;
+      }
+    }
+  }
+  
+  .card-wallpaper {
+    height: 180px;
+    border-radius: 4px;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 32px;
+    position: relative;
+    
+    &::before {
+      display: none;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    
+    .wallpaper-image {
+      border-radius: 4px;
+      filter: saturate(0.85) contrast(0.95);
+    }
+    
+    .wallpaper-placeholder {
+      color: #ccc;
+      font-weight: 300;
+      font-size: 12px;
+    }
+  }
+  
+  .card-footer {
+    .watermark-section {
+      justify-content: center;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.2;
+      }
+      
+      .watermark-icon {
+        display: none;
+      }
+      
+      .card-watermark {
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.6;
+      }
     }
   }
 }

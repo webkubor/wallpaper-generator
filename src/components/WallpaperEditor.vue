@@ -53,7 +53,7 @@
             <template #footer>
               <n-space justify="end">
                 <n-button @click="showCropperModal = false">取消</n-button>
-                <n-button type="primary" @click="confirmCrop">确认</n-button>
+                <n-button type="primary" color="#f4d03f" @click="confirmCrop">确认</n-button>
               </n-space>
             </template>
           </n-modal>
