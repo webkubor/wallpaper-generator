@@ -58,7 +58,7 @@ const wallpaperEditorRef = ref<{
 } | null>(null);
 
 // 获取壁纸配置
-const { watermarkSettings, titleSettings, previewSettings, imageUrl } = useWallpaper();
+const { watermarkSettings, titleSettings, previewSettings, backgroundSettings, imageUrl } = useWallpaper();
 
 // 保存为模板函数
 const saveAsTemplate = async () => {
@@ -89,6 +89,7 @@ const saveAsTemplate = async () => {
         watermarkSettings: JSON.parse(JSON.stringify(watermarkSettings.value)),
         titleSettings: JSON.parse(JSON.stringify(titleSettings.value)),
         previewSettings: JSON.parse(JSON.stringify(previewSettings.value)),
+        backgroundSettings: JSON.parse(JSON.stringify(backgroundSettings.value)),
         downloadOption: downloadOption.value,
       },
       previewImage,

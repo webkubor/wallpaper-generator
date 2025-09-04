@@ -240,6 +240,10 @@ const loadTemplate = (template: Template) => {
     Object.assign(watermarkSettings.value, template.config.watermarkSettings);
     Object.assign(titleSettings.value, template.config.titleSettings);
     Object.assign(previewSettings.value, template.config.previewSettings);
+    // 仅应用字体颜色，避免影响 PC 端背景设置
+    if (template.config.backgroundSettings?.fontColor) {
+      backgroundSettings.value.fontColor = template.config.backgroundSettings.fontColor;
+    }
     window.$message.success(`已加载模板: ${template.name}`);
   } catch (error) {
     console.error('加载模板失败:', error);

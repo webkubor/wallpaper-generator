@@ -6,6 +6,7 @@ export interface Template {
     watermarkSettings: any;
     titleSettings: any;
     previewSettings: any;
+    backgroundSettings: any;
     downloadOption: string;
   };
   previewImage: string; // base64 图片数据
