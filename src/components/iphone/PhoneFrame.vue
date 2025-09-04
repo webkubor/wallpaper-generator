@@ -54,7 +54,7 @@ const props = defineProps({
   },
 });
 
-const { imageUrl, watermarkSettings, shadowEffect } = useWallpaper();
+const { imageUrl, shadowEffect, backgroundSettings } = useWallpaper();
 
 // 根据壁纸颜色生成静态阴影样式
 const dynamicShadowStyle = computed(() => ({
@@ -91,7 +91,7 @@ const backgroundImageStyle = computed(() => ({
 
 // 动态锁屏覆盖层样式
 const lockScreenOverlayStyle = computed(() => ({
-  color: watermarkSettings.value.color,
+  color: backgroundSettings.value.fontColor,
   paddingTop: topPadding.value,
 }));
 

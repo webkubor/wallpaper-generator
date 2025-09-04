@@ -26,7 +26,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
-const { imageUrl, titleSettings, shadowEffect } = useWallpaper();
+const { imageUrl, shadowEffect, backgroundSettings } = useWallpaper();
 
 const tabletFrameRef = ref(null);
 const { width: elementWidth } = useElementSize(tabletFrameRef);
@@ -42,7 +42,7 @@ const dynamicShadowStyle = computed(() => ({
 }));
 
 const textColorStyle = computed(() => ({
-  color: titleSettings.value.color,
+  color: backgroundSettings.value.fontColor,
 }));
 
 const lockTime = ref('');

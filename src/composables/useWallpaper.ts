@@ -109,12 +109,14 @@ export const defaultPreviewSettings = {
 export interface BackgroundSettings {
   type: 'perspective' | 'color';
   color: string;
+  fontColor: string;
 }
 
 // 默认背景设置
 export const defaultBackgroundSettings: BackgroundSettings = {
   type: 'perspective',
-  color: '#f0f0f0'
+  color: '#7D6A6A5E',
+  fontColor: '#ffffff'
 };
 
 // Shared state
@@ -134,6 +136,10 @@ const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});
 const backgroundSettings = ref<BackgroundSettings>({...defaultBackgroundSettings});
 
+// 自定义尺寸状态
+const customWidth = ref(400);
+const customHeight = ref(400);
+
 // 存储图片颜色信息
 const imageColorInfo = ref<{
   isDark: boolean;
@@ -149,6 +155,7 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
   if (!url) {
     watermarkSettings.value.color = defaultWatermarkSettings.color;
     titleSettings.value.color = defaultTitleSettings.color;
+    backgroundSettings.value.fontColor = defaultBackgroundSettings.fontColor;
     imageColorInfo.value = null;
     return;
   }
@@ -157,6 +164,7 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
     const newColor = color.isDark ? '#ffffff' : '#000000';
     watermarkSettings.value.color = newColor;
     titleSettings.value.color = newColor;
+    backgroundSettings.value.fontColor = newColor;
     
     // 存储图片颜色信息供阴影效果使用
     imageColorInfo.value = {
@@ -173,6 +181,7 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
     console.error(e);
     watermarkSettings.value.color = defaultWatermarkSettings.color;
     titleSettings.value.color = defaultTitleSettings.color;
+    backgroundSettings.value.fontColor = defaultBackgroundSettings.fontColor;
     imageColorInfo.value = null;
   }
 };
@@ -199,6 +208,11 @@ const resetConfig = async () => {
   Object.assign(watermarkSettings.value, JSON.parse(JSON.stringify(defaultWatermarkSettings)));
   Object.assign(titleSettings.value, JSON.parse(JSON.stringify(defaultTitleSettings)));
   Object.assign(previewSettings.value, JSON.parse(JSON.stringify(defaultPreviewSettings)));
+  Object.assign(backgroundSettings.value, JSON.parse(JSON.stringify(defaultBackgroundSettings)));
+  
+  // 重置自定义尺寸
+  customWidth.value = 400;
+  customHeight.value = 400;
   
   // 重新计算当前图片的颜色信息
   await updateTextColorBasedOnImage(imageUrl.value);
@@ -318,6 +332,9 @@ export const useWallpaper = () => {
     watermarkImageUrl,
     watermarkSettings,
     previewSettings,
+    backgroundSettings,
+    customWidth,
+    customHeight,
     deviceOptions,
     fontOptions,
     positionOptions,

@@ -114,13 +114,11 @@ const {
   previewSettings,
   currentDevice,
   watermarkPositionStyle,
+  backgroundSettings,
+  customWidth,
+  customHeight,
   resetConfig
 } = useWallpaper();
-
-const backgroundSettings = ref({
-  type: 'perspective',
-  color: '#7D6A6A5E', // 更新纯色背景的默认值
-});
 
 const previewAreaRef = ref<HTMLElement | null>(null);
 
@@ -161,9 +159,6 @@ const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
 
-// 自定义尺寸相关
-const customWidth = ref(400);
-const customHeight = ref(400);
 
 // 确认自定义尺寸
 const confirmCustomSize = () => {
@@ -265,19 +260,9 @@ defineExpose({
   loadTemplates: () => personalTemplatesRef.value?.loadTemplates()
 });
 
-// 包装resetConfig函数以添加本地逻辑
+// 重置配置
 const handleResetConfig = async () => {
-  // 重置本地状态
-  backgroundSettings.value = {
-    type: 'perspective',
-    color: '#7D6A6A5E',
-  };
-  customWidth.value = 400;
-  customHeight.value = 400;
-  
-  // 调用useWallpaper中的resetConfig
   await resetConfig();
-  
   message.success('配置已重置为默认值');
 };
 
@@ -346,14 +331,6 @@ const handleResetConfig = async () => {
 }
 
 
-.background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent; /* 确保备用背景透明 */
-}
 
 .draggable {
   cursor: move;
@@ -371,53 +348,6 @@ const handleResetConfig = async () => {
   animation: pulse 2s infinite ease-in-out; /* 添加脉冲动画效果 */
 }
 
-.phone-top-icon {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.phone-bottom-icon {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.tablet-top-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.tablet-dock {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.mac-top-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
-
-.mac-dock {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-}
 
 .title-display {
   transition: all 0.3s ease;
@@ -472,14 +402,7 @@ const handleResetConfig = async () => {
   opacity: 0.8;
 }
 
-/* 设备框架通用样式 */
-.device-frame {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-}
+
 
 
 </style>

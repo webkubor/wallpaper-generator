@@ -20,7 +20,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
-const { imageUrl, titleSettings, shadowEffect } = useWallpaper();
+const { imageUrl, shadowEffect, backgroundSettings } = useWallpaper();
 
 // 根据壁纸颜色生成静态阴影样式
 const dynamicShadowStyle = computed(() => ({
@@ -31,7 +31,7 @@ const dynamicShadowStyle = computed(() => ({
 const wallpaperUrl = computed(() => imageUrl.value);
 
 const textColorStyle = computed(() => ({
-  color: titleSettings.value.color,
+  color: backgroundSettings.value.fontColor,
 }));
 
 const lockTime = ref('');

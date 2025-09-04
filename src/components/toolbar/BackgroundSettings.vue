@@ -1,5 +1,5 @@
 <template>
-  <n-divider title-placement="left">预览背景</n-divider>
+  <n-divider title-placement="left">背景</n-divider>
   <n-form-item label="背景类型">
     <n-radio-group v-model:value="backgroundSettings.type">
       <n-radio-button value="perspective">透视</n-radio-button>
@@ -8,6 +8,10 @@
   </n-form-item>
   <n-form-item v-if="backgroundSettings.type === 'color'" label="背景颜色">
     <n-color-picker :modes="['hex']" v-model:value="backgroundSettings.color" />
+  </n-form-item>
+  <n-divider title-placement="left">壁纸字体</n-divider>
+  <n-form-item label="字体颜色">
+    <n-color-picker :modes="['hex']" v-model:value="backgroundSettings.fontColor" />
   </n-form-item>
 </template>
 
@@ -20,6 +24,4 @@ interface Props {
 
 defineProps<Props>();
 
-// BackgroundSettings 组件接收 backgroundSettings 作为 props
-// 直接在模板中使用，无需额外的响应式处理
 </script>
