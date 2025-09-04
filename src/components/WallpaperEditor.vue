@@ -81,7 +81,7 @@ import { computed, ref, type CSSProperties } from 'vue';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '@/composables/useWallpaper';
-import { createDragHandler } from '../utils';
+import { createDragHandler } from '../utils/dragUtils';
 import { type Template } from '../utils/indexedDB';
 
 import { 

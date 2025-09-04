@@ -1,5 +1,5 @@
 <template>
-  <n-modal :show="show" @update:show="$emit('update:show', $event)" preset="card" style="width: 400px;" title="分享卡片">
+  <n-modal :show="show" @update:show="handleUpdateShow" preset="card" style="width: 400px;" title="分享卡片">
     <div class="share-card" ref="shareCardRef">
       <!-- 日期 -->
       <div class="card-date">{{ currentDate }}</div>
@@ -14,7 +14,7 @@
       </div>
       
       <!-- 水印 -->
-      <div class="card-watermark">白日梦壁纸</div>
+      <div class="card-watermark">{{ watermarkSettings.text || '氛围壁纸工坊' }}</div>
     </div>
     
     <template #footer>
@@ -31,6 +31,7 @@ import { ref, computed, watch } from 'vue';
 import { NModal, NButton, NSpace } from 'naive-ui';
 import { useQuotes } from '../../hooks/useQuotes';
 import { captureAndDownload, generateTimestampFilename } from '../../utils/captureUtils';
+import { useWallpaper } from '../../composables/useWallpaper';
 import dayjs from 'dayjs';
 
 interface Props {
@@ -47,7 +48,8 @@ const emit = defineEmits<Emits>();
 
 const shareCardRef = ref<HTMLElement>();
 const { getRandomQuote } = useQuotes();
-const currentQuote = ref('');
+const { watermarkSettings } = useWallpaper();
+const currentQuote = ref(getRandomQuote()); // 初始化时就生成一句
 const currentDate = computed(() => dayjs().format('YYYY/MM/DD'));
 
 // 当弹窗打开时生成随机文案
@@ -59,6 +61,10 @@ watch(() => props.show, (newShow) => {
 
 const handleClose = () => {
   emit('update:show', false);
+};
+
+const handleUpdateShow = (value: boolean) => {
+  emit('update:show', value);
 };
 
 const handleDownloadCard = async () => {
