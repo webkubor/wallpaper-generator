@@ -88,7 +88,21 @@
           </div>
         </n-space>
       </n-collapse-item>
+      
+      <!-- 个人收藏模板 -->
+      <n-collapse-item name="4">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="ImageSquare" class="header-icon" />
+            <span>个人收藏</span>
+          </div>
+        </template>
+        <PersonalTemplates 
+          @load-template="handleLoadTemplate"
+        />
+      </n-collapse-item>
     </n-collapse>
+    
   </n-card>
 </template>
 
@@ -98,6 +112,7 @@ import {
   NSelect, NSwitch, NInputNumber, NTooltip
 } from 'naive-ui';
 import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT } from "@phosphor-icons/vue";
+import PersonalTemplates from './PersonalTemplates.vue';
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
@@ -108,6 +123,7 @@ interface Props {
   backgroundSettings: any;
   customWidth: number;
   customHeight: number;
+  refreshTrigger?: number;
 }
 
 defineProps<Props>();
@@ -118,7 +134,10 @@ const emit = defineEmits<{
   confirmCustomSize: [];
   'update:customWidth': [value: number];
   'update:customHeight': [value: number];
+  togglePersonalTemplates: [];
+  loadTemplate: [template: any];
 }>();
+
 
 // 直接使用 useWallpaper 获取数据
 const { 
@@ -134,9 +153,43 @@ const handleImageUpload = (options: { file: UploadFileInfo }) => {
 const confirmCustomSize = () => {
   emit('confirmCustomSize');
 };
+
+const handleLoadTemplate = (template: any) => {
+  emit('loadTemplate', template);
+};
+
 </script>
 
 <style scoped lang="scss">
+.personal-templates-toggle {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background: var(--n-color-hover);
+    border-color: rgba(244, 208, 63, 0.5);
+  }
+  
+  .template-icon {
+    color: #f4d03f;
+    font-size: 16px;
+  }
+  
+  .toggle-label {
+    color: var(--n-text-color);
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
 .settings-panel {
   width: 380px;
   height: 100%;

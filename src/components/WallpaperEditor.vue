@@ -8,6 +8,7 @@
       @reset-config="handleResetConfig"
       @image-upload="handleImageUpload"
       @confirm-custom-size="confirmCustomSize"
+      @load-template="loadTemplate"
     />
 
     <!-- Center: Preview Area -->
@@ -72,11 +73,6 @@
         </div>
       </div>
       
-      <!-- 个人模板列表 -->
-      <PersonalTemplates 
-        ref="personalTemplatesRef"
-        @load-template="loadTemplate"
-      />
     </div>
 </template>
 
@@ -100,7 +96,6 @@ import MacFrame from './mac/MacFrame.vue';
 import CarFrame from './car/CarFrame.vue';
 import ComboDevices from './combo/ComboDevices.vue';
 import CustomFrame from './custom/CustomFrame.vue';
-import PersonalTemplates from './PersonalTemplates.vue';
 import SettingsToolbar from './SettingsToolbar.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
