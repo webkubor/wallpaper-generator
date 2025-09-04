@@ -97,7 +97,7 @@ import {
   NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NIcon, NButton, NUpload,
   NSelect, NSwitch, NInputNumber, NTooltip
 } from 'naive-ui';
-import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhPaintBrush as PaintBrush } from "@phosphor-icons/vue";
+import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT } from "@phosphor-icons/vue";
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';

@@ -4,7 +4,7 @@
       <div class="footer-left">
         <div class="creator-info">
           <n-icon :component="Sparkles" class="creator-icon" />
-          <span class="creator-text">Created with ❤️ by <span class="highlight">webkubor</span></span>
+          <span class="creator-text">Created with ❤️ by <span class="highlight">webkubor(司南烛)</span></span>
         </div>
       </div>
       <div class="footer-right">
@@ -14,9 +14,7 @@
               <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
                  target="_blank" 
                  class="social-link xiaohongshu">
-                <svg viewBox="0 0 24 24" class="social-icon">
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 5.728-.896 5.728-.514 2.267-2.718 2.267-2.718 2.267s-.637.131-1.022.131c-.386 0-1.022-.131-1.022-.131s-2.204 0-2.718-2.267c0 0-.727-3.87-.896-5.728C8.296 8.16 8.16 7.68 8.16 7.68s.136-.48.136-.96c0-.48-.136-.96-.136-.96s.136-.48.136-.96c0-.48-.136-.96-.136-.96s.48-.48.96-.48.96.48.96.48.48.48.48.96c0 .48-.48.96-.48.96s.48.48.48.96c0 .48-.48.96-.48.96s.48.48.48.96c0 .48-.48.96-.48.96s.48.48.48.96c0 .48-.48.96-.48.96z" fill="#ff2442"/>
-                </svg>
+                <n-icon :component="Heart" class="social-icon" />
               </a>
             </template>
             访问我的小红书
@@ -37,7 +35,7 @@
 
 <script setup lang="ts">
 import { NLayoutFooter, NIcon, NTooltip } from 'naive-ui';
-import { PhEnvelope as Envelope, PhSparkle as Sparkles } from "@phosphor-icons/vue";
+import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from "@phosphor-icons/vue";
 </script>
 
 <style scoped lang="scss">

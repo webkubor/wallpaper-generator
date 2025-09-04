@@ -81,7 +81,7 @@ const topIconWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 75}px
 const bottomIconSize = computed(() => `${(elementWidth.value / BASE_WIDTH) * 50}px`);
 
 // 根据刘海开关动态计算顶部内边距
-const topPadding = computed(() => props.hasNotch ? '35px' : '10px');
+const topPadding = computed(() => props.hasNotch ? '45px' : '10px');
 
 // 动态背景图像样式
 const backgroundImageStyle = computed(() => ({
@@ -141,13 +141,32 @@ onUnmounted(() => {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 35%;
-  height: 35px;
+  width: 120px;
+  height: 30px;
   background-color: #000;
-  border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;
-  z-index: 20; /* 提高z-index使其在最上层 */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  border-radius: 0 0 20px 20px;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle at 0 0, transparent 8px, #000 8px);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle at 8px 0, transparent 8px, #000 8px);
+  }
 }
 
 
@@ -183,8 +202,10 @@ onUnmounted(() => {
 .top-icon {
   width: 100%;
   display: flex;
-  justify-content: flex-end; /* 修改为右对齐 */
+  justify-content: flex-end;
+  align-items: flex-start;
   box-sizing: border-box;
+  margin-top: -10px; /* 向上调整，与刘海对齐 */
 }
 
 .top-icon :deep(svg) {
