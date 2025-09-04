@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import demoWallpaper from '../assets/demo.png'
-import { FastAverageColor } from 'fast-average-color'
+import { analyzeImageColor } from '../utils/colorUtils'
 
 // 类型定义
 export interface Device {
@@ -147,9 +147,6 @@ const imageColorInfo = ref<{
   hex: string;
 } | null>(null);
 
-// 实例化颜色分析器
-const fac = new FastAverageColor();
-
 // 根据图片颜色动态更新文本颜色和阴影效果
 const updateTextColorBasedOnImage = async (url: string | null) => {
   if (!url) {
@@ -159,26 +156,20 @@ const updateTextColorBasedOnImage = async (url: string | null) => {
     imageColorInfo.value = null;
     return;
   }
-  try {
-    const color = await fac.getColorAsync(url);
-    const newColor = color.isDark ? '#ffffff' : '#000000';
-    watermarkSettings.value.color = newColor;
-    titleSettings.value.color = newColor;
-    backgroundSettings.value.fontColor = newColor;
+  
+  const colorResult = await analyzeImageColor(url);
+  if (colorResult) {
+    watermarkSettings.value.color = colorResult.textColor;
+    titleSettings.value.color = colorResult.textColor;
+    backgroundSettings.value.fontColor = colorResult.textColor;
     
     // 存储图片颜色信息供阴影效果使用
     imageColorInfo.value = {
-      isDark: color.isDark,
-      rgba: {
-        r: color.value[0],
-        g: color.value[1],
-        b: color.value[2],
-        a: color.value[3] / 255
-      },
-      hex: color.hex
+      isDark: colorResult.isDark,
+      rgba: colorResult.rgba,
+      hex: colorResult.hex
     };
-  } catch (e) {
-    console.error(e);
+  } else {
     watermarkSettings.value.color = defaultWatermarkSettings.color;
     titleSettings.value.color = defaultTitleSettings.color;
     backgroundSettings.value.fontColor = defaultBackgroundSettings.fontColor;

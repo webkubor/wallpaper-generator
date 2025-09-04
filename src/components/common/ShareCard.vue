@@ -22,7 +22,7 @@
 
       <!-- 卡片内容 -->
       <div class="modal-content">
-        <div class="share-card" ref="shareCardRef">
+        <div class="share-card" ref="shareCardRef" :class="`template-${currentTemplate}`" :style="{ backgroundColor: selectedColor, fontFamily: currentFont.value, color: textColor }">
           <!-- 日期标签 -->
           <div class="card-date-tag">
             <div class="date-dot"></div>
@@ -57,6 +57,28 @@
         </div>
       </div>
 
+      <!-- 颜色选择 -->
+      <div class="card-controls">
+        <div class="color-palette">
+          <div class="color-options">
+            <button 
+              v-for="color in cardColors" 
+              :key="color"
+              class="color-btn"
+              :class="{ active: selectedColor === color }"
+              :style="{ backgroundColor: color }"
+              @click="selectedColor = color"
+            ></button>
+          </div>
+        </div>
+        
+        <button class="refresh-btn" @click="refreshCard">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+            <path d="M13.65 2.35C12.2 0.9 10.2 0 8 0C3.58 0 0 3.58 0 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L9 5h7V-2l-2.35 2.35z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
       <!-- 自定义底部 -->
       <div class="modal-footer">
         <button class="footer-btn secondary" @click="handleClose">
@@ -76,10 +98,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { NModal } from 'naive-ui';
-import { useQuotes } from '../../hooks/useQuotes';
-import { captureAndDownload, generateTimestampFilename } from '../../utils/captureUtils';
-import { useWallpaper } from '../../composables/useWallpaper';
 import dayjs from 'dayjs';
+import html2canvas from 'html2canvas';
+import { getContrastTextColor } from '../../utils/colorUtils';
+import { useQuotes } from '../../hooks/useQuotes';
+import { useWallpaper } from '../../composables/useWallpaper';
 
 interface Props {
   show: boolean;
@@ -94,10 +117,41 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const shareCardRef = ref<HTMLElement>();
-const { getRandomQuote } = useQuotes();
+const { getRandomQuote, getRandomFont, cardColors } = useQuotes();
 const { watermarkSettings } = useWallpaper();
 const currentQuote = ref(getRandomQuote()); // 初始化时就生成一句
 const currentDate = computed(() => dayjs().format('YYYY/MM/DD'));
+
+// 卡片颜色和模板
+const selectedColor = ref(cardColors[0]);
+const currentTemplate = ref(1);
+const currentFont = ref(getRandomFont());
+
+// 使用颜色工具分析背景色并计算文本颜色
+const textColor = ref('#333333');
+
+// 分析背景色并更新文本颜色
+const updateTextColor = async () => {
+  try {
+    const color = await getContrastTextColor(selectedColor.value);
+    textColor.value = color;
+  } catch (error) {
+    console.error('颜色分析失败:', error);
+    textColor.value = '#333333';
+  }
+};
+
+// 监听背景色变化
+watch(selectedColor, updateTextColor, { immediate: true });
+
+// 刷新卡片内容和模板
+const refreshCard = () => {
+  currentQuote.value = getRandomQuote();
+  // 切换模板：1 -> 2, 2 -> 1
+  currentTemplate.value = currentTemplate.value === 1 ? 2 : 1;
+  // 随机切换字体
+  currentFont.value = getRandomFont();
+};
 
 // 当弹窗打开时生成随机文案
 watch(() => props.show, (newShow) => {
@@ -118,15 +172,16 @@ const handleDownloadCard = async () => {
   if (!shareCardRef.value) return;
   
   try {
-    await captureAndDownload(
-      shareCardRef.value,
-      generateTimestampFilename('share-card'),
-      {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true
-      }
-    );
+    const canvas = await html2canvas(shareCardRef.value, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true
+    });
+    
+    const link = document.createElement('a');
+    link.download = `share-card-${Date.now()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
   } catch (error) {
     console.error('下载卡片失败:', error);
   }
@@ -141,92 +196,80 @@ const handleDownloadCard = async () => {
 }
 
 .modal-container {
-  width: 480px;
+  width: 420px;
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: 
-    0 32px 64px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(20px);
   overflow: hidden;
   position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-    z-index: 1;
-  }
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 32px 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: #ffffff;
   
   .header-title {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #1a1a1a;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
     
     .title-icon {
-      font-size: 20px;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      font-size: 16px;
     }
   }
   
   .close-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border: none;
-    background: rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
+    background: transparent;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #666;
-    transition: all 0.2s ease;
+    color: #999;
+    transition: all 0.15s ease;
     
     &:hover {
-      background: rgba(0, 0, 0, 0.08);
-      color: #333;
-      transform: scale(1.05);
+      background: rgba(0, 0, 0, 0.04);
+      color: #666;
     }
   }
 }
 
 .modal-content {
-  padding: 32px;
+  padding: 24px;
   display: flex;
   justify-content: center;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: #ffffff;
 }
 
 .share-card {
-  width: 400px;
-  height: 500px; // 4:5 比例
+  width: 360px;
+  height: 450px; // 4:5 比例
   background: #ffffff;
-  border-radius: 20px;
-  padding: 32px;
+  border-radius: 12px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   position: relative;
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.08),
-    0 8px 16px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.04);
   
   
   .card-date-tag {
@@ -261,7 +304,6 @@ const handleDownloadCard = async () => {
     .quote-mark {
       font-size: 48px;
       color: rgba(244, 208, 63, 0.6);
-      font-family: Georgia, serif;
       line-height: 1;
       position: absolute;
       
@@ -285,13 +327,12 @@ const handleDownloadCard = async () => {
       text-align: center;
       padding: 16px 24px;
       position: relative;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
   }
   
   .card-wallpaper {
-    height: 240px; // 固定高度，避免flex导致的超出
-    margin-bottom: 24px;
+    height: 200px; // 固定高度，避免flex导致的超出
+    margin-bottom: 20px;
     z-index: 1;
     position: relative;
     
@@ -376,49 +417,229 @@ const handleDownloadCard = async () => {
 
 .modal-footer {
   display: flex;
-  gap: 16px;
-  padding: 24px 32px 32px;
+  gap: 12px;
+  padding: 16px 24px 20px;
   background: #ffffff;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
   
   .footer-btn {
     flex: 1;
-    height: 48px;
+    height: 40px;
     border: none;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     
     &.secondary {
-      background: rgba(0, 0, 0, 0.04);
+      background: #f5f5f5;
       color: #666;
       
       &:hover {
-        background: rgba(0, 0, 0, 0.08);
+        background: #e8e8e8;
         color: #333;
-        transform: translateY(-1px);
       }
     }
     
     &.primary {
-      background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
+      background: #007AFF;
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(244, 208, 63, 0.3);
       
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(244, 208, 63, 0.4);
+        background: #0056CC;
+        transform: translateY(-1px);
       }
       
       &:active {
         transform: translateY(0);
       }
+    }
+  }
+}
+
+.card-controls {
+  padding: 16px 24px;
+  background: #fafbfc;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .color-palette {
+    flex: 1;
+    overflow: hidden;
+    
+    .color-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      
+      .color-btn {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        position: relative;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        &.active {
+          border-color: #007AFF;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+          
+          &::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #007AFF;
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          }
+        }
+      }
+    }
+  }
+  
+  .refresh-btn {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    margin-left: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background: #e0e0e0;
+      color: #333;
+      transform: translateY(-1px);
+    }
+    
+    svg {
+      animation: none;
+      width: 16px;
+      height: 16px;
+    }
+    
+    &:active svg {
+      animation: spin 0.4s ease-in-out;
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// 模板2样式 - 极简线条设计
+.share-card.template-2 {
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  
+  .card-date-tag {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    
+    .date-dot {
+      display: none;
+    }
+    
+    span {
+      color: #333;
+      font-weight: 300;
+      text-transform: none;
+      font-size: 24px;
+      line-height: 1;
+      
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 1px;
+        background: #333;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  }
+  
+  .card-quote-section {
+    .quote-mark {
+      display: none;
+    }
+    
+    .card-quote {
+      color: #333;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 1.4;
+      text-align: left;
+      padding: 0;
+      font-style: italic;
+    }
+  }
+  
+  .card-wallpaper .wallpaper-frame {
+    border-radius: 0;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    
+    &::before {
+      display: none;
+    }
+    
+    .wallpaper-placeholder {
+      color: #999;
+      font-weight: 300;
+    }
+  }
+  
+  .card-footer .watermark-section {
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    justify-content: center;
+    
+    .watermark-icon {
+      display: none;
+    }
+    
+    .card-watermark {
+      color: #666;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
   }
 }
