@@ -1,0 +1,17 @@
+{
+  "name": "氛围壁纸工坊",
+  "short_name": "壁纸工坊",
+  "description": "你的心情壁纸生成器，东方美学、水彩风、极简留白。",
+  "icons": [
+    {
+      "src": "/webkubor.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#f4d03f",
+  "background_color": "#1a1f36",
+  "orientation": "portrait-primary"
+}

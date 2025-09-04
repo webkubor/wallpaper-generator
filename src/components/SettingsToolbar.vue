@@ -2,13 +2,22 @@
   <n-card class="settings-panel" hoverable bordered content-style="padding: 10px; height: 100%; overflow: auto;">
     <template #header>
       <div class="settings-header">
-        <span>设置</span>
-        <n-button  quaternary size="small" @click="$emit('resetConfig')">
-          <template #icon>
-            <n-icon :component="ArrowCounterClockwise" />
-          </template>
-          重置
-        </n-button>
+        <div class="header-left">
+          <n-icon :component="Gear" class="settings-icon" />
+          <span class="settings-title">创作面板</span>
+        </div>
+        <div class="header-actions">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary size="small" class="reset-btn" @click="$emit('resetConfig')">
+                <template #icon>
+                  <n-icon :component="ArrowCounterClockwise" />
+                </template>
+              </n-button>
+            </template>
+            重置所有设置
+          </n-tooltip>
+        </div>
       </div>
     </template>
     <n-collapse default-expanded-names="1,3" style="height: 100%; overflow: auto;">
@@ -86,9 +95,9 @@
 <script setup lang="ts">
 import { 
   NCard, NCollapse, NCollapseItem, NSpace, NFormItem, NIcon, NButton, NUpload,
-  NSelect, NSwitch, NInputNumber
+  NSelect, NSwitch, NInputNumber, NTooltip
 } from 'naive-ui';
-import { PhImageSquare as ImageSquare, PhUploadSimple as UploadSimple, PhTextT as TextT, PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise } from "@phosphor-icons/vue";
+import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhPaintBrush as PaintBrush } from "@phosphor-icons/vue";
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
@@ -141,6 +150,43 @@ const confirmCustomSize = () => {
 
 .settings-panel:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .settings-icon {
+      font-size: 18px;
+      color: var(--n-text-color);
+      opacity: 0.8;
+    }
+    
+    .settings-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--n-text-color);
+    }
+  }
+  
+  .header-actions {
+    .reset-btn {
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: var(--n-color-hover);
+        transform: rotate(-15deg);
+      }
+    }
+  }
 }
 
 .collapse-header {

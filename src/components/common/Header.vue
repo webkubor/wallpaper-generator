@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { NLayoutHeader, NButton, NIcon } from 'naive-ui';
+import { NLayoutHeader, NButton, NIcon, NTooltip } from 'naive-ui';
 import { PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
 
 defineEmits<{
@@ -121,6 +121,7 @@ defineEmits<{
         font-style: italic;
         opacity: 0.8;
         line-height: 1;
+        font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
       }
     }
   }
