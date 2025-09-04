@@ -80,6 +80,11 @@ const dateStyle = computed(() => ({
 const topIconWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 75}px`);
 const bottomIconSize = computed(() => `${(elementWidth.value / BASE_WIDTH) * 50}px`);
 
+// 动态计算刘海尺寸和位置
+const notchWidth = computed(() => `${(elementWidth.value / BASE_WIDTH) * 100}px`);
+const notchHeight = computed(() => `${(elementWidth.value / BASE_WIDTH) * 28}px`);
+const notchTop = computed(() => `${(elementWidth.value / BASE_WIDTH) * 20}px`);
+
 // 根据刘海开关动态计算顶部内边距
 const topPadding = computed(() => props.hasNotch ? '45px' : '10px');
 
@@ -138,35 +143,15 @@ onUnmounted(() => {
 
 .notch {
   position: absolute;
-  top: 0;
+  top: v-bind(notchTop);
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 30px;
+  width: v-bind(notchWidth);
+  height: v-bind(notchHeight);
   background-color: #000;
-  border-radius: 0 0 20px 20px;
+  border-radius: 50px;
   z-index: 20;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle at 0 0, transparent 8px, #000 8px);
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle at 8px 0, transparent 8px, #000 8px);
-  }
 }
 
 
@@ -200,12 +185,14 @@ onUnmounted(() => {
 }
 
 .top-icon {
-  width: 100%;
+  position: absolute;
+  top: v-bind(notchTop);
+  right: 20px;
   display: flex;
   justify-content: flex-end;
-  align-items: flex-start;
+  align-items: center;
   box-sizing: border-box;
-  margin-top: -10px; /* 向上调整，与刘海对齐 */
+  height: v-bind(notchHeight);
 }
 
 .top-icon :deep(svg) {
@@ -255,13 +242,40 @@ onUnmounted(() => {
 
 .notch-camera {
   position: absolute;
-  top: 8px;
-  right: 30%;
-  width: 8px;
-  height: 8px;
-  background-color: #1a1a1a;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #0a0a0a 30%, #1a1a1a 50%, #333 100%);
   border-radius: 50%;
-  box-shadow: inset 0 0 2px rgba(255,255,255,0.2);
+  box-shadow: 
+    inset 0 1px 2px rgba(0,0,0,0.8),
+    0 0 3px rgba(0,0,0,0.5);
+}
+
+.notch-camera::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 50%);
+  border-radius: 50%;
+}
+
+.notch-camera::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 25%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  background: #2a2a2a;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1px rgba(255,255,255,0.1);
 }
 
 </style>
