@@ -2,7 +2,10 @@
   <n-layout-header class="header">
     <div class="title-container">
       <img src="/webkubor.svg" class="logo" alt="Logo" />
-      <h1 class="main-title">✨ 壁纸生成器</h1>
+      <div class="title-content">
+        <h1 class="main-title">✨ 氛围壁纸工坊</h1>
+        <p class="subtitle">风有归处，心有颜色。</p>
+      </div>
       <n-button tertiary size="small" class="save-template-button" @click="$emit('saveTemplate')">
         <template #icon>
           <n-icon :component="Star" />
@@ -94,12 +97,28 @@ defineEmits<{
       object-fit: contain;
     }
     
-    .main-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin: 0;
-      font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
-      color: var(--n-text-color);
+    .title-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      
+      .main-title {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0;
+        font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
+        color: var(--n-text-color);
+        line-height: 1.2;
+      }
+      
+      .subtitle {
+        font-size: 12px;
+        color: var(--n-text-color-disabled);
+        margin: 0;
+        font-style: italic;
+        opacity: 0.8;
+        line-height: 1;
+      }
     }
   }
 }

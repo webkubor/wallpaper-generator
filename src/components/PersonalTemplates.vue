@@ -9,6 +9,17 @@
       </div>
       
       <div v-show="templatesExpanded" class="template-content">
+        <!-- 模板工坊头部 -->
+        <div class="template-header">
+          <div class="header-content">
+            <h2 class="workshop-title">个人收藏模板</h2>
+            <p class="workshop-subtitle">保存你的创意灵感</p>
+          </div>
+          <div class="header-decoration">
+            <n-icon :component="Star" class="star-icon" />
+          </div>
+        </div>
+        
         <div v-if="templates.length > 0" class="template-grid">
           <div 
             v-for="template in templates" 
@@ -65,7 +76,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { NIcon, NButton, useMessage } from 'naive-ui';
-import { PhCaretLeft as ChevronLeft, PhCaretRight as ChevronRight, PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
+import { PhCaretLeft as ChevronLeft, PhCaretRight as ChevronRight, PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare, PhStar as Star } from "@phosphor-icons/vue";
 import { templateDB, type Template } from '../utils/indexedDB';
 
 // Props
@@ -179,6 +190,53 @@ defineExpose({
     font-size: 14px;
     transition: all 0.3s ease;
   }
+}
+
+/* 模板工坊头部样式 */
+.template-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 20px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--n-border-color);
+  
+  .header-content {
+    flex: 1;
+    
+    .workshop-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--n-text-color);
+      margin: 0 0 8px 0;
+      background: linear-gradient(135deg, #f4d03f 0%, #ff9a56 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .workshop-subtitle {
+      font-size: 14px;
+      color: var(--n-text-color-disabled);
+      margin: 0;
+      font-style: italic;
+      opacity: 0.8;
+    }
+  }
+  
+  .header-decoration {
+    .star-icon {
+      font-size: 28px;
+      color: #f4d03f;
+      opacity: 0.6;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+  }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.1); }
 }
 
 .template-content {
