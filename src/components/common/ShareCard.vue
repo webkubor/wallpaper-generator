@@ -173,14 +173,16 @@ const handleDownloadCard = async () => {
   
   try {
     const canvas = await html2canvas(shareCardRef.value, {
-      backgroundColor: null,
+      backgroundColor: selectedColor.value,
       scale: 2,
-      useCORS: true
+      useCORS: true,
+      allowTaint: true,
+      logging: false
     });
     
     const link = document.createElement('a');
     link.download = `share-card-${Date.now()}.png`;
-    link.href = canvas.toDataURL();
+    link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
   } catch (error) {
     console.error('下载卡片失败:', error);
@@ -257,8 +259,6 @@ const handleDownloadCard = async () => {
 }
 
 .share-card {
-  width: 360px;
-  height: 450px; // 4:5 比例
   background: #ffffff;
   border-radius: 12px;
   padding: 24px;
@@ -290,7 +290,6 @@ const handleDownloadCard = async () => {
     
     span {
       font-size: 13px;
-      color: #666;
       font-weight: 500;
       letter-spacing: 0.5px;
     }
@@ -321,7 +320,6 @@ const handleDownloadCard = async () => {
     
     .card-quote {
       font-size: 18px;
-      color: #2c3e50;
       line-height: 1.6;
       font-weight: 500;
       text-align: center;
@@ -341,7 +339,6 @@ const handleDownloadCard = async () => {
       height: 100%;
       border-radius: 16px;
       overflow: hidden;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -407,7 +404,6 @@ const handleDownloadCard = async () => {
       
       .card-watermark {
         font-size: 12px;
-        color: #8e9aaf;
         font-weight: 500;
         letter-spacing: 0.5px;
       }
@@ -577,7 +573,6 @@ const handleDownloadCard = async () => {
     }
     
     span {
-      color: #333;
       font-weight: 300;
       text-transform: none;
       font-size: 24px;
@@ -588,7 +583,7 @@ const handleDownloadCard = async () => {
         display: inline-block;
         width: 20px;
         height: 1px;
-        background: #333;
+        background: currentColor;
         margin-right: 8px;
         vertical-align: middle;
       }
@@ -601,7 +596,6 @@ const handleDownloadCard = async () => {
     }
     
     .card-quote {
-      color: #333;
       font-weight: 300;
       font-size: 20px;
       line-height: 1.4;
@@ -613,7 +607,6 @@ const handleDownloadCard = async () => {
   
   .card-wallpaper .wallpaper-frame {
     border-radius: 0;
-    border: 1px solid #ddd;
     box-shadow: none;
     
     &::before {
@@ -636,7 +629,6 @@ const handleDownloadCard = async () => {
     }
     
     .card-watermark {
-      color: #666;
       font-weight: 300;
       text-transform: uppercase;
       letter-spacing: 1px;
