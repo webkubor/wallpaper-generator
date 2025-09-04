@@ -62,6 +62,11 @@ const wallpaperEditorRef = ref<{
 // 获取壁纸配置
 const { watermarkSettings, titleSettings, previewSettings, imageUrl } = useWallpaper();
 
+window.$message.success('成功');
+window.$message.warning('成功');
+window.$message.error('成功');
+window.$message.info('成功');
+
 // 保存为模板函数
 const saveAsTemplate = async () => {
   if (!wallpaperEditorRef.value?.previewAreaRef) {

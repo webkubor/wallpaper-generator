@@ -50,7 +50,7 @@ const handleImageUpload = ({ event }: { file: UploadFileInfo, event?: ProgressEv
   if (event && event.target) {
     const xhr = event.target as XMLHttpRequest;
     const response = JSON.parse(xhr.response);
-    watermarkSettings.value.imageUrl = response.url; // 假设后端返回 { url: '...' }
+    watermarkSettings.value.imageUrl = response.url; 
   }
 };
 </script>
