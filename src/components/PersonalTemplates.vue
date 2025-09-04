@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { NIcon, NButton, useMessage } from 'naive-ui';
+import { NIcon, NButton } from 'naive-ui';
 import { PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
 import { templateDB, type Template } from '../utils/indexedDB';
 
@@ -71,7 +71,6 @@ defineEmits<{
 
 // 响应式数据
 const templates = ref<Template[]>([]);
-const message = useMessage();
 
 // 加载所有模板
 const loadTemplates = async () => {
@@ -87,10 +86,10 @@ const handleDeleteTemplate = async (id: string) => {
   try {
     await templateDB.deleteTemplate(id);
     await loadTemplates(); // 重新加载模板列表
-    message.success('模板删除成功');
+    window.$message.success('模板删除成功');
   } catch (error) {
     console.error('删除模板失败:', error);
-    message.error('删除模板失败');
+    window.$message.error('删除模板失败');
   }
 };
 

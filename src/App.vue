@@ -1,6 +1,5 @@
 <template>
   <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
-    <n-message-provider>
       <n-global-style />
       <n-layout>
       <Header 
@@ -30,7 +29,6 @@
         :wallpaper-image="currentWallpaperImage"
       />
     </n-layout>
-    </n-message-provider>
   </n-config-provider>
 </template>
 <script setup lang="ts">
@@ -39,7 +37,7 @@ import Footer from '@/components/common/Footer.vue';
 import SettingsModal from '@/components/common/SettingsModal.vue';
 import Header from '@/components/common/Header.vue';
 import ShareCard from '@/components/common/ShareCard.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent, NMessageProvider } from "naive-ui";
+import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useWallpaper } from './composables/useWallpaper';
@@ -62,10 +60,7 @@ const wallpaperEditorRef = ref<{
 // 获取壁纸配置
 const { watermarkSettings, titleSettings, previewSettings, imageUrl } = useWallpaper();
 
-window.$message.success('成功');
-window.$message.warning('成功');
-window.$message.error('成功');
-window.$message.info('成功');
+
 
 // 保存为模板函数
 const saveAsTemplate = async () => {

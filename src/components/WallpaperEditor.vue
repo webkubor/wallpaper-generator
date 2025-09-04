@@ -85,7 +85,6 @@ import { createDragHandler } from '../utils/dragUtils';
 import { type Template } from '../utils/indexedDB';
 
 import { 
-  useMessage,
   NModal
 } from 'naive-ui';
 
@@ -99,7 +98,6 @@ import CustomFrame from './custom/CustomFrame.vue';
 import SettingsToolbar from './SettingsToolbar.vue';
 import type { UploadFileInfo } from 'naive-ui';
 
-const message = useMessage();
 
 const { 
   imageUrl, 
@@ -177,7 +175,7 @@ const handleImageUpload = (file: UploadFileInfo) => {
     };
     reader.readAsDataURL(actualFile);
   } else {
-    message.error('请上传图片文件');
+    window.$message.error('请上传图片文件');
   }
 };
 
@@ -185,7 +183,7 @@ const confirmCrop = () => {
   cropperRef.value.getCropData((data: string) => {
     imageUrl.value = data;
     showCropperModal.value = false;
-    message.success('背景图片上传成功');
+    window.$message.success('背景图片上传成功');
   });
 };
 
@@ -242,10 +240,10 @@ const loadTemplate = (template: Template) => {
     Object.assign(watermarkSettings.value, template.config.watermarkSettings);
     Object.assign(titleSettings.value, template.config.titleSettings);
     Object.assign(previewSettings.value, template.config.previewSettings);
-    message.success(`已加载模板: ${template.name}`);
+    window.$message.success(`已加载模板: ${template.name}`);
   } catch (error) {
     console.error('加载模板失败:', error);
-    message.error('加载模板失败');
+    window.$message.error('加载模板失败');
   }
 };
 
@@ -258,7 +256,7 @@ defineExpose({
 // 重置配置
 const handleResetConfig = async () => {
   await resetConfig();
-  message.success('配置已重置为默认值');
+  window.$message.success('配置已重置为默认值');
 };
 
 
