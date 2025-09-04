@@ -15,32 +15,38 @@
             :key="template.id" 
             class="template-card"
           >
-            <div class="template-image-wrapper">
-              <img :src="template.previewImage" :alt="template.name" class="template-image" />
-              <div class="template-overlay">
-                <n-button 
-                  size="small" 
-                  type="primary" 
-                  circle
-                  @click="$emit('loadTemplate', template)" 
-                  class="action-btn load-btn"
-                >
-                  <template #icon>
-                    <n-icon :component="Download" />
-                  </template>
-                </n-button>
-                <n-button 
-                  size="small" 
-                  type="error" 
-                  circle
-                  @click="handleDeleteTemplate(template.id)" 
-                  class="action-btn delete-btn"
-                >
-                  <template #icon>
-                    <n-icon :component="Trash" />
-                  </template>
-                </n-button>
-              </div>
+            <div class="template-preview">
+              <img :src="template.previewImage" :alt="template.name" class="template-thumbnail" />
+            </div>
+            <div class="template-info">
+              <h4 class="template-title">{{ template.name }}</h4>
+              <p class="template-description">{{ formatTemplateDescription(template) }}</p>
+            </div>
+            <div class="template-actions">
+              <n-button 
+                size="small" 
+                color="#f4d03f"
+                dashed
+                @click="$emit('loadTemplate', template)" 
+                class="load-btn"
+              >
+                <template #icon>
+                  <n-icon :component="Download" />
+                </template>
+                加载
+              </n-button>
+              <n-button 
+                size="small" 
+                color="#ef4444"
+                dashed
+                @click="handleDeleteTemplate(template.id)" 
+                class="delete-btn"
+              >
+                <template #icon>
+                  <n-icon :component="Trash" />
+                </template>
+                删除
+              </n-button>
             </div>
           </div>
         </div>
@@ -68,7 +74,7 @@ defineProps<{
 }>();
 
 // Emits
-const emit = defineEmits<{
+defineEmits<{
   loadTemplate: [template: Template];
 }>();
 
@@ -96,6 +102,37 @@ const handleDeleteTemplate = async (id: string) => {
     console.error('删除模板失败:', error);
     message.error('删除模板失败');
   }
+};
+
+// 格式化模板描述
+const formatTemplateDescription = (template: Template) => {
+  const config = template.config;
+  const parts = [];
+  
+  // 设备信息
+  if (config.previewSettings?.selectedDevice) {
+    const deviceNames: Record<string, string> = {
+      'iphone': 'iPhone',
+      'ipad': 'iPad',
+      'mac': 'Mac',
+      'car': '车机',
+      'combo': '组合设备',
+      'custom': '自定义'
+    };
+    parts.push(deviceNames[config.previewSettings.selectedDevice] || '未知设备');
+  }
+  
+  // 水印信息
+  if (config.watermarkSettings?.text) {
+    parts.push(`水印: ${config.watermarkSettings.text}`);
+  }
+  
+  // 标题信息
+  if (config.titleSettings?.show && config.titleSettings?.text) {
+    parts.push(`标题: ${config.titleSettings.text}`);
+  }
+  
+  return parts.length > 0 ? parts.join(' • ') : '个人模板配置';
 };
 
 // 组件挂载时加载模板
@@ -154,81 +191,74 @@ defineExpose({
 
 .template-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .template-card {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
   overflow: hidden;
-  aspect-ratio: 1;
-  cursor: pointer;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
   transition: all 0.3s ease;
   
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    
-    .template-overlay {
-      opacity: 1;
-    }
-    
-    .template-image {
-      transform: scale(1.05);
-    }
   }
 }
 
-.template-image-wrapper {
+.template-preview {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 120px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  overflow: hidden;
 }
 
-.template-image {
+.template-thumbnail {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
-.template-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.template-info {
+  padding: 12px 16px;
+  flex: 1;
 }
 
-.action-btn {
-  backdrop-filter: blur(10px);
-  border: none !important;
-  
-  &.load-btn {
-    background: rgba(24, 160, 88, 0.9) !important;
-    
-    &:hover {
-      background: rgba(24, 160, 88, 1) !important;
-    }
-  }
-  
-  &.delete-btn {
-    background: rgba(208, 48, 80, 0.9) !important;
-    
-    &:hover {
-      background: rgba(208, 48, 80, 1) !important;
-    }
-  }
+.template-title {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--n-text-color);
+  line-height: 1.4;
 }
+
+.template-description {
+  margin: 0;
+  font-size: 12px;
+  color: var(--n-text-color-disabled);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.template-actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--n-border-color);
+  display: flex;
+  gap: 8px;
+}
+
+
 
 .template-empty {
   padding: 32px 20px;

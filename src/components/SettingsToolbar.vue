@@ -3,7 +3,7 @@
     <template #header>
       <div class="settings-header">
         <span>设置</span>
-        <n-button type="warning" size="small" @click="$emit('resetConfig')">
+        <n-button  quaternary size="small" @click="$emit('resetConfig')">
           <template #icon>
             <n-icon :component="ArrowCounterClockwise" />
           </template>

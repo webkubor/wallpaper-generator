@@ -3,7 +3,7 @@
     <div class="title-container">
       <img src="/webkubor.svg" class="logo" alt="Logo" />
       <h1 class="main-title">✨ 壁纸生成器</h1>
-      <n-button type="warning" size="small" class="save-template-button" @click="$emit('saveTemplate')">
+      <n-button tertiary size="small" class="save-template-button" @click="$emit('saveTemplate')">
         <template #icon>
           <n-icon :component="Star" />
         </template>
@@ -11,13 +11,13 @@
       </n-button>
     </div>
     <div class="header-actions">
-      <n-button type="info" class="save-config-button" @click="$emit('saveConfig')">
+      <n-button color="#f4d03f" strong secondary class="save-config-button" @click="$emit('saveConfig')">
         <template #icon>
           <n-icon :component="FloppyDisk" />
         </template>
         保存配置
       </n-button>
-      <n-button type="primary" color="#f4d03f" class="download-button" @click="$emit('download')">
+      <n-button type="primary" color="#f4d03f" strong secondary  class="download-button" @click="$emit('download')">
         <template #icon>
           <n-icon :component="Download" />
         </template>

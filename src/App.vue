@@ -18,6 +18,8 @@
         v-model:show="showDownloadModal"
         v-model:isDark="isDark"
         v-model:downloadOption="downloadOption"
+        v-model:fileNamePrefix="fileNamePrefix"
+        v-model:fileNameMode="fileNameMode"
         :isDownloading="isDownloading"
         @download="downloadWallpaper"
       />
@@ -41,13 +43,15 @@ const isDark = useDark();
 const isDownloading = ref(false);
 const showDownloadModal = ref(false);
 const downloadOption = ref('withBackground'); // 默认包含背景
+const fileNamePrefix = ref('wallpaper'); // 文件名前缀
+const fileNameMode = ref('timestamp'); // 命名模式：timestamp 或 imageName
 const wallpaperEditorRef = ref<{
   previewAreaRef: HTMLElement | null;
   loadTemplates?: () => Promise<void>;
 } | null>(null);
 
 // 获取壁纸配置
-const { watermarkSettings, titleSettings, previewSettings } = useWallpaper();
+const { watermarkSettings, titleSettings, previewSettings, imageUrl } = useWallpaper();
 
 // 保存为模板函数
 const saveAsTemplate = async () => {
@@ -115,6 +119,23 @@ const saveConfig = () => {
   }
 };
 
+// 生成文件名函数
+const generateFileName = () => {
+  const prefix = fileNamePrefix.value || 'wallpaper';
+  
+  if (fileNameMode.value === 'imageName' && imageUrl.value) {
+    // 从图片URL中提取文件名（不包含扩展名）
+    const urlParts = imageUrl.value.split('/');
+    const fileName = urlParts[urlParts.length - 1];
+    const nameWithoutExt = fileName.split('.')[0];
+    return `${prefix}_${nameWithoutExt}.png`;
+  } else {
+    // 使用时间戳
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    return `${prefix}_${timestamp}.png`;
+  }
+};
+
 // 下载壁纸函数
 const downloadWallpaper = () => {
   if (wallpaperEditorRef.value && wallpaperEditorRef.value.previewAreaRef) {
@@ -135,7 +156,7 @@ const downloadWallpaper = () => {
     }).then(canvas => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
-      link.download = 'wallpaper.png';
+      link.download = generateFileName();
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
