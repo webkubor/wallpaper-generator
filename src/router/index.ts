@@ -10,8 +10,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/xhs',
-    name: 'XHSPosterEditor',
-    component: () => import('@/pages/XHSPosterEditor.vue'),
+    name: 'Poster',
+    component: () => import('@/pages/poster/index.vue'),
     meta: { title: '小红书封面大字报' }
   }
 ];
