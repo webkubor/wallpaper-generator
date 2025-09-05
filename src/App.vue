@@ -3,10 +3,12 @@
       <n-global-style />
       <n-layout>
       <Header 
+        :hide-actions="isXHS"
         @save-template="saveAsTemplate"
         @save-config="saveConfig"
         @download="downloadWallpaper"
         @open-settings="showDownloadModal = true"
+        @download-poster="downloadPoster"
       />
       <n-layout-content class="content">
         <router-view v-slot="{ Component }">
@@ -183,6 +185,12 @@ const downloadWallpaper = async () => {
       isDownloading.value = false;
     }
   }
+};
+
+// 下载海报函数
+const downloadPoster = () => {
+  // 触发海报页面的下载事件
+  window.dispatchEvent(new CustomEvent('downloadPoster'));
 };
 
 

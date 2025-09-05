@@ -60,11 +60,3 @@
   --gradient-primary: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   --gradient-overlay: linear-gradient(135deg, rgba(255, 215, 0, 0.8) 0%, rgba(255, 237, 78, 0.6) 100%);
 }
-
-/* 暗色模式下的主题色 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-color: #66b1ff;
-    --primary-color-hover: #8cc5ff;
-  }
-}

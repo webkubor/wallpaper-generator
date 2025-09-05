@@ -79,12 +79,9 @@
       </div>
 
 
-      <div class="controls">
-        <n-button type="primary" @click="downloadPoster">下载封面</n-button>
-        <n-button secondary @click="goHome">返回首页</n-button>
-      </div>
     </div>
 
+    
     <div class="canvas-wrap">
       <div class="preview-section">
         <div class="poster" ref="posterRef" :style="posterStyle">
@@ -97,34 +94,34 @@
             </div>
           </div>
         </div>
-        
-        <div class="template-section">
-          <h3>预设模板</h3>
-          <div class="template-grid">
-            <div 
-              v-for="template in templates" 
-              :key="template.id"
-              class="template-card"
-              @click="applyTemplate(template)"
-            >
-              <div class="template-preview">
-                <div class="template-title" :style="{ fontFamily: template.config.selectedFont }">
-                  {{ template.config.title }}
-                </div>
-                <div class="template-subtitle" :style="{ fontFamily: template.config.subtitleFont }">
-                  {{ template.config.subtitle }}
-                </div>
+      </div>
+      
+      <div class="template-section">
+        <h3>预设模板</h3>
+        <div class="template-grid">
+          <div 
+            v-for="template in templates" 
+            :key="template.id"
+            class="template-card"
+            :class="{ 'template-card-selected': selectedTemplateId === template.id }"
+            @click="applyTemplate(template)"
+          >
+            <div class="template-preview">
+              <div class="template-title" :style="{ fontFamily: template.config.selectedFont }">
+                {{ template.config.title }}
               </div>
-              <div class="template-info">
-                <span class="template-name">{{ template.name }}</span>
-                <span class="template-desc">{{ template.description }}</span>
+              <div class="template-subtitle" :style="{ fontFamily: template.config.subtitleFont }">
+                {{ template.config.subtitle }}
               </div>
+            </div>
+            <div class="template-info">
+              <span class="template-name">{{ template.name }}</span>
+              <span class="template-desc">{{ template.description }}</span>
             </div>
           </div>
         </div>
+    <DesignTips />
       </div>
-      
-      <DesignTips />
     </div>
   </div>
   
@@ -133,24 +130,11 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import type { CSSProperties } from 'vue';
-import { NButton, NInput, NSlider, NSwitch, NColorPicker, NDivider, NSelect, NAlert } from 'naive-ui';
-import { useRouter } from 'vue-router';
+import { NInput, NSlider, NSwitch, NColorPicker, NDivider, NSelect, NAlert } from 'naive-ui';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
 import DesignTips from '@/components/common/DesignTips.vue';
-// 本地同步计算与背景色对比度更高的文本颜色
-// 使用简单的 YIQ/亮度算法，避免异步依赖，便于在 computed 中同步使用
-const getContrastTextColorSync = (hex: string): string => {
-  const n = hex.replace('#', '');
-  const r = parseInt(n.substring(0, 2), 16);
-  const g = parseInt(n.substring(2, 4), 16);
-  const b = parseInt(n.substring(4, 6), 16);
-  // 相对亮度近似：0.299R + 0.587G + 0.114B
-  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 150 ? '#111111' : '#FFFFFF';
-};
 
-const router = useRouter();
 
 const title = ref('江湖秘辛');
 const subtitle = ref('金庸笔下最隐秘的伏笔');
@@ -173,6 +157,9 @@ const subtitleVertical = ref(false);
 const titleStroke = ref(true);
 const titleStrokeColor = ref('#DC143C');
 const subtitleColor = ref('#FFFFFF');
+
+// 当前选中的模板
+const selectedTemplateId = ref('wuxia');
 
 // 预设模板
 interface TemplateConfig {
@@ -283,6 +270,7 @@ const templates = ref<Template[]>([
 
 const applyTemplate = (template: Template) => {
   const config = template.config;
+  selectedTemplateId.value = template.id;
   title.value = config.title;
   subtitle.value = config.subtitle;
   textColor.value = config.textColor;
@@ -367,7 +355,7 @@ const posterRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const subtitleRef = ref<HTMLElement | null>(null);
 
-// 3:4 固定尺寸导出，响应式下也保持比例
+// 海报样式，仅设置背景色
 const posterStyle = computed(() => ({
   backgroundColor: mainColor.value,
   width: '100%',
@@ -405,7 +393,12 @@ watch([
   titleSize, subtitleSize, selectedFont, customFont
 ], () => nextTick(calcTextArea));
 
-onMounted(() => nextTick(calcTextArea));
+onMounted(() => {
+  nextTick(calcTextArea);
+  
+  // 监听来自Header的下载事件
+  window.addEventListener('downloadPoster', downloadPoster);
+});
 
 const downloadPoster = async () => {
   if (!posterRef.value) return;
@@ -421,8 +414,6 @@ const downloadPoster = async () => {
     window.$message?.error('下载失败');
   }
 };
-
-const goHome = () => router.push('/');
 </script>
 
 <style scoped lang="scss">
@@ -466,10 +457,13 @@ const goHome = () => router.push('/');
 }
 
 .template-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 8px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-bottom: 16px;
 }
 
 .template-card {
@@ -482,8 +476,28 @@ const goHome = () => router.push('/');
   flex-shrink: 0;
   
   &:hover {
-    border-color: var(--n-primary-color);
+    border-color: var(--primary-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.template-card-selected {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 2px var(--primary-color);
+    
+    .template-preview {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .template-name {
+      color: white;
+      font-weight: 700;
+    }
+    
+    .template-desc {
+      color: rgba(255, 255, 255, 0.8);
+    }
   }
 }
 
@@ -527,35 +541,38 @@ const goHome = () => router.push('/');
   opacity: 0.6;
 }
 .canvas-wrap {
-  flex: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   gap: 40px;
+  align-items: flex-start;
 }
 .preview-section {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .poster {
-  width: 300px;
+  height: min(60vh, 400px);
+  min-height: 300px;
   aspect-ratio: 3 / 4;
   border-radius: 16px;
+  border: 3px solid var(--primary-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+              0 4px 16px rgba(0, 0, 0, 0.1),
+              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
   margin: 0 auto;
 }
 
 .template-section {
-  width: 100%;
+  flex: 1;
+  min-width: 300px;
   
   h3 {
     margin: 0 0 16px 0;

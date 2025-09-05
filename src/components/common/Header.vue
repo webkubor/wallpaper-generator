@@ -16,7 +16,7 @@
         保存为个人模板
       </n-tooltip>
     </div>
-    <div class="header-actions">
+    <div class="header-actions" v-if="!hideActions">
       <n-button tertiary class="xhs-button" @click="goXHS">
         小红书封面
       </n-button>
@@ -39,6 +39,14 @@
         设置
       </n-button>
     </div>
+    <div class="header-actions" v-else>
+      <n-button color="#ffed4e" @click="$emit('downloadPoster')">
+        下载大字报
+      </n-button>
+      <n-button secondary @click="goHome">
+        返回
+      </n-button>
+    </div>
   </n-layout-header>
 </template>
 
@@ -47,16 +55,26 @@ import { NLayoutHeader, NButton, NIcon, NTooltip } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import { PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
 
+interface Props {
+  hideActions?: boolean;
+}
+
+defineProps<Props>();
+
 defineEmits<{
   saveTemplate: [];
   saveConfig: [];
   download: [];
   openSettings: [];
+  downloadPoster: [];
 }>();
 
 const router = useRouter();
 const goXHS = () => {
   router.push('/xhs');
+};
+const goHome = () => {
+  router.push('/');
 };
 </script>
 
