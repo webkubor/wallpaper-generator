@@ -178,6 +178,8 @@ const applyTemplate = (template: Template) => {
   selectedTemplateId.value = template.id;
   title.value = config.title;
   subtitle.value = config.subtitle;
+  // 如果模板有副标题，确保显示状态为true
+  showSubtitle.value = config.subtitle ? true : false;
   textColor.value = config.textColor;
   mainColor.value = config.mainColor;
   titleSize.value = config.titleSize;
@@ -220,7 +222,7 @@ const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
   fontSize: `${titleSize.value}em`,
   fontFamily: titleFontFamily.value,
-  writingMode: titleVertical.value === 'vertical' ? 'vertical-lr' : 'horizontal-tb',
+  writingMode: titleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: titleVertical.value === 'vertical' ? 'upright' : 'mixed',
   WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
   textShadow: titleShadow.value
@@ -231,7 +233,7 @@ const subtitleStyle = computed((): CSSProperties => ({
   fontSize: `${subtitleSize.value}em`,
   fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
-  writingMode: subtitleVertical.value === 'vertical' ? 'vertical-lr' : 'horizontal-tb',
+  writingMode: subtitleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: subtitleVertical.value === 'vertical' ? 'upright' : 'mixed',
   textShadow: subtitleShadow.value
 }));
@@ -255,8 +257,9 @@ const downloadPoster = async () => {
   try {
     // 使用主标题作为文件名，清理特殊字符
     const sanitizedTitle = title.value.replace(/[^\w\u4e00-\u9fa5]/g, '_') || 'xhs-cover';
+    
     await captureAndDownload(posterRef.value, `${sanitizedTitle}-${formatFileTimestamp()}.png`, {
-      backgroundColor: null,
+      backgroundColor: mainColor.value,
       scale: 2,
       useCORS: true
     });

@@ -8,6 +8,11 @@ export interface CaptureOptions {
   backgroundColor?: string | null;
   scale?: number;
   useCORS?: boolean;
+  allowTaint?: boolean;
+  foreignObjectRendering?: boolean;
+  logging?: boolean;
+  width?: number;
+  height?: number;
 }
 
 /**
