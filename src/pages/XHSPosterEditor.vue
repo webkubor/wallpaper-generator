@@ -8,10 +8,6 @@
           <span>背景色</span>
           <n-color-picker v-model:value="mainColor" :modes="['hex']" size="small"/>
         </div>
-        <div class="control-item">
-          <span>自动限制≤30%</span>
-          <n-switch v-model:value="autoLimitText" />
-        </div>
       </div>
       <div class="controls">
         <div class="control-item">
@@ -58,19 +54,13 @@
         </div>
         <div class="control-item">
           <span>主标题字号</span>
-          <n-slider v-model:value="titleSize" :min="60" :max="180" :step="2" style="width: 180px" />
-          <span class="value">{{ titleSize }}px</span>
+          <n-slider v-model:value="titleSize" :min="3" :max="12" :step="0.25" style="width: 180px" />
+          <span class="value">{{ titleSize }}em</span>
         </div>
         <div class="control-item">
           <span>副标题字号</span>
-          <n-slider v-model:value="subtitleSize" :min="18" :max="60" :step="1" style="width: 180px" />
-          <span class="value">{{ subtitleSize }}px</span>
-        </div>
-        <div class="control-item">
-          <n-alert :type="textAreaPercent > 30 ? 'warning' : 'info'" :show-icon="false">
-            文字占比：{{ textAreaPercent.toFixed(1) }}%
-            <template v-if="textAreaPercent > 30">（建议≤30%，避免触发限流）</template>
-          </n-alert>
+          <n-slider v-model:value="subtitleSize" :min="1" :max="4" :step="0.125" style="width: 180px" />
+          <span class="value">{{ subtitleSize }}em</span>
         </div>
       </div>
 
@@ -81,10 +71,10 @@
     <div class="canvas-wrap">
       <div class="poster" ref="posterRef" :style="posterStyle">
         <div class="poster-inner">
-          <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
+          <div class="poster-title" v-if="title" :style="titleStyle">
             {{ title }}
           </div>
-          <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
+          <div class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
             {{ subtitle }}
           </div>
         </div>
@@ -122,9 +112,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import type { CSSProperties } from 'vue';
-import { NInput, NSlider, NSwitch, NColorPicker, NSelect, NAlert } from 'naive-ui';
+import { NInput, NSlider, NSwitch, NColorPicker, NSelect } from 'naive-ui';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
 import DesignTips from '@/components/common/DesignTips.vue';
@@ -136,9 +126,8 @@ const title = ref('江湖秘辛');
 const subtitle = ref('金庸笔下最隐秘的伏笔');
 const textColor = ref('#000000');
 const mainColor = ref('#1A1A1A');
-const autoLimitText = ref(true);
-const titleSize = ref(120);
-const subtitleSize = ref(28);
+const titleSize = ref(7.5);
+const subtitleSize = ref(1.75);
 
 // 字体选择
 const selectedFont = ref('drizzle');
@@ -168,6 +157,7 @@ const fontOptions = ref<Array<{label: string, value: string}>>(posterConfig.font
 
 const applyTemplate = (template: Template) => {
   const config = template.config;
+  
   selectedTemplateId.value = template.id;
   title.value = config.title;
   subtitle.value = config.subtitle;
@@ -211,7 +201,7 @@ const subtitleFontFamily = computed(() => {
 // 主标题样式
 const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
-  fontSize: `${titleSize.value / 16}em`,
+  fontSize: `${titleSize.value}em`,
   fontFamily: titleFontFamily.value,
   writingMode: titleVertical.value ? 'vertical-lr' : 'horizontal-tb',
   textOrientation: titleVertical.value ? 'upright' : 'mixed',
@@ -221,7 +211,7 @@ const titleStyle = computed((): CSSProperties => ({
 
 // 副标题样式
 const subtitleStyle = computed((): CSSProperties => ({
-  fontSize: `${subtitleSize.value / 16}em`,
+  fontSize: `${subtitleSize.value}em`,
   fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
   writingMode: subtitleVertical.value ? 'vertical-lr' : 'horizontal-tb',
@@ -230,47 +220,15 @@ const subtitleStyle = computed((): CSSProperties => ({
 }));
 
 const posterRef = ref<HTMLElement | null>(null);
-const titleRef = ref<HTMLElement | null>(null);
-const subtitleRef = ref<HTMLElement | null>(null);
 
 // 海报样式，仅设置背景色
 const posterStyle = computed(() => ({
   backgroundColor: mainColor.value,
 }));
 
-// 计算文字占比
-const textAreaPercent = ref(0);
-const calcTextArea = () => {
-  if (!posterRef.value) return;
-  const posterRect = posterRef.value.getBoundingClientRect();
-  let area = 0;
-  if (titleRef.value) {
-    const r = titleRef.value.getBoundingClientRect();
-    area += r.width * r.height;
-  }
-  if (subtitleRef.value) {
-    const r = subtitleRef.value.getBoundingClientRect();
-    area += r.width * r.height;
-  }
-  const percent = (area / (posterRect.width * posterRect.height)) * 100;
-  textAreaPercent.value = percent;
-  if (autoLimitText.value && percent > 30) {
-    // 按比例缩小标题字号以回到阈值附近（粗略近似）
-    const ratio = Math.sqrt(30 / percent);
-    titleSize.value = Math.max(60, Math.floor(titleSize.value * ratio));
-    subtitleSize.value = Math.max(18, Math.floor(subtitleSize.value * ratio));
-    nextTick(() => calcTextArea());
-  }
-};
 
-watch([
-  title, subtitle, textColor, mainColor,
-  titleSize, subtitleSize, selectedFont, customFont
-], () => nextTick(calcTextArea));
 
 onMounted(() => {
-  nextTick(calcTextArea);
-  
   // 监听来自Header的下载事件
   window.addEventListener('downloadPoster', downloadPoster);
 });
@@ -424,15 +382,17 @@ const downloadPoster = async () => {
   display: flex;
   gap: 40px;
   align-items: flex-start;
-
+  
   .poster {
-    width: min(30vw, 300px);
+    width: min(50vw, 550px);
     aspect-ratio: 3 / 4;
     border-radius: 16px;
-    border: 3px solid var(--primary-color);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                0 2px 8px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     justify-content: center;

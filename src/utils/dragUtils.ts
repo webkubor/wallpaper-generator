@@ -114,7 +114,14 @@ export function createDragHandler(
    * 鼠标按下事件处理
    */
   const onMouseDown = (e: MouseEvent) => {
-    e.preventDefault();
+    // 只在左键点击时阻止默认行为，保留右键菜单
+    if (e.button === 0) {
+      e.preventDefault();
+    }
+    
+    // 只处理左键拖拽
+    if (e.button !== 0) return;
+    
     isDragging = true;
     startPos = { x: e.clientX, y: e.clientY };
     initialOffset = getCurrentOffset();
