@@ -79,15 +79,13 @@
 
     
     <div class="canvas-wrap">
-      <div class="preview-section">
-        <div class="poster" ref="posterRef" :style="posterStyle">
-          <div class="poster-inner">
-            <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
-              {{ title }}
-            </div>
-            <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
-              {{ subtitle }}
-            </div>
+      <div class="poster" ref="posterRef" :style="posterStyle">
+        <div class="poster-inner">
+          <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
+            {{ title }}
+          </div>
+          <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
+            {{ subtitle }}
           </div>
         </div>
       </div>
@@ -126,7 +124,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import type { CSSProperties } from 'vue';
-import { NInput, NSlider, NSwitch, NColorPicker, NDivider, NSelect, NAlert } from 'naive-ui';
+import { NInput, NSlider, NSwitch, NColorPicker, NSelect, NAlert } from 'naive-ui';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
 import DesignTips from '@/components/common/DesignTips.vue';
@@ -213,7 +211,7 @@ const subtitleFontFamily = computed(() => {
 // 主标题样式
 const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
-  fontSize: titleSize.value + 'px',
+  fontSize: `${titleSize.value / 16}em`,
   fontFamily: titleFontFamily.value,
   writingMode: titleVertical.value ? 'vertical-lr' : 'horizontal-tb',
   textOrientation: titleVertical.value ? 'upright' : 'mixed',
@@ -223,11 +221,12 @@ const titleStyle = computed((): CSSProperties => ({
 
 // 副标题样式
 const subtitleStyle = computed((): CSSProperties => ({
-  fontSize: subtitleSize.value + 'px',
+  fontSize: `${subtitleSize.value / 16}em`,
   fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
   writingMode: subtitleVertical.value ? 'vertical-lr' : 'horizontal-tb',
-  textOrientation: subtitleVertical.value ? 'upright' : 'mixed'
+  textOrientation: subtitleVertical.value ? 'upright' : 'mixed',
+  textShadow: subtitleShadow.value
 }));
 
 const posterRef = ref<HTMLElement | null>(null);
@@ -237,9 +236,6 @@ const subtitleRef = ref<HTMLElement | null>(null);
 // 海报样式，仅设置背景色
 const posterStyle = computed(() => ({
   backgroundColor: mainColor.value,
-  width: '100%',
-  height: '100vh',
-  overflow: 'auto',
 }));
 
 // 计算文字占比
@@ -302,48 +298,53 @@ const downloadPoster = async () => {
   padding: 20px;
   min-height: 100vh;
   justify-content: space-around;
-}
-.toolbar {
-  width: max(30vw, 350px);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px;
-  height: fit-content;
-}
-.controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-.control-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  min-height: 36px;
-  
-  span:first-child {
-    min-width: 80px;
-    font-weight: 500;
+
+  .toolbar {
+    width: max(30vw, 350px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    height: fit-content;
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      align-items: start;
+
+      .control-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        min-height: 36px;
+        
+        span:first-child {
+          min-width: 80px;
+          font-weight: 500;
+        }
+
+        &.area-indicator {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          gap: 4px !important;
+        }
+      }
+    }
   }
-}
 
-.area-indicator {
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  gap: 4px !important;
-}
-
-.template-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  max-height: 60vh;
-  overflow-y: auto;
-  margin-bottom: 16px;
-  padding:10px;
+  .template-section {
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      padding: 10px;
+    }
+  }
 }
 
 .template-card {
@@ -367,131 +368,127 @@ const downloadPoster = async () => {
     box-shadow: 0 0 0 2px var(--primary-color);
     
     .template-preview {
-      background-color: rgba(212, 175, 55, 0.05);
+      border-color: var(--primary-color);
     }
     
-    .template-name {
+    :deep(.n-card-header) {
       color: var(--primary-color);
-      font-weight: 700;
-    }
-    
-    .template-desc {
-      color: var(--primary-color);
-      opacity: 0.8;
     }
   }
 }
 
 .template-preview {
-  height: 60px;
-  background: var(--n-card-color);
-  border-radius: 4px;
+  width: 100%;
+  height: 120px;
+  border-radius: 6px;
+  border: 1px solid var(--n-border-color);
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  align-items: center;
+  font-size: 10px;
   position: relative;
   overflow: hidden;
-}
 
-.template-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 2px;
-}
+  .template-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
 
-.template-subtitle {
-  font-size: 9px;
-  opacity: 0.7;
+  .template-subtitle {
+    font-size: 9px;
+    opacity: 0.7;
+  }
 }
 
 .template-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  .template-name {
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .template-desc {
+    font-size: 11px;
+    opacity: 0.6;
+  }
 }
 
-.template-name {
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.template-desc {
-  font-size: 11px;
-  opacity: 0.6;
-}
 .canvas-wrap {
   flex: 1;
   display: flex;
   gap: 40px;
   align-items: flex-start;
-}
-.preview-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  flex: 0 0 auto;
-}
 
-.poster {
-  height: min(50vh, 300px);
-  max-height: 85vh;
-  aspect-ratio: 3 / 4;
-  border-radius: 16px;
-  border: 3px solid var(--primary-color);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-              0 4px 16px rgba(0, 0, 0, 0.1),
-              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  margin: 0 auto;
-}
+  .poster {
+    width: min(30vw, 300px);
+    aspect-ratio: 3 / 4;
+    border-radius: 16px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 
-.template-section {
-  flex: 1;
-  min-width: 300px;
-  
-  h3 {
-    margin: 0 0 16px 0;
-    font-size: 18px;
-    font-weight: 600;
+    .poster-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+
+      .poster-title {
+        font-weight: bold;
+        text-align: center;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        word-wrap: break-word;
+        word-break: break-all;
+        max-width: 90%;
+      }
+
+      .poster-subtitle {
+        text-align: center;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-all;
+        max-width: 90%;
+      }
+    }
+  }
+
+  .template-section {
+    width: 300px;
+    flex-shrink: 0;
   }
 }
-.poster-inner {
-  position: relative;
-  z-index: 2;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.value {
+  color: var(--primary-color);
+  font-weight: 500;
+  min-width: 40px;
+  text-align: right;
 }
-.poster-title {
-  font-size: 120px;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-  word-wrap: break-word;
-  word-break: break-all;
-  max-width: 100%;
-  max-height: 80vh;
-  overflow: hidden;
-}
-.poster-subtitle {
-  margin-top: 12px;
-  font-size: 28px;
-  opacity: 0.9;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
-}
+
 .secondary-block {
   position: absolute;
   z-index: 1;
 }
+
 .accent-badge {
   position: absolute;
   z-index: 3;
