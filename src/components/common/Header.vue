@@ -17,6 +17,9 @@
       </n-tooltip>
     </div>
     <div class="header-actions">
+      <n-button tertiary class="xhs-button" @click="goXHS">
+        小红书封面
+      </n-button>
       <n-button color="#f4d03f" strong secondary class="save-config-button" @click="$emit('saveConfig')">
         <template #icon>
           <n-icon :component="FloppyDisk" />
@@ -41,6 +44,7 @@
 
 <script setup lang="ts">
 import { NLayoutHeader, NButton, NIcon, NTooltip } from 'naive-ui';
+import { useRouter } from 'vue-router';
 import { PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
 
 defineEmits<{
@@ -49,6 +53,11 @@ defineEmits<{
   download: [];
   openSettings: [];
 }>();
+
+const router = useRouter();
+const goXHS = () => {
+  router.push('/xhs');
+};
 </script>
 
 <style scoped lang="scss">

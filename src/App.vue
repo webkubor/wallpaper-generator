@@ -9,7 +9,10 @@
         @open-settings="showDownloadModal = true"
       />
       <n-layout-content class="content">
-        <WallpaperEditor ref="wallpaperEditorRef" />
+        <router-view v-slot="{ Component }">
+          <component :is="Component" v-if="isXHS" />
+        </router-view>
+        <WallpaperEditor v-if="!isXHS" ref="wallpaperEditorRef" />
       </n-layout-content>
       <Footer />
       <!-- 系统设置模态框 -->
@@ -40,12 +43,15 @@ import ShareCard from '@/components/common/ShareCard.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
+import { useRoute } from 'vue-router';
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
 import { captureWallpaper } from './utils/captureUtils';
 import { formatFileTimestamp } from './utils/time';
 
 const isDark = useDark();
+const route = useRoute();
+const isXHS = computed(() => route.path === '/xhs');
 const isDownloading = ref(false);
 const showDownloadModal = ref(false);
 const showShareCard = ref(false);

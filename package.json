@@ -15,7 +15,8 @@
     "fast-average-color": "^9.5.0",
     "html2canvas": "^1.4.1",
     "vue": "^3.5.18",
-    "vue-cropper": "^1.1.4"
+    "vue-cropper": "^1.1.4",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@phosphor-icons/vue": "^2.2.1",
@@ -29,7 +30,6 @@
     "unplugin-auto-import": "^20.1.0",
     "unplugin-vue-components": "^29.0.0",
     "vite": "^7.1.2",
-    "vue-router": "^4.5.1",
     "vue-tsc": "^3.0.5"
   }
 }
