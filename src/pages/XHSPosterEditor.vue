@@ -4,26 +4,11 @@
       <n-input v-model:value="title" placeholder="输入封面主标题（大字）" size="large" />
       <n-input v-model:value="subtitle" placeholder="输入副标题（可选）" />
 
+      <n-divider title-placement="left">背景</n-divider>
       <div class="controls">
         <div class="control-item">
-          <span>主色(60%)</span>
-          <input type="color" v-model="mainColor" />
-        </div>
-        <div class="control-item">
-          <span>辅色(30%)</span>
-          <input type="color" v-model="secondaryColor" />
-        </div>
-        <div class="control-item">
-          <span>强调色(10%)</span>
-          <input type="color" v-model="accentColor" />
-        </div>
-        <div class="control-item">
-          <span>布局</span>
-          <n-select v-model:value="layout" :options="layoutOptions" style="width: 140px" />
-        </div>
-        <div class="control-item">
-          <span>显示强调元素</span>
-          <n-switch v-model:value="showAccent" />
+          <span>背景色</span>
+          <n-color-picker v-model:value="mainColor" :modes="['hex']" size="small"/>
         </div>
         <div class="control-item">
           <span>自动限制≤30%</span>
@@ -31,7 +16,50 @@
         </div>
       </div>
 
+      <n-divider title-placement="left">排版</n-divider>
       <div class="controls">
+        <div class="control-item">
+          <span>主标题字体</span>
+          <n-select v-model:value="selectedFont" :options="fontOptions" style="width: 180px" />
+        </div>
+        <div class="control-item" v-if="selectedFont === 'custom'">
+          <span>自定义字体</span>
+          <n-input v-model:value="customFont" placeholder="输入字体名称" style="width: 160px" />
+        </div>
+        <div class="control-item">
+          <span>副标题字体</span>
+          <n-select v-model:value="subtitleFont" :options="fontOptions" style="width: 180px" />
+        </div>
+        <div class="control-item">
+          <span>主标题排版</span>
+          <n-switch v-model:value="titleVertical" checked-value="vertical" unchecked-value="horizontal">
+            <template #checked>竖排</template>
+            <template #unchecked>横排</template>
+          </n-switch>
+        </div>
+        <div class="control-item">
+          <span>副标题排版</span>
+          <n-switch v-model:value="subtitleVertical" checked-value="vertical" unchecked-value="horizontal">
+            <template #checked>竖排</template>
+            <template #unchecked>横排</template>
+          </n-switch>
+        </div>
+        <div class="control-item">
+          <span>主标题颜色</span>
+          <n-color-picker v-model:value="textColor" :modes="['hex']" size="small"/>
+        </div>
+        <div class="control-item">
+          <span>副标题颜色</span>
+          <n-color-picker v-model:value="subtitleColor" :modes="['hex']" size="small"/>
+        </div>
+        <div class="control-item">
+          <span>主标题描边</span>
+          <n-switch v-model:value="titleStroke" />
+        </div>
+        <div class="control-item" v-if="titleStroke">
+          <span>描边颜色</span>
+          <n-color-picker v-model:value="titleStrokeColor" :modes="['hex']" size="small"/>
+        </div>
         <div class="control-item">
           <span>主标题字号</span>
           <n-slider v-model:value="titleSize" :min="60" :max="180" :step="2" style="width: 180px" />
@@ -42,35 +70,57 @@
           <n-slider v-model:value="subtitleSize" :min="18" :max="60" :step="1" style="width: 180px" />
           <span class="value">{{ subtitleSize }}px</span>
         </div>
-        <div class="control-item area-indicator" :class="{ warn: textAreaPercent > 30 }">
-          文字占比：<b>{{ textAreaPercent.toFixed(1) }}%</b>
-          <span v-if="textAreaPercent > 30">（建议≤30%，避免触发限流）</span>
+        <div class="control-item">
+          <n-alert :type="textAreaPercent > 30 ? 'warning' : 'info'" :show-icon="false">
+            文字占比：{{ textAreaPercent.toFixed(1) }}%
+            <template v-if="textAreaPercent > 30">（建议≤30%，避免触发限流）</template>
+          </n-alert>
+        </div>
+      </div>
+
+
+      <n-divider title-placement="left">预设模板</n-divider>
+      <div class="template-grid">
+        <div 
+          v-for="template in templates" 
+          :key="template.id"
+          class="template-card"
+          @click="applyTemplate(template)"
+        >
+          <div class="template-preview">
+            <div class="template-title" :style="{ fontFamily: template.config.selectedFont }">
+              {{ template.config.title }}
+            </div>
+            <div class="template-subtitle" :style="{ fontFamily: template.config.subtitleFont }">
+              {{ template.config.subtitle }}
+            </div>
+          </div>
+          <div class="template-info">
+            <span class="template-name">{{ template.name }}</span>
+            <span class="template-desc">{{ template.description }}</span>
+          </div>
         </div>
       </div>
 
       <div class="controls">
-        <n-button type="primary" color="#f4d03f" @click="downloadPoster">下载封面</n-button>
+        <n-button type="primary" @click="downloadPoster">下载封面</n-button>
         <n-button secondary @click="goHome">返回首页</n-button>
       </div>
     </div>
 
     <div class="canvas-wrap">
       <div class="poster" ref="posterRef" :style="posterStyle">
-        <!-- 辅助色 30% 区域：根据布局放置 -->
-        <div v-if="layout !== 'none'" class="secondary-block" :style="secondaryBlockStyle"></div>
-
-        <!-- 强调色 10% 元素：例如角标/圆形 -->
-        <div v-if="showAccent" class="accent-badge" :style="accentStyle"></div>
-
-        <div class="poster-inner" :style="{ color: textColor, fontFamily: currentFont.value }">
-          <div ref="titleRef" class="poster-title" :style="{ fontSize: titleSize + 'px' }">
-            {{ title || '小红书封面大字报' }}
+        <div class="poster-inner">
+          <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
+            {{ title }}
           </div>
-          <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="{ fontSize: subtitleSize + 'px' }">
+          <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
             {{ subtitle }}
           </div>
         </div>
       </div>
+      
+      <DesignTips />
     </div>
   </div>
   
@@ -78,36 +128,236 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
-import { NButton, NInput, NSlider, NSwitch, NSelect } from 'naive-ui';
+import type { CSSProperties } from 'vue';
+import { NButton, NInput, NSlider, NSwitch, NColorPicker, NDivider, NSelect, NAlert } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
-import { useQuotes } from '@/hooks/useQuotes';
+import DesignTips from '@/components/common/DesignTips.vue';
+// 本地同步计算与背景色对比度更高的文本颜色
+// 使用简单的 YIQ/亮度算法，避免异步依赖，便于在 computed 中同步使用
+const getContrastTextColorSync = (hex: string): string => {
+  const n = hex.replace('#', '');
+  const r = parseInt(n.substring(0, 2), 16);
+  const g = parseInt(n.substring(2, 4), 16);
+  const b = parseInt(n.substring(4, 6), 16);
+  // 相对亮度近似：0.299R + 0.587G + 0.114B
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 150 ? '#111111' : '#FFFFFF';
+};
 
 const router = useRouter();
-const { getRandomFont } = useQuotes();
-const currentFont = ref(getRandomFont());
 
-const title = ref('');
-const subtitle = ref('');
-const textColor = ref('#ffffff');
-// 631 配色
-const mainColor = ref('#141414');
-const secondaryColor = ref('#222222');
-const accentColor = ref('#f4d03f');
-
-// 布局：none / bottom30 / side30
-const layout = ref<'none' | 'bottom30' | 'side30'>('bottom30');
-const layoutOptions = [
-  { label: '无辅助区', value: 'none' },
-  { label: '底部 30%', value: 'bottom30' },
-  { label: '侧边 30%', value: 'side30' },
-];
-
-const showAccent = ref(true);
+const title = ref('江湖秘辛');
+const subtitle = ref('金庸笔下最隐秘的伏笔');
+const textColor = ref('#000000');
+const mainColor = ref('#1A1A1A');
 const autoLimitText = ref(true);
 const titleSize = ref(120);
 const subtitleSize = ref(28);
+
+// 字体选择
+const selectedFont = ref('drizzle');
+const customFont = ref('');
+const subtitleFont = ref('SimSun');
+
+// 文字排版
+const titleVertical = ref(true);
+const subtitleVertical = ref(false);
+
+// 文字描边
+const titleStroke = ref(true);
+const titleStrokeColor = ref('#DC143C');
+const subtitleColor = ref('#FFFFFF');
+
+// 预设模板
+interface TemplateConfig {
+  title: string;
+  subtitle: string;
+  textColor: string;
+  mainColor: string;
+  titleSize: number;
+  subtitleSize: number;
+  selectedFont: string;
+  subtitleFont: string;
+  titleVertical: boolean;
+  subtitleVertical: boolean;
+  titleStroke: boolean;
+  titleStrokeColor: string;
+  subtitleColor: string;
+}
+
+interface Template {
+  id: string;
+  name: string;
+  description: string;
+  config: TemplateConfig;
+}
+
+const templates = ref<Template[]>([
+  {
+    id: 'wuxia',
+    name: '武侠风',
+    description: '毛笔字体，竖排布局，红色描边',
+    config: {
+      title: '江湖秘辛',
+      subtitle: '金庸笔下最隐秘的伏笔',
+      textColor: '#000000',
+      mainColor: '#1A1A1A',
+      titleSize: 120,
+      subtitleSize: 28,
+      selectedFont: 'drizzle',
+      subtitleFont: 'SimSun',
+      titleVertical: true,
+      subtitleVertical: false,
+      titleStroke: true,
+      titleStrokeColor: '#DC143C',
+      subtitleColor: '#FFFFFF'
+    }
+  },
+  {
+    id: 'modern',
+    name: '现代简约',
+    description: '简洁字体，横排布局，无描边',
+    config: {
+      title: '设计美学',
+      subtitle: '探索现代生活的艺术之美',
+      textColor: '#2D3748',
+      mainColor: '#F7FAFC',
+      titleSize: 100,
+      subtitleSize: 24,
+      selectedFont: 'PingFang SC',
+      subtitleFont: 'PingFang SC',
+      titleVertical: false,
+      subtitleVertical: false,
+      titleStroke: false,
+      titleStrokeColor: '#000000',
+      subtitleColor: '#718096'
+    }
+  },
+  {
+    id: 'cute',
+    name: '可爱萌系',
+    description: '圆润字体，彩色搭配，温馨风格',
+    config: {
+      title: '甜蜜日常',
+      subtitle: '记录生活中的小确幸',
+      textColor: '#FF6B9D',
+      mainColor: '#FFF5F8',
+      titleSize: 110,
+      subtitleSize: 26,
+      selectedFont: 'cute',
+      subtitleFont: 'AlimamaFangYuanTiVF-Thin',
+      titleVertical: false,
+      subtitleVertical: false,
+      titleStroke: false,
+      titleStrokeColor: '#000000',
+      subtitleColor: '#A0AEC0'
+    }
+  },
+  {
+    id: 'tech',
+    name: '科技未来',
+    description: '英文字体，深色背景，科幻感',
+    config: {
+      title: 'FUTURE',
+      subtitle: 'Technology Changes Everything',
+      textColor: '#00F5FF',
+      mainColor: '#0D1117',
+      titleSize: 130,
+      subtitleSize: 30,
+      selectedFont: 'DIN Alternate',
+      subtitleFont: 'Helvetica Neue',
+      titleVertical: false,
+      subtitleVertical: false,
+      titleStroke: true,
+      titleStrokeColor: '#1E90FF',
+      subtitleColor: '#8B949E'
+    }
+  }
+]);
+
+const applyTemplate = (template: Template) => {
+  const config = template.config;
+  title.value = config.title;
+  subtitle.value = config.subtitle;
+  textColor.value = config.textColor;
+  mainColor.value = config.mainColor;
+  titleSize.value = config.titleSize;
+  subtitleSize.value = config.subtitleSize;
+  selectedFont.value = config.selectedFont;
+  subtitleFont.value = config.subtitleFont;
+  titleVertical.value = config.titleVertical;
+  subtitleVertical.value = config.subtitleVertical;
+  titleStroke.value = config.titleStroke;
+  titleStrokeColor.value = config.titleStrokeColor;
+  subtitleColor.value = config.subtitleColor;
+};
+const fontOptions = [
+  { label: 'PingFang SC（苹果）', value: 'PingFang SC' },
+  { label: 'Microsoft YaHei（微软雅黑）', value: 'Microsoft YaHei' },
+  { label: 'Source Han Sans（思源黑体）', value: 'Source Han Sans SC' },
+  { label: 'Noto Sans CJK（谷歌）', value: 'Noto Sans CJK SC' },
+  { label: 'Alibaba PuHuiTi（阿里普惠体）', value: 'Alibaba PuHuiTi' },
+  { label: 'HarmonyOS Sans（鸿蒙）', value: 'HarmonyOS Sans SC' },
+  { label: 'DIN Alternate（英文数字）', value: 'DIN Alternate' },
+  { label: 'Helvetica Neue（经典）', value: 'Helvetica Neue' },
+  { label: '阿里妈妈方圆体（圆润）', value: 'AlimamaFangYuanTiVF-Thin' },
+  { label: '可爱字体（萌系）', value: 'cute' },
+  { label: '毛笔字体（艺术）', value: 'drizzle' },
+  { label: 'AI中文字体', value: 'AiChinese02' },
+  { label: '中文字体3', value: 'Chinese3' },
+  { label: '英文标题字体', value: 'vampire-wars' },
+  { label: '自定义字体', value: 'custom' }
+];
+
+// 计算主标题字体
+const titleFontFamily = computed(() => {
+  if (selectedFont.value === 'custom' && customFont.value) {
+    return customFont.value;
+  } else if (selectedFont.value === 'system') {
+    return '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  } else {
+    return selectedFont.value;
+  }
+});
+
+// 计算副标题字体
+const subtitleFontFamily = computed(() => {
+  if (subtitleFont.value === 'custom' && customFont.value) {
+    return customFont.value;
+  } else if (subtitleFont.value === 'system') {
+    return '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  } else {
+    return subtitleFont.value;
+  }
+});
+
+// 主标题样式
+const titleStyle = computed((): CSSProperties => {
+  const style: CSSProperties = {
+    fontSize: titleSize.value + 'px',
+    fontFamily: titleFontFamily.value,
+    color: textColor.value,
+    writingMode: titleVertical.value ? 'vertical-rl' : 'horizontal-tb',
+    textOrientation: titleVertical.value ? 'upright' : 'mixed'
+  };
+  
+  if (titleStroke.value) {
+    style.textShadow = `2px 2px 0 ${titleStrokeColor.value}, -2px -2px 0 ${titleStrokeColor.value}, 2px -2px 0 ${titleStrokeColor.value}, -2px 2px 0 ${titleStrokeColor.value}`;
+  }
+  
+  return style;
+});
+
+// 副标题样式
+const subtitleStyle = computed((): CSSProperties => ({
+  fontSize: subtitleSize.value + 'px',
+  fontFamily: subtitleFontFamily.value,
+  color: subtitleColor.value,
+  writingMode: subtitleVertical.value ? 'vertical-rl' : 'horizontal-tb',
+  textOrientation: subtitleVertical.value ? 'upright' : 'mixed'
+}));
 
 const posterRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
@@ -116,49 +366,10 @@ const subtitleRef = ref<HTMLElement | null>(null);
 // 3:4 固定尺寸导出，响应式下也保持比例
 const posterStyle = computed(() => ({
   backgroundColor: mainColor.value,
+  width: '100%',
+  height: '100vh',
+  overflow: 'auto',
 }));
-
-// 计算辅助色 30% 区域样式
-const secondaryBlockStyle = computed(() => {
-  if (!posterRef.value) return {};
-  const w = posterRef.value.clientWidth;
-  const h = posterRef.value.clientHeight;
-  const style: Record<string, string> = {
-    backgroundColor: secondaryColor.value,
-    position: 'absolute',
-  };
-  if (layout.value === 'bottom30') {
-    style.left = '0';
-    style.right = '0';
-    style.bottom = '0';
-    style.height = Math.round(h * 0.3) + 'px';
-  } else if (layout.value === 'side30') {
-    style.top = '0';
-    style.bottom = '0';
-    style.right = '0';
-    style.width = Math.round(w * 0.3) + 'px';
-  }
-  return style;
-});
-
-// 计算强调色 10% 区域：放置右上角角标，面积约为 10%
-const accentStyle = computed(() => {
-  if (!posterRef.value) return {};
-  const w = posterRef.value.clientWidth;
-  const h = posterRef.value.clientHeight;
-  const area = w * h * 0.1; // 10%
-  const size = Math.round(Math.sqrt(area)); // 近似正方形
-  return {
-    position: 'absolute',
-    top: '24px',
-    right: '24px',
-    width: size + 'px',
-    height: size + 'px',
-    backgroundColor: accentColor.value,
-    borderRadius: '12px',
-    opacity: '0.9'
-  } as Record<string, string>;
-});
 
 // 计算文字占比
 const textAreaPercent = ref(0);
@@ -186,8 +397,8 @@ const calcTextArea = () => {
 };
 
 watch([
-  title, subtitle, textColor, mainColor, secondaryColor, accentColor, layout, showAccent,
-  titleSize, subtitleSize
+  title, subtitle, textColor, mainColor,
+  titleSize, subtitleSize, selectedFont, customFont
 ], () => nextTick(calcTextArea));
 
 onMounted(() => nextTick(calcTextArea));
@@ -213,38 +424,113 @@ const goHome = () => router.push('/');
 <style scoped lang="scss">
 .xhs-page {
   display: flex;
-  gap: 16px;
-  padding: 16px;
+  gap: 20px;
+  padding: 20px;
+  min-height: 100vh;
 }
 .toolbar {
-  width: 340px;
+  width: 360px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  padding: 20px;
+  height: fit-content;
 }
 .controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  align-items: start;
 }
 .control-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(0,0,0,0.04);
-  padding: 6px 10px;
+  gap: 12px;
+  font-size: 14px;
+  min-height: 36px;
+  
+  span:first-child {
+    min-width: 80px;
+    font-weight: 500;
+  }
+}
+
+.area-indicator {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.template-card {
+  border: 1px solid var(--n-border-color);
   border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--n-primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.template-preview {
+  height: 80px;
+  background: var(--n-card-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.template-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.template-subtitle {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.template-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.template-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.template-desc {
+  font-size: 12px;
+  opacity: 0.6;
 }
 .canvas-wrap {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
 }
 .poster {
-  width: 900px;
-  height: 1200px;
+  width: clamp(240px, 50vw, 480px);
+  aspect-ratio: 3 / 4; /* 始终保持 3:4 比例 */
+  min-height: 320px;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -267,11 +553,13 @@ const goHome = () => router.push('/');
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: 2px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 .poster-subtitle {
   margin-top: 12px;
   font-size: 28px;
   opacity: 0.9;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
 }
 .secondary-block {
   position: absolute;
@@ -284,25 +572,14 @@ const goHome = () => router.push('/');
 @media (max-width: 1024px) {
   .xhs-page {
     flex-direction: column;
+    padding: 16px;
   }
   .toolbar {
     width: 100%;
+    padding: 16px;
   }
-  .poster {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3/4;
+  .controls {
+    grid-template-columns: 1fr;
   }
-  .poster-title {
-    font-size: 13vw;
-  }
-  .poster-subtitle {
-    font-size: 3.2vw;
-  }
-}
-.area-indicator {
-  font-weight: 600;
-  &.warn { color: #e74c3c; }
-  .value { opacity: 0.7; margin-left: 6px; }
 }
 </style>
