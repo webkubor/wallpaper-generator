@@ -79,29 +79,6 @@
       </div>
 
 
-      <n-divider title-placement="left">预设模板</n-divider>
-      <div class="template-grid">
-        <div 
-          v-for="template in templates" 
-          :key="template.id"
-          class="template-card"
-          @click="applyTemplate(template)"
-        >
-          <div class="template-preview">
-            <div class="template-title" :style="{ fontFamily: template.config.selectedFont }">
-              {{ template.config.title }}
-            </div>
-            <div class="template-subtitle" :style="{ fontFamily: template.config.subtitleFont }">
-              {{ template.config.subtitle }}
-            </div>
-          </div>
-          <div class="template-info">
-            <span class="template-name">{{ template.name }}</span>
-            <span class="template-desc">{{ template.description }}</span>
-          </div>
-        </div>
-      </div>
-
       <div class="controls">
         <n-button type="primary" @click="downloadPoster">下载封面</n-button>
         <n-button secondary @click="goHome">返回首页</n-button>
@@ -109,13 +86,40 @@
     </div>
 
     <div class="canvas-wrap">
-      <div class="poster" ref="posterRef" :style="posterStyle">
-        <div class="poster-inner">
-          <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
-            {{ title }}
+      <div class="preview-section">
+        <div class="poster" ref="posterRef" :style="posterStyle">
+          <div class="poster-inner">
+            <div ref="titleRef" class="poster-title" v-if="title" :style="titleStyle">
+              {{ title }}
+            </div>
+            <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
+              {{ subtitle }}
+            </div>
           </div>
-          <div ref="subtitleRef" class="poster-subtitle" v-if="subtitle" :style="subtitleStyle">
-            {{ subtitle }}
+        </div>
+        
+        <div class="template-section">
+          <h3>预设模板</h3>
+          <div class="template-grid">
+            <div 
+              v-for="template in templates" 
+              :key="template.id"
+              class="template-card"
+              @click="applyTemplate(template)"
+            >
+              <div class="template-preview">
+                <div class="template-title" :style="{ fontFamily: template.config.selectedFont }">
+                  {{ template.config.title }}
+                </div>
+                <div class="template-subtitle" :style="{ fontFamily: template.config.subtitleFont }">
+                  {{ template.config.subtitle }}
+                </div>
+              </div>
+              <div class="template-info">
+                <span class="template-name">{{ template.name }}</span>
+                <span class="template-desc">{{ template.description }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -462,10 +466,10 @@ const goHome = () => router.push('/');
 }
 
 .template-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
 }
 
 .template-card {
@@ -474,6 +478,8 @@ const goHome = () => router.push('/');
   padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 180px;
+  flex-shrink: 0;
   
   &:hover {
     border-color: var(--n-primary-color);
@@ -482,7 +488,7 @@ const goHome = () => router.push('/');
 }
 
 .template-preview {
-  height: 80px;
+  height: 60px;
   background: var(--n-card-color);
   border-radius: 4px;
   display: flex;
@@ -495,13 +501,13 @@ const goHome = () => router.push('/');
 }
 
 .template-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .template-subtitle {
-  font-size: 10px;
+  font-size: 9px;
   opacity: 0.7;
 }
 
@@ -513,11 +519,11 @@ const goHome = () => router.push('/');
 
 .template-name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .template-desc {
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.6;
 }
 .canvas-wrap {
@@ -527,10 +533,16 @@ const goHome = () => router.push('/');
   justify-content: space-between;
   gap: 40px;
 }
+.preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
 .poster {
-  width: clamp(240px, 50vw, 480px);
-  aspect-ratio: 3 / 4; /* 始终保持 3:4 比例 */
-  min-height: 320px;
+  width: 300px;
+  aspect-ratio: 3 / 4;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -539,6 +551,17 @@ const goHome = () => router.push('/');
   text-align: center;
   position: relative;
   box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  margin: 0 auto;
+}
+
+.template-section {
+  width: 100%;
+  
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
 }
 .poster-inner {
   position: relative;
