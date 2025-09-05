@@ -28,10 +28,6 @@
           <span>主标题字体</span>
           <n-select v-model:value="selectedFont" :options="fontOptions" style="width: 180px" />
         </div>
-        <div class="control-item" v-if="selectedFont === 'custom'">
-          <span>自定义字体</span>
-          <n-input v-model:value="customFont" placeholder="输入字体名称" style="width: 160px" />
-        </div>
         <div class="control-item">
           <span>副标题字体</span>
           <n-select v-model:value="subtitleFont" :options="fontOptions" style="width: 180px" />
@@ -341,6 +337,7 @@ const downloadPoster = async () => {
   transition: all 0.2s ease;
   min-width: 180px;
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.09);
   
   &:hover {
     border-color: var(--primary-color);

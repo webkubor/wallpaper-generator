@@ -31,10 +31,6 @@
         {
             "label": "中文字体3",
             "value": "Chinese3"
-        },
-        {
-            "label": "自定义字体",
-            "value": "custom"
         }
     ],
     "templates": [
