@@ -217,7 +217,7 @@ const titleStyle = computed((): CSSProperties => ({
   fontFamily: titleFontFamily.value,
   writingMode: titleVertical.value ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: titleVertical.value ? 'upright' : 'mixed',
-  WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : 'none',
+  WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
   textShadow: titleShadow.value
 }));
 
