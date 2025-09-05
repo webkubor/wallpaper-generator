@@ -236,7 +236,9 @@ onMounted(() => {
 const downloadPoster = async () => {
   if (!posterRef.value) return;
   try {
-    await captureAndDownload(posterRef.value, `xhs-cover-${formatFileTimestamp()}.png`, {
+    // 使用主标题作为文件名，清理特殊字符
+    const sanitizedTitle = title.value.replace(/[^\w\u4e00-\u9fa5]/g, '_') || 'xhs-cover';
+    await captureAndDownload(posterRef.value, `${sanitizedTitle}-${formatFileTimestamp()}.png`, {
       backgroundColor: null,
       scale: 2,
       useCORS: true
