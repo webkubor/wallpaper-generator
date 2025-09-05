@@ -66,7 +66,7 @@ const fontFamilies = [
   },
   {
     name: '中文AI',
-    value: 'Chinese3'
+    value: 'Wuxia'
   },
   {
     name: '爱心字体',

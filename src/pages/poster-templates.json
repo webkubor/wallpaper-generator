@@ -30,7 +30,7 @@
         },
         {
             "label": "武侠风",
-            "value": "Chinese3"
+            "value": "Wuxia"
         }
     ],
     "templates": [
@@ -45,8 +45,8 @@
                 "mainColor": "#1A1A1A",
                 "titleSize": 7.5,
                 "subtitleSize": 1.75,
-                "selectedFont": "Chinese3",
-                "subtitleFont": "Chinese3",
+                "selectedFont": "Wuxia",
+                "subtitleFont": "Wuxia",
                 "titleVertical": true,
                 "subtitleVertical": false,
                 "titleStroke": true,
