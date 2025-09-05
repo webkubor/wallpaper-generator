@@ -187,7 +187,7 @@
 
           <!-- 个人收藏 -->
           <template v-else-if="mobileActivePanel === 'templates'">
-            <PersonalTemplates @load-template="loadTemplate" />
+            <PersonalTemplates ref="personalTemplatesRef" @load-template="loadTemplate" />
           </template>
       </div>
     </MobileBottomSheet>

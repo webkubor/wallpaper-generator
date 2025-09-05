@@ -98,6 +98,9 @@ const saveAsTemplate = async () => {
     
     await templateDB.saveTemplate(template);
     console.log('模板保存成功！', template);
+    if (window && (window as any).$message) {
+      (window as any).$message.success('模板保存成功');
+    }
     
     // 通知 WallpaperEditor 刷新模板列表
     if (wallpaperEditorRef.value?.loadTemplates) {
@@ -105,6 +108,9 @@ const saveAsTemplate = async () => {
     }
   } catch (error) {
     console.error('保存模板时出错:', error);
+    if (window && (window as any).$message) {
+      ;(window as any).$message.error('模板保存失败');
+    }
   }
 };
 
@@ -121,8 +127,14 @@ const saveConfig = () => {
     
     localStorage.setItem('wallpaper-config', JSON.stringify(config));
     console.log('配置保存成功！', config);
+    if (window && (window as any).$message) {
+      (window as any).$message.success('配置已保存');
+    }
   } catch (error) {
     console.error('保存配置时出错:', error);
+    if (window && (window as any).$message) {
+      ;(window as any).$message.error('配置保存失败');
+    }
   }
 };
 
