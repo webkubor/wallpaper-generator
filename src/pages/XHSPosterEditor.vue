@@ -215,7 +215,7 @@ const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
   fontSize: titleSize.value + 'px',
   fontFamily: titleFontFamily.value,
-  writingMode: titleVertical.value ? 'vertical-rl' : 'horizontal-tb',
+  writingMode: titleVertical.value ? 'vertical-lr' : 'horizontal-tb',
   textOrientation: titleVertical.value ? 'upright' : 'mixed',
   WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
   textShadow: titleShadow.value
@@ -226,7 +226,7 @@ const subtitleStyle = computed((): CSSProperties => ({
   fontSize: subtitleSize.value + 'px',
   fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
-  writingMode: subtitleVertical.value ? 'vertical-rl' : 'horizontal-tb',
+  writingMode: subtitleVertical.value ? 'vertical-lr' : 'horizontal-tb',
   textOrientation: subtitleVertical.value ? 'upright' : 'mixed'
 }));
 
@@ -476,6 +476,11 @@ const downloadPoster = async () => {
   line-height: 1.05;
   letter-spacing: 2px;
   text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  word-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
 }
 .poster-subtitle {
   margin-top: 12px;

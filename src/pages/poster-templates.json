@@ -85,6 +85,28 @@
             }
         },
         {
+            "id": "wuxia-qinggong",
+            "name": "武侠轻功盘点",
+            "description": "黑白主色+金色点缀，毛笔大字营造武侠感",
+            "config": {
+              "title": "盘点金庸笔下轻功天花板",
+              "subtitle": "江湖谁能凌空而行？",
+              "textColor": "#000000",
+              "mainColor": "#FFFFFF",
+              "titleSize": 102,
+              "subtitleSize": 28,
+              "selectedFont": "drizzle", 
+              "subtitleFont": "PingFang SC",
+              "titleVertical": true,
+              "subtitleVertical": false,
+              "titleStroke": true,
+              "titleStrokeColor": "#FFD700",
+              "subtitleColor": "#4A4A4A",
+              "titleShadow": "0 4px 12px rgba(0,0,0,0.35)",
+              "subtitleShadow": "0 2px 6px rgba(0,0,0,0.25)"
+            }
+          },
+        {
             "id": "modern",
             "name": "现代简约",
             "description": "简洁字体，横排布局，无描边",
@@ -171,6 +193,28 @@
                   "titleShadow": "0 2px 8px rgba(47,133,90,0.25)",
                   "subtitleShadow": "0 1px 4px rgba(104,211,145,0.2)"
                 }
+        },
+        {
+            "id": "cold-minimal",
+            "name": "高冷极简黑白风",
+            "description": "黑白配色，留白极简，高冷氛围",
+            "config": {
+                "title": "孤影行",
+                "subtitle": "冷冽江湖里的独行者",
+                "textColor": "#000000",
+                "mainColor": "#FFFFFF",
+                "titleSize": 110,
+                "subtitleSize": 24,
+                "selectedFont": "Helvetica Neue",
+                "subtitleFont": "PingFang SC",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#4A4A4A",
+                "titleShadow": "none",
+                "subtitleShadow": "none"
+            }
         },
         {
             "id": "chinese-retro",
