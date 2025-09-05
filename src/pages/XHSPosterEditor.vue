@@ -135,8 +135,8 @@ const customFont = ref('');
 const subtitleFont = ref('SimSun');
 
 // 文字排版
-const titleVertical = ref(true);
-const subtitleVertical = ref(false);
+const titleVertical = ref('vertical');
+const subtitleVertical = ref('horizontal');
 
 // 文字描边
 const titleStroke = ref(true);
@@ -167,8 +167,8 @@ const applyTemplate = (template: Template) => {
   subtitleSize.value = config.subtitleSize;
   selectedFont.value = config.selectedFont;
   subtitleFont.value = config.subtitleFont;
-  titleVertical.value = config.titleVertical;
-  subtitleVertical.value = config.subtitleVertical;
+  titleVertical.value = config.titleVertical ? 'vertical' : 'horizontal';
+  subtitleVertical.value = config.subtitleVertical ? 'vertical' : 'horizontal';
   titleStroke.value = config.titleStroke;
   titleStrokeColor.value = config.titleStrokeColor;
   subtitleColor.value = config.subtitleColor;
@@ -203,8 +203,8 @@ const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
   fontSize: `${titleSize.value}em`,
   fontFamily: titleFontFamily.value,
-  writingMode: titleVertical.value ? 'vertical-lr' : 'horizontal-tb',
-  textOrientation: titleVertical.value ? 'upright' : 'mixed',
+  writingMode: titleVertical.value === 'vertical' ? 'vertical-lr' : 'horizontal-tb',
+  textOrientation: titleVertical.value === 'vertical' ? 'upright' : 'mixed',
   WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
   textShadow: titleShadow.value
 }));
@@ -214,8 +214,8 @@ const subtitleStyle = computed((): CSSProperties => ({
   fontSize: `${subtitleSize.value}em`,
   fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
-  writingMode: subtitleVertical.value ? 'vertical-lr' : 'horizontal-tb',
-  textOrientation: subtitleVertical.value ? 'upright' : 'mixed',
+  writingMode: subtitleVertical.value === 'vertical' ? 'vertical-lr' : 'horizontal-tb',
+  textOrientation: subtitleVertical.value === 'vertical' ? 'upright' : 'mixed',
   textShadow: subtitleShadow.value
 }));
 
