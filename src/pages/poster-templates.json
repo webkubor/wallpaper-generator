@@ -1,32 +1,12 @@
 {
     "fontOptions": [
         {
-            "label": "PingFang SC（苹果）",
-            "value": "PingFang SC"
-        },
-        {
-            "label": "Microsoft YaHei（微软雅黑）",
-            "value": "Microsoft YaHei"
-        },
-        {
-            "label": "Source Han Sans（思源黑体）",
-            "value": "Source Han Sans SC"
-        },
-        {
-            "label": "Noto Sans CJK（谷歌）",
-            "value": "Noto Sans CJK SC"
-        },
-        {
             "label": "Alibaba PuHuiTi（阿里普惠体）",
             "value": "Alibaba PuHuiTi"
         },
         {
-            "label": "HarmonyOS Sans（鸿蒙）",
-            "value": "HarmonyOS Sans SC"
-        },
-        {
-            "label": "DIN Alternate（英文数字）",
-            "value": "DIN Alternate"
+            "label": "SimSun（宋体）",
+            "value": "SimSun"
         },
         {
             "label": "Helvetica Neue（经典）",
@@ -51,10 +31,6 @@
         {
             "label": "中文字体3",
             "value": "Chinese3"
-        },
-        {
-            "label": "英文标题字体",
-            "value": "vampire-wars"
         },
         {
             "label": "自定义字体",

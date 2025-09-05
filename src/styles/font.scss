@@ -20,12 +20,7 @@
     font-style: normal;
   }
   
-  @font-face {
-    font-family: 'vampire-wars';
-    src: url('@/assets/fonts/vampire-wars.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
+
   
   @font-face {
     font-family: 'AiChinese02';
@@ -58,7 +53,4 @@
 
   .chinese-500 {
     font-family: 'AiChinese02';
-  }
-  .en-title {
-    font-family: 'vampire-wars';
   }

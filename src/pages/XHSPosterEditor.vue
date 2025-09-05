@@ -221,21 +221,27 @@ const subtitleFontFamily = computed(() => {
 const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
   fontSize: `${titleSize.value}em`,
-  fontFamily: titleFontFamily.value,
+  fontFamily: `'${titleFontFamily.value}', sans-serif`,
   writingMode: titleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: titleVertical.value === 'vertical' ? 'upright' : 'mixed',
   WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
-  textShadow: titleShadow.value
+  textShadow: titleShadow.value,
+  fontFeatureSettings: 'kern',
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'grayscale'
 }));
 
 // 副标题样式
 const subtitleStyle = computed((): CSSProperties => ({
   fontSize: `${subtitleSize.value}em`,
-  fontFamily: subtitleFontFamily.value,
+  fontFamily: `'${subtitleFontFamily.value}', sans-serif`,
   color: subtitleColor.value,
   writingMode: subtitleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: subtitleVertical.value === 'vertical' ? 'upright' : 'mixed',
-  textShadow: subtitleShadow.value
+  textShadow: subtitleShadow.value,
+  fontFeatureSettings: 'kern',
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'grayscale'
 }));
 
 const posterRef = ref<HTMLElement | null>(null);

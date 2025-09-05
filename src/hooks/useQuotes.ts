@@ -79,10 +79,6 @@ const fontFamilies = [
   {
     name: '中文500',
     value: 'AiChinese02'
-  },
-  {
-    name: '英文标题',
-    value: 'vampire-wars'
   }
 ]
 
