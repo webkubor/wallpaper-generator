@@ -437,8 +437,8 @@ const downloadPoster = async () => {
 }
 
 .poster {
-  height: min(60vh, 400px);
-  min-height: 300px;
+  height: min(50vh, 300px);
+  max-height: 85vh;
   aspect-ratio: 3 / 4;
   border-radius: 16px;
   border: 3px solid var(--primary-color);

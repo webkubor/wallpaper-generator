@@ -1,101 +1,186 @@
 {
-  "fontOptions": [
-    { "label": "PingFang SC（苹果）", "value": "PingFang SC" },
-    { "label": "Microsoft YaHei（微软雅黑）", "value": "Microsoft YaHei" },
-    { "label": "Source Han Sans（思源黑体）", "value": "Source Han Sans SC" },
-    { "label": "Noto Sans CJK（谷歌）", "value": "Noto Sans CJK SC" },
-    { "label": "Alibaba PuHuiTi（阿里普惠体）", "value": "Alibaba PuHuiTi" },
-    { "label": "HarmonyOS Sans（鸿蒙）", "value": "HarmonyOS Sans SC" },
-    { "label": "DIN Alternate（英文数字）", "value": "DIN Alternate" },
-    { "label": "Helvetica Neue（经典）", "value": "Helvetica Neue" },
-    { "label": "阿里妈妈方圆体（圆润）", "value": "AlimamaFangYuanTiVF-Thin" },
-    { "label": "可爱字体（萌系）", "value": "cute" },
-    { "label": "毛笔字体（艺术）", "value": "drizzle" },
-    { "label": "AI中文字体", "value": "AiChinese02" },
-    { "label": "中文字体3", "value": "Chinese3" },
-    { "label": "英文标题字体", "value": "vampire-wars" },
-    { "label": "自定义字体", "value": "custom" }
-  ],
-  "templates": [
-    {
-      "id": "wuxia",
-      "name": "武侠风",
-      "description": "毛笔字体，竖排布局，红色描边",
-      "config": {
-        "title": "江湖秘辛",
-        "subtitle": "金庸笔下最隐秘的伏笔",
-        "textColor": "#000000",
-        "mainColor": "#1A1A1A",
-        "titleSize": 120,
-        "subtitleSize": 28,
-        "selectedFont": "drizzle",
-        "subtitleFont": "SimSun",
-        "titleVertical": true,
-        "subtitleVertical": false,
-        "titleStroke": true,
-        "titleStrokeColor": "#DC143C",
-        "subtitleColor": "#FFFFFF"
-      }
-    },
-    {
-      "id": "modern",
-      "name": "现代简约",
-      "description": "简洁字体，横排布局，无描边",
-      "config": {
-        "title": "设计美学",
-        "subtitle": "探索现代生活的艺术之美",
-        "textColor": "#2D3748",
-        "mainColor": "#F7FAFC",
-        "titleSize": 100,
-        "subtitleSize": 24,
-        "selectedFont": "PingFang SC",
-        "subtitleFont": "PingFang SC",
-        "titleVertical": false,
-        "subtitleVertical": false,
-        "titleStroke": false,
-        "titleStrokeColor": "#000000",
-        "subtitleColor": "#718096"
-      }
-    },
-    {
-      "id": "cute",
-      "name": "可爱萌系",
-      "description": "圆润字体，彩色搭配，温馨风格",
-      "config": {
-        "title": "甜蜜日常",
-        "subtitle": "记录生活中的小确幸",
-        "textColor": "#FF6B9D",
-        "mainColor": "#FFF5F8",
-        "titleSize": 110,
-        "subtitleSize": 26,
-        "selectedFont": "cute",
-        "subtitleFont": "AlimamaFangYuanTiVF-Thin",
-        "titleVertical": false,
-        "subtitleVertical": false,
-        "titleStroke": false,
-        "titleStrokeColor": "#000000",
-        "subtitleColor": "#A0AEC0"
-      }
-    },
-    {
-      "id": "tech",
-      "name": "科技未来",
-      "description": "英文字体，深色背景，科幻感",
-      "config": {
-        "title": "FUTURE",
-        "subtitle": "Technology Changes Everything",
-        "textColor": "#00F5FF",
-        "mainColor": "#0D1117",
-        "titleSize": 130,
-        "subtitleSize": 30,
-        "selectedFont": "DIN Alternate",
-        "subtitleFont": "Helvetica Neue",
-        "titleVertical": false,
-        "subtitleVertical": false,
-        "titleStroke": true,
-        "titleStrokeColor": "#1E90FF",
-        "subtitleColor": "#8B949E"
-      }
-    }
-  ]
+    "fontOptions": [
+        {
+            "label": "PingFang SC（苹果）",
+            "value": "PingFang SC"
+        },
+        {
+            "label": "Microsoft YaHei（微软雅黑）",
+            "value": "Microsoft YaHei"
+        },
+        {
+            "label": "Source Han Sans（思源黑体）",
+            "value": "Source Han Sans SC"
+        },
+        {
+            "label": "Noto Sans CJK（谷歌）",
+            "value": "Noto Sans CJK SC"
+        },
+        {
+            "label": "Alibaba PuHuiTi（阿里普惠体）",
+            "value": "Alibaba PuHuiTi"
+        },
+        {
+            "label": "HarmonyOS Sans（鸿蒙）",
+            "value": "HarmonyOS Sans SC"
+        },
+        {
+            "label": "DIN Alternate（英文数字）",
+            "value": "DIN Alternate"
+        },
+        {
+            "label": "Helvetica Neue（经典）",
+            "value": "Helvetica Neue"
+        },
+        {
+            "label": "阿里妈妈方圆体（圆润）",
+            "value": "AlimamaFangYuanTiVF-Thin"
+        },
+        {
+            "label": "可爱字体（萌系）",
+            "value": "cute"
+        },
+        {
+            "label": "毛笔字体（艺术）",
+            "value": "drizzle"
+        },
+        {
+            "label": "AI中文字体",
+            "value": "AiChinese02"
+        },
+        {
+            "label": "中文字体3",
+            "value": "Chinese3"
+        },
+        {
+            "label": "英文标题字体",
+            "value": "vampire-wars"
+        },
+        {
+            "label": "自定义字体",
+            "value": "custom"
+        }
+    ],
+    "templates": [
+        {
+            "id": "wuxia",
+            "name": "武侠风",
+            "description": "毛笔字体，竖排布局，红色描边",
+            "config": {
+                "title": "江湖秘辛",
+                "subtitle": "金庸笔下最隐秘的伏笔",
+                "textColor": "#000000",
+                "mainColor": "#1A1A1A",
+                "titleSize": 120,
+                "subtitleSize": 28,
+                "selectedFont": "drizzle",
+                "subtitleFont": "SimSun",
+                "titleVertical": true,
+                "subtitleVertical": false,
+                "titleStroke": true,
+                "titleStrokeColor": "#DC143C",
+                "subtitleColor": "#FFFFFF"
+            }
+        },
+        {
+            "id": "modern",
+            "name": "现代简约",
+            "description": "简洁字体，横排布局，无描边",
+            "config": {
+                "title": "设计美学",
+                "subtitle": "探索现代生活的艺术之美",
+                "textColor": "#2D3748",
+                "mainColor": "#F7FAFC",
+                "titleSize": 100,
+                "subtitleSize": 24,
+                "selectedFont": "PingFang SC",
+                "subtitleFont": "PingFang SC",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#718096"
+            }
+        },
+        {
+            "id": "cute",
+            "name": "可爱萌系",
+            "description": "圆润字体，彩色搭配，温馨风格",
+            "config": {
+                "title": "甜蜜日常",
+                "subtitle": "记录生活中的小确幸",
+                "textColor": "#FF6B9D",
+                "mainColor": "#FFF5F8",
+                "titleSize": 110,
+                "subtitleSize": 26,
+                "selectedFont": "cute",
+                "subtitleFont": "AlimamaFangYuanTiVF-Thin",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#A0AEC0"
+            }
+        },
+        {
+            "id": "luxury-tech",
+            "name": "黑金科幻",
+            "description": "黑色背景+金属金字，未来感与奢华结合",
+            "config": {
+              "title": "NEO FUTURE",
+              "subtitle": "Beyond the Digital Age",
+              "textColor": "#FFD700",
+              "mainColor": "#0A0A0A",
+              "titleSize": 128,
+              "subtitleSize": 30,
+              "selectedFont": "DIN Alternate",
+              "subtitleFont": "Helvetica Neue",
+              "titleVertical": false,
+              "subtitleVertical": false,
+              "titleStroke": true,
+              "titleStrokeColor": "#B8860B",
+              "subtitleColor": "#C0C0C0"
+            }
+          },
+        {
+                "id": "fresh-healing",
+                "name": "清新治愈",
+                "description": "浅绿色调，清新自然，简洁温暖",
+                "config": {
+                  "title": "慢生活",
+                  "subtitle": "在日常里寻找治愈感",
+                  "textColor": "#2F855A",
+                  "mainColor": "#F0FFF4",
+                  "titleSize": 100,
+                  "subtitleSize": 26,
+                  "selectedFont": "Alibaba PuHuiTi",
+                  "subtitleFont": "HarmonyOS Sans SC",
+                  "titleVertical": false,
+                  "subtitleVertical": false,
+                  "titleStroke": false,
+                  "titleStrokeColor": "#000000",
+                  "subtitleColor": "#68D391"
+                }
+        },
+        {
+            "id": "chinese-retro",
+            "name": "国潮复古",
+            "description": "大红底+金色字，复古大字报感",
+            "config": {
+                "title": "国潮风尚",
+                "subtitle": "传统与现代的融合之美",
+                "textColor": "#FFD700",
+                "mainColor": "#B22222",
+                "titleSize": 120,
+                "subtitleSize": 28,
+                "selectedFont": "Source Han Sans SC",
+                "subtitleFont": "SimSun",
+                "titleVertical": true,
+                "subtitleVertical": false,
+                "titleStroke": true,
+                "titleStrokeColor": "#8B0000",
+                "subtitleColor": "#FFF8DC"
+            }
+        }
+    ]
 }
