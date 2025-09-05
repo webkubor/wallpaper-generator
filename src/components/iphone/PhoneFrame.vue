@@ -35,9 +35,7 @@
 import { useWallpaper } from '@/composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useElementSize } from '@vueuse/core';
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-dayjs.locale('zh-cn');
+import { getLockScreenNow } from '@/utils/time';
 import PhoneTopIcon from './PhoneTopIcon.vue';
 import PhoneFlashlightIcon from './PhoneFlashlightIcon.vue';
 import PhoneCameraIcon from './PhoneCameraIcon.vue';
@@ -108,9 +106,9 @@ const currentDate = ref('');
 let timer: number;
 
 const updateTime = () => {
-  const now = dayjs();
-  currentDate.value = now.format('dddd, M月D日');
-  currentTime.value = now.format('HH:mm');
+  const { date, time } = getLockScreenNow();
+  currentDate.value = date;
+  currentTime.value = time;
 };
 
 onMounted(() => {

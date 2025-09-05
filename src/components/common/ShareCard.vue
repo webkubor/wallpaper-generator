@@ -95,7 +95,7 @@
 import { ref, computed, watch } from 'vue';
 import { NModal, NButton, NSpace } from 'naive-ui';
 import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
-import dayjs from 'dayjs';
+import { formatNow, formatFileTimestamp } from '@/utils/time';
 import html2canvas from 'html2canvas';
 import { getContrastTextColor } from '../../utils/colorUtils';
 import { useQuotes } from '../../hooks/useQuotes';
@@ -117,7 +117,7 @@ const shareCardRef = ref<HTMLElement>();
 const { getRandomQuote, getRandomFont, cardColors } = useQuotes();
 const { watermarkSettings } = useWallpaper();
 const currentQuote = ref(getRandomQuote()); // 初始化时就生成一句
-const currentDate = computed(() => dayjs().format('YYYY/MM/DD'));
+const currentDate = computed(() => formatNow('YYYY/MM/DD'));
 
 // 卡片颜色和模板
 const selectedColor = ref(cardColors[0]);
@@ -181,7 +181,7 @@ const handleDownloadCard = async () => {
     });
     
     const link = document.createElement('a');
-    link.download = `share-card-${Date.now()}.png`;
+    link.download = `share-card-${formatFileTimestamp()}.png`;
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
   } catch (error) {

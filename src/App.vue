@@ -43,6 +43,7 @@ import { computed, ref } from "vue";
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
 import { captureWallpaper } from './utils/captureUtils';
+import { formatFileTimestamp } from './utils/time';
 
 const isDark = useDark();
 const isDownloading = ref(false);
@@ -79,8 +80,8 @@ const saveAsTemplate = async () => {
     
     const previewImage = canvas.toDataURL('image/jpeg', 0.8);
     
-    // 生成模板名称（可以后续改为用户输入）
-    const templateName = `模板_${new Date().toLocaleString('zh-CN')}`;
+    // 生成模板名称（默认不带时间，时间存入 timestamp 字段，避免影响后续重命名）
+    const templateName = '个人模板';
     
     const template: Template = {
       id: Date.now().toString(),
@@ -150,7 +151,7 @@ const generateFileName = () => {
     return `${prefix}_${nameWithoutExt}.png`;
   } else {
     // 使用时间戳
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const timestamp = formatFileTimestamp();
     return `${prefix}_${timestamp}.png`;
   }
 };

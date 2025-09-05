@@ -16,9 +16,7 @@
 <script setup lang="ts">
 import { useWallpaper } from '@/composables/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-dayjs.locale('zh-cn');
+import { getLockScreenNow } from '@/utils/time';
 
 const { imageUrl, shadowEffect, backgroundSettings } = useWallpaper();
 
@@ -39,9 +37,9 @@ const lockDate = ref('');
 let timer: number;
 
 const updateTime = () => {
-  const now = dayjs();
-  lockDate.value = now.format('dddd, M月D日');
-  lockTime.value = now.format('HH:mm');
+  const { date, time } = getLockScreenNow();
+  lockDate.value = date;
+  lockTime.value = time;
 };
 
 onMounted(() => {

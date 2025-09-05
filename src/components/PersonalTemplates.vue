@@ -11,7 +11,27 @@
             <img :src="template.previewImage" :alt="template.name" class="template-thumbnail" />
           </div>
           <div class="template-info">
-            <h4 class="template-title">{{ template.name }}</h4>
+            <h4 
+              v-if="editingId !== template.id" 
+              class="template-title" 
+              @dblclick="() => startEdit(template)"
+              title="双击编辑名称"
+            >
+              {{ template.name }}
+            </h4>
+            <n-input
+              v-else
+              v-model:value="editingName"
+              size="small"
+              autofocus
+              placeholder="输入模板名称"
+              @blur="() => handleSaveName(template)"
+              @keyup.enter="() => handleSaveName(template)"
+              @keyup.esc="cancelEdit"
+            />
+            <div class="template-meta">
+              <span class="template-time">{{ formatDisplayTime(template.timestamp) }}</span>
+            </div>
             <p class="template-description">{{ formatTemplateDescription(template) }}</p>
           </div>
           <div class="template-actions">
@@ -24,8 +44,7 @@
             >
               <template #icon>
                 <n-icon :component="Download" />
-              </template>
-              加载
+               </template>
             </n-button>
             <n-button 
               size="small" 
@@ -37,7 +56,6 @@
               <template #icon>
                 <n-icon :component="Trash" />
               </template>
-              删除
             </n-button>
           </div>
         </div>
@@ -55,7 +73,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { NIcon, NButton } from 'naive-ui';
+import { NIcon, NButton, NInput } from 'naive-ui';
+import { formatDisplayTime } from '../utils/time';
 import { PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
 import { templateDB, type Template } from '../utils/indexedDB';
 
@@ -71,6 +90,8 @@ defineEmits<{
 
 // 响应式数据
 const templates = ref<Template[]>([]);
+const editingId = ref<string | null>(null);
+const editingName = ref('');
 
 // 加载所有模板
 const loadTemplates = async () => {
@@ -80,6 +101,45 @@ const loadTemplates = async () => {
     console.error('加载模板失败:', error);
   }
 };
+
+// 开始编辑名称
+const startEdit = (template: Template) => {
+  editingId.value = template.id;
+  editingName.value = template.name;
+};
+
+// 取消编辑
+const cancelEdit = () => {
+  editingId.value = null;
+  editingName.value = '';
+};
+
+// 保存名称（失焦或回车）
+const handleSaveName = async (template: Template) => {
+  const newName = editingName.value.trim();
+  if (!newName) {
+    // 空名称则还原并退出
+    cancelEdit();
+    return;
+  }
+  if (newName === template.name) {
+    cancelEdit();
+    return;
+  }
+  try {
+    const updated: Template = { ...template, name: newName };
+    await templateDB.saveTemplate(updated);
+    await loadTemplates();
+    window.$message?.success('模板名称已更新');
+  } catch (e) {
+    console.error('更新模板名称失败:', e);
+    window.$message?.error('更新模板名称失败');
+  } finally {
+    cancelEdit();
+  }
+};
+
+// 时间格式化改为复用通用工具函数（formatDisplayTime）
 
 // 删除模板
 const handleDeleteTemplate = async (id: string) => {
@@ -112,9 +172,7 @@ const formatTemplateDescription = (template: Template) => {
   }
   
   // 水印信息
-  if (config.watermarkSettings?.text) {
-    parts.push(`水印: ${config.watermarkSettings.text}`);
-  }
+  // 按需精简：不显示水印内容
   
   // 标题信息
   if (config.titleSettings?.show && config.titleSettings?.text) {
@@ -258,8 +316,8 @@ defineExpose({
 
 .template-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
 .template-card {
@@ -280,7 +338,7 @@ defineExpose({
 .template-preview {
   position: relative;
   width: 100%;
-  height: 120px;
+  height: 100px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow: hidden;
 }
@@ -293,13 +351,13 @@ defineExpose({
 }
 
 .template-info {
-  padding: 12px 16px;
+  padding: 10px 12px;
   flex: 1;
 }
 
 .template-title {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--n-text-color);
   line-height: 1.4;
@@ -307,7 +365,7 @@ defineExpose({
 
 .template-description {
   margin: 0;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--n-text-color-disabled);
   line-height: 1.4;
   overflow: hidden;
@@ -319,10 +377,29 @@ defineExpose({
 }
 
 .template-actions {
-  padding: 12px 16px;
+  padding: 10px 12px;
   border-top: 1px solid var(--n-border-color);
   display: flex;
-  gap: 8px;
+  gap: 6px;
+}
+
+.template-meta {
+  margin: 4px 0 6px;
+}
+
+.template-time {
+  font-size: 11px;
+  color: var(--n-text-color-disabled);
+}
+
+/* 响应式：小屏幕保持单列显示 */
+@media (max-width: 768px) {
+  .template-grid {
+    grid-template-columns: 1fr;
+  }
+  .template-preview {
+    height: 120px; /* 小屏可适当增大预览高度，便于点击 */
+  }
 }
 
 

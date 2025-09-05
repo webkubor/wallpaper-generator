@@ -1,5 +1,5 @@
 import html2canvas from 'html2canvas';
-import dayjs from 'dayjs';
+import { formatNow } from './time';
 
 /**
  * HTML元素截图选项
@@ -55,7 +55,8 @@ export async function captureElement(
  * 生成带时间戳的文件名
  */
 export function generateTimestampFilename(prefix: string = 'capture', extension: string = 'png'): string {
-  return `${prefix}-${dayjs().format('YYYYMMDD-HHmmss')}.${extension}`;
+  const ts = formatNow('YYYYMMDD-HHmmss');
+  return `${prefix}-${ts}.${extension}`;
 }
 
 /**
