@@ -12,6 +12,8 @@ export interface TemplateConfig {
   titleStroke: boolean;
   titleStrokeColor: string;
   subtitleColor: string;
+  titleShadow: string;
+  subtitleShadow: string;
 }
 
 export interface Template {

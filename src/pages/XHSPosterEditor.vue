@@ -3,8 +3,6 @@
     <div class="toolbar">
       <n-input v-model:value="title" placeholder="输入封面主标题（大字）" size="large" />
       <n-input v-model:value="subtitle" placeholder="输入副标题（可选）" />
-
-      <n-divider title-placement="left">背景</n-divider>
       <div class="controls">
         <div class="control-item">
           <span>背景色</span>
@@ -15,8 +13,6 @@
           <n-switch v-model:value="autoLimitText" />
         </div>
       </div>
-
-      <n-divider title-placement="left">排版</n-divider>
       <div class="controls">
         <div class="control-item">
           <span>主标题字体</span>
@@ -160,6 +156,10 @@ const titleStroke = ref(true);
 const titleStrokeColor = ref('#DC143C');
 const subtitleColor = ref('#FFFFFF');
 
+// 文字阴影
+const titleShadow = ref('0 3px 15px rgba(0,0,0,0.8)');
+const subtitleShadow = ref('0 2px 8px rgba(0,0,0,0.6)');
+
 // 当前选中的模板
 const selectedTemplateId = ref('wuxia');
 
@@ -184,6 +184,8 @@ const applyTemplate = (template: Template) => {
   titleStroke.value = config.titleStroke;
   titleStrokeColor.value = config.titleStrokeColor;
   subtitleColor.value = config.subtitleColor;
+  titleShadow.value = config.titleShadow;
+  subtitleShadow.value = config.subtitleShadow;
 };
 
 // 计算主标题字体
@@ -209,21 +211,15 @@ const subtitleFontFamily = computed(() => {
 });
 
 // 主标题样式
-const titleStyle = computed((): CSSProperties => {
-  const style: CSSProperties = {
-    fontSize: titleSize.value + 'px',
-    fontFamily: titleFontFamily.value,
-    color: textColor.value,
-    writingMode: titleVertical.value ? 'vertical-rl' : 'horizontal-tb',
-    textOrientation: titleVertical.value ? 'upright' : 'mixed'
-  };
-  
-  if (titleStroke.value) {
-    style.textShadow = `2px 2px 0 ${titleStrokeColor.value}, -2px -2px 0 ${titleStrokeColor.value}, 2px -2px 0 ${titleStrokeColor.value}, -2px 2px 0 ${titleStrokeColor.value}`;
-  }
-  
-  return style;
-});
+const titleStyle = computed((): CSSProperties => ({
+  color: textColor.value,
+  fontSize: titleSize.value + 'px',
+  fontFamily: titleFontFamily.value,
+  writingMode: titleVertical.value ? 'vertical-rl' : 'horizontal-tb',
+  textOrientation: titleVertical.value ? 'upright' : 'mixed',
+  WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : 'none',
+  textShadow: titleShadow.value
+}));
 
 // 副标题样式
 const subtitleStyle = computed((): CSSProperties => ({
@@ -305,9 +301,10 @@ const downloadPoster = async () => {
   gap: 20px;
   padding: 20px;
   min-height: 100vh;
+  justify-content: space-around;
 }
 .toolbar {
-  width: 360px;
+  width: max(30vw, 350px);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -425,6 +422,7 @@ const downloadPoster = async () => {
   opacity: 0.6;
 }
 .canvas-wrap {
+  flex: 1;
   display: flex;
   gap: 40px;
   align-items: flex-start;
