@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite dev --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "changelog": "node scripts/generate-changelog.mjs"
   },
   "dependencies": {
     "@vueuse/core": "^13.9.0",
