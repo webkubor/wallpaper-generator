@@ -349,21 +349,49 @@ const downloadPoster = async () => {
   padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 100%; /* Full width of the grid cell */
+  width: 100%;
   background: rgba(255, 255, 255, 0.09);
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 70%);
+    top: -60px;
+    right: -60px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
   
   &:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
   
   &.template-card-selected {
     border-color: var(--primary-color);
     background: rgba(212, 175, 55, 0.1);
     color: var(--primary-color);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+    
+    &::before {
+      opacity: 1;
+      background: linear-gradient(135deg, rgba(255, 235, 180, 0.25), transparent 70%);
+    }
     box-shadow: 0 0 0 2px var(--primary-color);
     
     .template-preview {
