@@ -134,6 +134,8 @@ import { NInput, NSlider, NSwitch, NColorPicker, NDivider, NSelect, NAlert } fro
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
 import DesignTips from '@/components/common/DesignTips.vue';
+import posterConfig from './poster-templates.json';
+import type { Template } from './types';
 
 
 const title = ref('江湖秘辛');
@@ -162,111 +164,9 @@ const subtitleColor = ref('#FFFFFF');
 const selectedTemplateId = ref('wuxia');
 
 // 预设模板
-interface TemplateConfig {
-  title: string;
-  subtitle: string;
-  textColor: string;
-  mainColor: string;
-  titleSize: number;
-  subtitleSize: number;
-  selectedFont: string;
-  subtitleFont: string;
-  titleVertical: boolean;
-  subtitleVertical: boolean;
-  titleStroke: boolean;
-  titleStrokeColor: string;
-  subtitleColor: string;
-}
 
-interface Template {
-  id: string;
-  name: string;
-  description: string;
-  config: TemplateConfig;
-}
-
-const templates = ref<Template[]>([
-  {
-    id: 'wuxia',
-    name: '武侠风',
-    description: '毛笔字体，竖排布局，红色描边',
-    config: {
-      title: '江湖秘辛',
-      subtitle: '金庸笔下最隐秘的伏笔',
-      textColor: '#000000',
-      mainColor: '#1A1A1A',
-      titleSize: 120,
-      subtitleSize: 28,
-      selectedFont: 'drizzle',
-      subtitleFont: 'SimSun',
-      titleVertical: true,
-      subtitleVertical: false,
-      titleStroke: true,
-      titleStrokeColor: '#DC143C',
-      subtitleColor: '#FFFFFF'
-    }
-  },
-  {
-    id: 'modern',
-    name: '现代简约',
-    description: '简洁字体，横排布局，无描边',
-    config: {
-      title: '设计美学',
-      subtitle: '探索现代生活的艺术之美',
-      textColor: '#2D3748',
-      mainColor: '#F7FAFC',
-      titleSize: 100,
-      subtitleSize: 24,
-      selectedFont: 'PingFang SC',
-      subtitleFont: 'PingFang SC',
-      titleVertical: false,
-      subtitleVertical: false,
-      titleStroke: false,
-      titleStrokeColor: '#000000',
-      subtitleColor: '#718096'
-    }
-  },
-  {
-    id: 'cute',
-    name: '可爱萌系',
-    description: '圆润字体，彩色搭配，温馨风格',
-    config: {
-      title: '甜蜜日常',
-      subtitle: '记录生活中的小确幸',
-      textColor: '#FF6B9D',
-      mainColor: '#FFF5F8',
-      titleSize: 110,
-      subtitleSize: 26,
-      selectedFont: 'cute',
-      subtitleFont: 'AlimamaFangYuanTiVF-Thin',
-      titleVertical: false,
-      subtitleVertical: false,
-      titleStroke: false,
-      titleStrokeColor: '#000000',
-      subtitleColor: '#A0AEC0'
-    }
-  },
-  {
-    id: 'tech',
-    name: '科技未来',
-    description: '英文字体，深色背景，科幻感',
-    config: {
-      title: 'FUTURE',
-      subtitle: 'Technology Changes Everything',
-      textColor: '#00F5FF',
-      mainColor: '#0D1117',
-      titleSize: 130,
-      subtitleSize: 30,
-      selectedFont: 'DIN Alternate',
-      subtitleFont: 'Helvetica Neue',
-      titleVertical: false,
-      subtitleVertical: false,
-      titleStroke: true,
-      titleStrokeColor: '#1E90FF',
-      subtitleColor: '#8B949E'
-    }
-  }
-]);
+const templates = ref<Template[]>(posterConfig.templates);
+const fontOptions = ref<Array<{label: string, value: string}>>(posterConfig.fontOptions);
 
 const applyTemplate = (template: Template) => {
   const config = template.config;
@@ -285,23 +185,6 @@ const applyTemplate = (template: Template) => {
   titleStrokeColor.value = config.titleStrokeColor;
   subtitleColor.value = config.subtitleColor;
 };
-const fontOptions = [
-  { label: 'PingFang SC（苹果）', value: 'PingFang SC' },
-  { label: 'Microsoft YaHei（微软雅黑）', value: 'Microsoft YaHei' },
-  { label: 'Source Han Sans（思源黑体）', value: 'Source Han Sans SC' },
-  { label: 'Noto Sans CJK（谷歌）', value: 'Noto Sans CJK SC' },
-  { label: 'Alibaba PuHuiTi（阿里普惠体）', value: 'Alibaba PuHuiTi' },
-  { label: 'HarmonyOS Sans（鸿蒙）', value: 'HarmonyOS Sans SC' },
-  { label: 'DIN Alternate（英文数字）', value: 'DIN Alternate' },
-  { label: 'Helvetica Neue（经典）', value: 'Helvetica Neue' },
-  { label: '阿里妈妈方圆体（圆润）', value: 'AlimamaFangYuanTiVF-Thin' },
-  { label: '可爱字体（萌系）', value: 'cute' },
-  { label: '毛笔字体（艺术）', value: 'drizzle' },
-  { label: 'AI中文字体', value: 'AiChinese02' },
-  { label: '中文字体3', value: 'Chinese3' },
-  { label: '英文标题字体', value: 'vampire-wars' },
-  { label: '自定义字体', value: 'custom' }
-];
 
 // 计算主标题字体
 const titleFontFamily = computed(() => {
