@@ -84,11 +84,26 @@
     
     <div class="canvas-wrap">
       <div class="poster" ref="posterRef" :style="posterStyle">
+        <!-- 辅助线 -->
+        <div v-if="showGuides" class="guide-lines">
+          <div class="guide-line horizontal" :style="{ top: guideY + 'px' }"></div>
+          <div class="guide-line vertical" :style="{ left: guideX + 'px' }"></div>
+        </div>
         <div class="poster-inner">
-          <div class="poster-title" v-if="title" :style="titleStyle">
+          <div 
+            class="poster-title draggable" 
+            v-if="title" 
+            :style="titleStyle"
+            @mousedown="titleDragHandler.onMouseDown"
+          >
             {{ title }}
           </div>
-          <div class="poster-subtitle" v-if="subtitle && showSubtitle" :style="subtitleStyle">
+          <div 
+            class="poster-subtitle draggable" 
+            v-if="subtitle && showSubtitle" 
+            :style="subtitleStyle"
+            @mousedown="subtitleDragHandler.onMouseDown"
+          >
             {{ subtitle }}
           </div>
         </div>
@@ -126,9 +141,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
 import { NInput, NSlider, NSwitch, NColorPicker, NSelect, NButton } from 'naive-ui';
+import { createDragHandler } from '@/utils/dragUtils';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
 import DesignTips from '@/components/common/DesignTips.vue';
@@ -160,6 +176,11 @@ const showLightingEffect = ref(true);
 
 // 副标题显示控制
 const showSubtitle = ref(true);
+
+// 监听副标题显示状态变化
+watch(showSubtitle, () => {
+  nextTick(updatePositions);
+});
 
 // 文字阴影
 const titleShadow = ref('0 3px 15px rgba(0,0,0,0.8)');
@@ -194,6 +215,13 @@ const applyTemplate = (template: Template) => {
   subtitleColor.value = config.subtitleColor;
   titleShadow.value = config.titleShadow;
   subtitleShadow.value = config.subtitleShadow;
+  
+  // 更新位置
+  nextTick(() => {
+    updatePositions();
+    // 确保所有样式应用完成后再更新一次位置
+    setTimeout(updatePositions, 50);
+  });
 };
 
 // 计算主标题字体
@@ -218,15 +246,79 @@ const subtitleFontFamily = computed(() => {
   }
 });
 
+// 标题位置状态
+const titlePos = ref({ x: 0, y: 0 });
+const subtitlePos = ref({ x: 0, y: 0 });
+
+
+// 更新位置为居中
+const updatePositions = () => {
+  nextTick(() => {
+    const poster = posterRef.value;
+    if (!poster) return;
+    
+    const titleEl = document.querySelector('.poster-title') as HTMLElement;
+    const subtitleEl = document.querySelector('.poster-subtitle') as HTMLElement;
+    const posterRect = poster.getBoundingClientRect();
+    
+    // 首先计算标题位置
+    if (titleEl) {
+      const titleRect = titleEl.getBoundingClientRect();
+      titlePos.value = { 
+        x: (posterRect.width - titleRect.width) / 2,
+        y: (posterRect.height - titleRect.height) / 3 // 标题位于垂直方向1/3处
+      };
+    }
+    
+    // 然后计算副标题位置
+    if (subtitleEl && showSubtitle.value) {
+      const subtitleRect = subtitleEl.getBoundingClientRect();
+      let newY = (posterRect.height - subtitleRect.height) * 2/3; // 默认在2/3处
+      
+      // 如果存在标题，则放在标题下方
+      if (titleEl) {
+        const titleBottom = titlePos.value.y + titleEl.offsetHeight;
+        const spacing = 30; // 主副标题间距
+        newY = Math.max(newY, titleBottom + spacing);
+      }
+      
+      subtitlePos.value = { 
+        x: (posterRect.width - subtitleRect.width) / 2,
+        y: newY
+      };
+    }
+  });
+};
+
+// 创建拖拽处理器
+const titleDragHandler = createDragHandler(
+  (x, y) => {
+    titlePos.value = { x, y };
+  },
+  () => titlePos.value
+);
+
+const subtitleDragHandler = createDragHandler(
+  (x, y) => {
+    subtitlePos.value = { x, y };
+  },
+  () => subtitlePos.value
+);
+
 // 主标题样式
 const titleStyle = computed((): CSSProperties => ({
   color: textColor.value,
   fontSize: `${titleSize.value}em`,
-  fontFamily: `'${titleFontFamily.value}', sans-serif`,
+  fontFamily: titleFontFamily.value,
   writingMode: titleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: titleVertical.value === 'vertical' ? 'upright' : 'mixed',
   WebkitTextStroke: titleStroke.value ? `2px ${titleStrokeColor.value}` : '',
   textShadow: titleShadow.value,
+  position: 'absolute',
+  left: `${titlePos.value.x}px`,
+  top: `${titlePos.value.y}px`,
+  cursor: 'move',
+  userSelect: 'none',
   fontFeatureSettings: 'kern',
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'grayscale'
@@ -235,11 +327,16 @@ const titleStyle = computed((): CSSProperties => ({
 // 副标题样式
 const subtitleStyle = computed((): CSSProperties => ({
   fontSize: `${subtitleSize.value}em`,
-  fontFamily: `'${subtitleFontFamily.value}', sans-serif`,
+  fontFamily: subtitleFontFamily.value,
   color: subtitleColor.value,
   writingMode: subtitleVertical.value === 'vertical' ? 'vertical-rl' : 'horizontal-tb',
   textOrientation: subtitleVertical.value === 'vertical' ? 'upright' : 'mixed',
   textShadow: subtitleShadow.value,
+  position: 'absolute',
+  left: `${subtitlePos.value.x}px`,
+  top: `${subtitlePos.value.y}px`,
+  cursor: 'move',
+  userSelect: 'none',
   fontFeatureSettings: 'kern',
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'grayscale'
@@ -257,6 +354,29 @@ const posterStyle = computed(() => ({
 onMounted(() => {
   // 监听来自Header的下载事件
   window.addEventListener('downloadPoster', downloadPoster);
+  
+  // 应用第一个模板
+  if (templates.value.length > 0) {
+    applyTemplate(templates.value[0]);
+  }
+  
+  // 初始位置更新
+  updatePositions();
+  
+  // 添加一个小的延迟，确保DOM完全渲染
+  setTimeout(() => {
+    updatePositions();
+    // 再次更新位置，确保所有样式应用完成
+    setTimeout(updatePositions, 50);
+  }, 100);
+  
+  // 监听窗口大小变化，保持居中
+  window.addEventListener('resize', updatePositions);
+});
+
+// 组件卸载时移除事件监听
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updatePositions);
 });
 
 const downloadPoster = async () => {
@@ -512,10 +632,12 @@ const downloadPoster = async () => {
         font-weight: bold;
         text-align: center;
         line-height: 1.2;
-        margin-bottom: 16px;
         word-wrap: break-word;
         word-break: break-all;
         max-width: 90%;
+        max-height: 85%;
+        z-index: 10;
+        transition: transform 0.2s ease;
       }
 
       .poster-subtitle {
@@ -524,6 +646,8 @@ const downloadPoster = async () => {
         word-wrap: break-word;
         word-break: break-all;
         max-width: 90%;
+        z-index: 10;
+        transition: transform 0.2s ease;
       }
     }
   }
@@ -548,6 +672,20 @@ const downloadPoster = async () => {
 .accent-badge {
   position: absolute;
   z-index: 3;
+}
+
+.draggable {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.draggable:active {
+  cursor: grabbing;
+  opacity: 0.9;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 @media (max-width: 1024px) {
   .xhs-page {
