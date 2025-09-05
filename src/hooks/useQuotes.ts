@@ -78,7 +78,7 @@ const fontFamilies = [
   },
   {
     name: '中文500',
-    value: 'AiChinese02'
+    value: 'AncientStyle'
   }
 ]
 

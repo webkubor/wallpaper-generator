@@ -25,11 +25,11 @@
             "value": "drizzle"
         },
         {
-            "label": "AI中文字体",
-            "value": "AiChinese02"
+            "label": "古典风",
+            "value": "AncientStyle"
         },
         {
-            "label": "中文字体3",
+            "label": "武侠风",
             "value": "Chinese3"
         }
     ],
@@ -45,8 +45,8 @@
                 "mainColor": "#1A1A1A",
                 "titleSize": 7.5,
                 "subtitleSize": 1.75,
-                "selectedFont": "drizzle",
-                "subtitleFont": "SimSun",
+                "selectedFont": "Chinese3",
+                "subtitleFont": "Chinese3",
                 "titleVertical": true,
                 "subtitleVertical": false,
                 "titleStroke": true,

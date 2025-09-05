@@ -23,8 +23,8 @@
 
   
   @font-face {
-    font-family: 'AiChinese02';
-    src: url('@/assets/fonts/AiChinese02.ttf') format('truetype');
+    font-family: 'AncientStyle';
+    src: url('@/assets/fonts/AncientStyle.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }
@@ -52,5 +52,5 @@
   }
 
   .chinese-500 {
-    font-family: 'AiChinese02';
+    font-family: 'AncientStyle';
   }

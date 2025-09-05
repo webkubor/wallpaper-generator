@@ -55,6 +55,10 @@
           <n-color-picker v-model:value="subtitleColor" :modes="['hex']" size="small"/>
         </div>
         <div class="control-item">
+          <span>光照效果</span>
+          <n-switch v-model:value="showLightingEffect" />
+        </div>
+        <div class="control-item">
           <span>主标题描边</span>
           <n-switch v-model:value="titleStroke" />
         </div>
@@ -152,6 +156,7 @@ const subtitleVertical = ref('horizontal');
 const titleStroke = ref(true);
 const titleStrokeColor = ref('#DC143C');
 const subtitleColor = ref('#FFFFFF');
+const showLightingEffect = ref(true);
 
 // 副标题显示控制
 const showSubtitle = ref(true);
@@ -469,6 +474,8 @@ const downloadPoster = async () => {
     position: relative;
     overflow: hidden;
 
+
+
     .poster-inner {
       width: 100%;
       height: 100%;
@@ -479,6 +486,27 @@ const downloadPoster = async () => {
       padding: 20px;
       position: relative;
       z-index: 1;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -30%;
+        width: 160%;
+        height: 200%;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0.2) 30%,
+          rgba(255, 255, 255, 0.05) 70%,
+          transparent 100%
+        );
+        transform: rotate(-25deg);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: v-bind('showLightingEffect ? 1 : 0');
+        transition: opacity 0.3s ease;
+      }
 
       .poster-title {
         font-weight: bold;
