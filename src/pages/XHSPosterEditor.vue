@@ -345,8 +345,8 @@ const downloadPoster = async () => {
   gap: 16px;
   max-height: 60vh;
   overflow-y: auto;
-  padding-right: 8px;
   margin-bottom: 16px;
+  padding:10px;
 }
 
 .template-card {
@@ -365,21 +365,22 @@ const downloadPoster = async () => {
   
   &.template-card-selected {
     border-color: var(--primary-color);
-    background-color: var(--primary-color);
-    color: white;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--primary-color);
     box-shadow: 0 0 0 2px var(--primary-color);
     
     .template-preview {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(212, 175, 55, 0.05);
     }
     
     .template-name {
-      color: white;
+      color: var(--primary-color);
       font-weight: 700;
     }
     
     .template-desc {
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--primary-color);
+      opacity: 0.8;
     }
   }
 }
