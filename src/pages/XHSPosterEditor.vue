@@ -317,14 +317,28 @@ const downloadPoster = async () => {
   }
 
   .template-section {
+    width: 100%;
+    max-width: 600px; /* Limit max width for better readability */
+    margin: 0 auto;
+    
+    h3 {
+      text-align: center;
+      margin-bottom: 16px;
+      color: var(--text-color);
+    }
+
     .template-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(2, 1fr); /* Two columns on PC */
       gap: 16px;
       max-height: 60vh;
       overflow-y: auto;
       margin-bottom: 16px;
       padding: 10px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr; /* Single column on mobile */
+      }
     }
   }
 }
@@ -335,9 +349,11 @@ const downloadPoster = async () => {
   padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 180px;
-  flex-shrink: 0;
+  width: 100%; /* Full width of the grid cell */
   background: rgba(255, 255, 255, 0.09);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   
   &:hover {
     border-color: var(--primary-color);
@@ -409,7 +425,7 @@ const downloadPoster = async () => {
   align-items: flex-start;
   
   .poster {
-    width: min(50vw, 550px);
+    width: min(50vw, 850px);
     aspect-ratio: 3 / 4;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -457,7 +473,6 @@ const downloadPoster = async () => {
   }
 
   .template-section {
-    width: 300px;
     flex-shrink: 0;
   }
 }

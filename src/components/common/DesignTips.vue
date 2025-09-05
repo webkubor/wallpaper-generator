@@ -57,7 +57,6 @@ import { NCard, NCollapse, NCollapseItem, NText, NUl, NLi } from 'naive-ui';
 
 <style scoped lang="scss">
 .design-tips {
-  width: 320px;
   height: fit-content;
   max-height: 80vh;
   overflow-y: auto;
