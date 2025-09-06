@@ -3,7 +3,13 @@
     <div class="toolbar">
       <n-input v-model:value="title" placeholder="输入封面主标题（大字）" size="large" />
       <div style="display: flex; align-items: center; gap: 8px;">
-        <n-input v-model:value="subtitle" placeholder="输入副标题（可选）" style="flex: 1;" />
+        <n-input
+  v-model:value="subtitle"
+  type="textarea"
+  :autosize="{ minRows: 1, maxRows: 4 }"
+  placeholder="输入副标题（可选，支持换行）"
+  style="flex: 1;"
+/>
         <n-button text @click="showSubtitle = !showSubtitle" :style="{ color: showSubtitle ? '#18a058' : '#d03050' }">
           <template #icon>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -88,10 +94,12 @@
             @mousedown="titleDragHandler.onMouseDown">
             {{ title }}
           </div>
-          <div class="poster-subtitle draggable" v-if="subtitle && showSubtitle" :style="subtitleStyle"
-            @mousedown="subtitleDragHandler.onMouseDown">
-            {{ subtitle }}
-          </div>
+          <div class="poster-subtitle draggable" 
+     v-if="subtitle && showSubtitle" 
+     :style="subtitleStyle"
+     @mousedown="subtitleDragHandler.onMouseDown" 
+     v-html="formatSubtitle">
+</div>
         </div>
       </div>
 
@@ -142,6 +150,9 @@ const showLightingEffect = ref(true);
 
 // 副标题显示控制
 const showSubtitle = ref(true);
+const formatSubtitle = computed(() => {
+  return subtitle.value ? subtitle.value.replace(/\n/g, '<br>') : '';
+});
 
 // 监听副标题显示状态变化
 watch(showSubtitle, () => {
