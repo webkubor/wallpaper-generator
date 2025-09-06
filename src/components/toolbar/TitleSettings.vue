@@ -1,5 +1,4 @@
 <template>
-  <n-divider title-placement="left">标题设置</n-divider>
   <n-form-item label="标题内容">
     <n-input v-model:value="titleSettings.text" />
   </n-form-item>

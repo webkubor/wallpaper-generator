@@ -54,6 +54,22 @@
         </div>
       </n-collapse-item>
 
+      <n-collapse-item name="5">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="Droplets" class="header-icon" />
+            <span>标题设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
+          </n-form-item>
+          <TitleSettings v-if="titleSettings.show" />
+        </div>
+      </n-collapse-item>
+
+
       <n-collapse-item name="3">
         <template #header>
           <div class="collapse-header">
@@ -83,14 +99,6 @@
           </div>
 
           <n-divider style="margin: 16px 0;" />
-
-          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
-          </n-form-item>
-          <TitleSettings v-if="titleSettings.show" />
-          
-          <n-divider style="margin: 16px 0;" />
-          
           <BackgroundSettings :background-settings="backgroundSettings" />
         </div>
       </n-collapse-item>
