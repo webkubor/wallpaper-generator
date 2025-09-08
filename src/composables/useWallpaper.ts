@@ -28,6 +28,7 @@ export interface TitleSettings {
   text: string;
   fontFamily: string;
   color: string;
+  fontSize: number; // 添加字体大小字段
   direction: 'horizontal' | 'vertical';
   offsetX: number;
   offsetY: number;
@@ -128,6 +129,7 @@ export const defaultTitleSettings: TitleSettings = {
   text: '默认标题',
   fontFamily: 'drizzle',
   color: '#ffffff',
+  fontSize: 24, // 默认字体大小
   direction: 'vertical',
   offsetX: 0,
   offsetY: 0,

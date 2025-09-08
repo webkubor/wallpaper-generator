@@ -258,7 +258,7 @@ const watermarkRef = ref<HTMLElement | null>(null);
 const titleStyle = computed(() => ({
   fontFamily: titleSettings.value.fontFamily,
   color: titleSettings.value.color,
-  fontSize: '24px',
+  fontSize: `${titleSettings.value.fontSize}px`,
   fontWeight: 500,
   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
 }));
