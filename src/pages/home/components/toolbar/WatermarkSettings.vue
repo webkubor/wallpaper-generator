@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NSlider, NUpload, NButton } from 'naive-ui';
-import { useWallpaper } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/hooks/useWallpaper';
 import type { UploadFileInfo } from 'naive-ui';
 
 // 直接使用 useWallpaper 获取响应式数据

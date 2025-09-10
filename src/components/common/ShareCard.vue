@@ -97,9 +97,9 @@ import { NModal, NButton, NSpace } from 'naive-ui';
 import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
 import { formatNow, formatFileTimestamp } from '@/utils/time';
 import html2canvas from 'html2canvas';
-import { getContrastTextColor } from '../../utils/colorUtils';
-import { useQuotes } from '../../hooks/useQuotes';
-import { useWallpaper } from '../../composables/useWallpaper';
+import { getContrastTextColor } from '@/utils/colorUtils';
+import { useQuotes } from '@/hooks/useQuotes';
+import { useWallpaper } from '@/hooks/useWallpaper';
 
 interface Props {
   show: boolean;

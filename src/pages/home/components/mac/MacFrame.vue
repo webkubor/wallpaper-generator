@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWallpaper } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/hooks/useWallpaper';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { getLockScreenNow } from '@/utils/time';
 

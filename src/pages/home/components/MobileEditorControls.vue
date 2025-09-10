@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWallpaper } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/hooks/useWallpaper';
 import { useMobile } from '@/hooks/useMobile';
 import { 
   NButton, NTooltip, NIcon, NUpload, 

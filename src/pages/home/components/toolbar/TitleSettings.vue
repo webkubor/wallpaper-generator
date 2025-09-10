@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWallpaper } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/hooks/useWallpaper';
 
 // 直接使用 useWallpaper 获取响应式数据
 const { titleSettings, fontOptions } = useWallpaper();

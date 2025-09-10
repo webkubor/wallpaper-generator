@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
-import demoWallpaper from '../assets/demo.png'
-import { analyzeImageColor } from '../utils/colorUtils'
+import demoWallpaper from '@/assets/demo.png'
+import { analyzeImageColor } from '@/utils/colorUtils'
 
 // 类型定义
 export interface Device {

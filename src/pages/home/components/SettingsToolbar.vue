@@ -119,7 +119,7 @@ import PersonalTemplates from './PersonalTemplates.vue';
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
-import { useWallpaper } from '@/composables/useWallpaper';
+import { useWallpaper } from '@/hooks/useWallpaper';
 import type { UploadFileInfo } from 'naive-ui';
 
 interface Props {

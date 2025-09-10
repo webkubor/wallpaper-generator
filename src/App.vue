@@ -45,7 +45,7 @@ import { NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from "naive-ui
 import { ref,computed } from "vue";
 import { useTheme } from '@/hooks/useTheme';
 import { useRoute } from 'vue-router';
-import { useWallpaper } from './composables/useWallpaper';
+import { useWallpaper } from './hooks/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
 import { captureWallpaper } from './utils/captureUtils';
 import { formatFileTimestamp } from './utils/time';
