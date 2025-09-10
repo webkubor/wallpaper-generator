@@ -6,7 +6,7 @@
       <div class="chat-history">
         <div v-for="(msg, index) in chatHistory" :key="index" class="message" :class="msg.role">
           <div class="role">{{ msg.role === 'user' ? '你' : 'AI' }}</div>
-          <div class="content">{{ msg.content }}</div>
+          <div class="content" v-html="msg.content"></div>
         </div>
       </div>
       
@@ -27,15 +27,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import fly from 'flyio'
-import { marked } from 'marked'; 
+
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY
 const prompt = ref('')
 const isLoading = ref(false)
 const chatHistory = ref<Array<{role: 'user' | 'assistant', content: string}>>([])
 
-
-const parseMarkdown = async (text: string): Promise<string> => {
-  return await marked.parse(text)
+// 模拟逐字输出函数
+const typeWriter = async (text: string, targetIndex: number, speed = 30) => {
+  for (let i = 0; i < text.length; i++) {
+    chatHistory.value[targetIndex].content += text[i]
+    await new Promise(r => setTimeout(r, speed))
+  }
 }
 
 const callGemini = async () => {
@@ -45,7 +48,12 @@ const callGemini = async () => {
     isLoading.value = true
     const userMessage = prompt.value
     chatHistory.value.push({ role: 'user', content: userMessage })
-  
+    
+    // 先占位 AI 消息
+    chatHistory.value.push({ role: 'assistant', content: '' })
+    const aiIndex = chatHistory.value.length - 1
+    
+    // 调用 API
     const res = await fly.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
@@ -58,11 +66,9 @@ const callGemini = async () => {
     )
     
     const aiResponse = res.data.candidates[0].content.parts[0].text
-      
-    chatHistory.value.push({ 
-      role: 'assistant', 
-      content: await parseMarkdown(aiResponse) 
-    })
+    // 逐字渲染
+    await typeWriter(aiResponse, aiIndex, 20) // 20ms/字符，可调节速度
+    
     prompt.value = ''
   } catch (error) {
     console.error('API调用失败:', error)
