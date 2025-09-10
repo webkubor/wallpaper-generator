@@ -157,9 +157,7 @@ const confirmCustomSize = () => {
   }
 };
 
-const handleImageUpload = (file: any) => {
-  // 实现文件上传逻辑
-};
+const { handleImageUpload } = useWallpaper();
 
 const handleResetConfig = async () => {
   await resetConfig();

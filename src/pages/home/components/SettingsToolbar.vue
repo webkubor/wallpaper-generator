@@ -133,7 +133,7 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   resetConfig: [];
-  imageUpload: [file: UploadFileInfo];
+
   confirmCustomSize: [];
   'update:customWidth': [value: number];
   'update:customHeight': [value: number];
@@ -149,9 +149,7 @@ const {
   titleSettings
 } = useWallpaper();
 
-const handleImageUpload = (options: { file: UploadFileInfo }) => {
-  emit('imageUpload', options.file);
-};
+const { handleImageUpload } = useWallpaper();
 
 const confirmCustomSize = () => {
   emit('confirmCustomSize');

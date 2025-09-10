@@ -131,6 +131,9 @@ export const defaultBackgroundSettings: BackgroundSettings = {
 const imageUrl = ref<string | null>(demoWallpaper);
 const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
+const currentDevice = computed(() => {
+  return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[1]
+});
 export const defaultTitleSettings: TitleSettings = {
   show: false,
   text: '默认标题',
@@ -240,6 +243,64 @@ const loadTemplate = (template: Template) => {
   }
 };
 
+const handleImageUpload = async (file: any) => {
+  try {
+    // 1. 验证文件类型和大小
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('只支持 JPG/PNG/WEBP 格式的图片');
+    }
+    
+    if (file.size > maxSize) {
+      throw new Error('图片大小不能超过 5MB');
+    }
+
+    // 2. 读取图片并检查比例
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onload = async (e) => {
+        try {
+          const img = new Image();
+          img.src = e.target?.result as string;
+          await img.decode();
+          
+          // 计算图片和设备比例是否一致
+          const imgAspect = img.width / img.height;
+          const deviceAspect = currentDevice.value.width / currentDevice.value.height;
+          
+          if (Math.abs(imgAspect - deviceAspect) < 0.01) {
+            // 比例一致，直接使用图片
+            imageUrl.value = img.src;
+            await updateTextColorBasedOnImage(img.src);
+            window.$message.success('图片已自动适配设备尺寸');
+            resolve(img.src);
+          } else {
+            // 比例不一致，显示裁剪界面
+            showCropperModal.value = true;
+            cropperSource.value = img.src;
+            resolve(null);
+          }
+        } catch (error) {
+          console.error('图片处理失败:', error);
+          window.$message.error('图片处理失败');
+          reject(error);
+        }
+      };
+      reader.onerror = () => {
+        window.$message.error('图片读取失败');
+        reject(new Error('图片读取失败'));
+      };
+      reader.readAsDataURL(file);
+    });
+  } catch (error) {
+    console.error('图片上传失败:', error);
+    window.$message.error(error.message || '图片上传失败');
+    throw error;
+  }
+};
+
 // 使用壁纸生成器
 export const useWallpaper = () => {
 
@@ -291,9 +352,7 @@ export const useWallpaper = () => {
     }
   }
   
-  const currentDevice = computed(() => {
-    return getDeviceById(previewSettings.value.selectedDevice) || deviceTypes[1]
-  })
+
   
   // 根据图片颜色生成适合的阴影效果
   const shadowEffect = computed(() => {
@@ -372,6 +431,7 @@ export const useWallpaper = () => {
     updateTextColorBasedOnImage,  // 导出颜色更新函数
     resetConfig,  // 导出重置配置函数
     personalTemplatesRef,  // 导出模板引用
-    loadTemplate  // 导出加载模板函数
+    loadTemplate,  // 导出加载模板函数
+    handleImageUpload  // 导出图片上传处理函数
   }
 }
