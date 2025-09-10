@@ -9,8 +9,8 @@
     <n-color-picker :modes="['hex']" v-model:value="titleSettings.color" />
   </n-form-item>
   <n-form-item label="字体大小">
-    <n-slider v-model:value="titleSettings.fontSize" :min="12" :max="72" :step="1" />
-    <n-input-number v-model:value="titleSettings.fontSize" :min="12" :max="72" style="margin-left: 12px; width: 80px" />
+    <n-slider v-model:value="titleSettings.fontSize" :min="12"  :step="1" />
+    <n-input-number v-model:value="titleSettings.fontSize" :min="12"  style="margin-left: 12px; width: 120px" />
   </n-form-item>
   <n-form-item label="排列方式">
     <n-radio-group v-model:value="titleSettings.direction">
@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NDivider, NSlider, NInputNumber } from 'naive-ui';
 import { useWallpaper } from '@/composables/useWallpaper';
 
 // 直接使用 useWallpaper 获取响应式数据

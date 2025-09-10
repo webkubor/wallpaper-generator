@@ -127,7 +127,7 @@ const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 export const defaultTitleSettings: TitleSettings = {
   show: false,
   text: '默认标题',
-  fontFamily: 'drizzle',
+  fontFamily: 'Wuxia',
   color: '#ffffff',
   fontSize: 24, // 默认字体大小
   direction: 'vertical',
@@ -188,11 +188,8 @@ export const fontOptions: FontOption[] = [
   { label: '细雨体', value: 'drizzle' },
   { label: '可爱体', value: 'cute' },
   { label: '古典风', value: 'AncientStyle' },
-  { label: '武侠风', value: 'Wuxia' },
-  { label: '默认字体', value: 'system-ui, sans-serif' },
-  { label: '衬线字体', value: 'serif' },
-  { label: '无衬线字体', value: 'sans-serif' },
-  { label: '等宽字体', value: 'monospace' },
+  { label: '细雨体', value: 'drizzle' },
+  { label: '默认字体', value: 'system-ui, sans-serif' }
 ];
 
 // 重置配置函数

@@ -29,7 +29,7 @@
           </div>
         </template>
         <div style="padding: 12px;">
-          <n-form-item label="上传背景" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+          <n-form-item label="壁纸" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
             <n-upload :custom-request="() => {}" :show-file-list="false" @change="handleImageUpload">
               <n-button>
                 <template #icon>
@@ -38,7 +38,30 @@
                 选择图片
               </n-button>
             </n-upload>
+            </n-form-item>
+
+          <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-select :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
           </n-form-item>
+          
+          <!-- iPhone 刘海开关 -->
+          <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
+          </n-form-item>
+          
+          <!-- 自定义尺寸输入 -->
+          <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
+            <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+              <n-input-number :value="customWidth" @update:value="(val) => $emit('update:customWidth', val || 400)" :min="100" :max="3000" placeholder="宽度" />
+            </n-form-item>
+            <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+              <n-input-number :value="customHeight" @update:value="(val) => $emit('update:customHeight', val || 400)" :min="100" :max="3000" placeholder="高度" />
+            </n-form-item>
+            <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
+          </div>
+
+          <n-divider style="margin: 16px 0;" />
+          <BackgroundSettings :background-settings="backgroundSettings" />
         </div>
       </n-collapse-item>
 
@@ -69,40 +92,6 @@
         </div>
       </n-collapse-item>
 
-
-      <n-collapse-item name="3">
-        <template #header>
-          <div class="collapse-header">
-            <n-icon :component="Gear" class="header-icon" />
-            <span>预览设置</span>
-          </div>
-        </template>
-        <div style="padding: 12px;">
-          <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-            <n-select :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
-          </n-form-item>
-          
-          <!-- iPhone 刘海开关 -->
-          <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-            <n-switch :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
-          </n-form-item>
-          
-          <!-- 自定义尺寸输入 -->
-          <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
-            <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
-              <n-input-number :value="customWidth" @update:value="(val) => $emit('update:customWidth', val || 400)" :min="100" :max="3000" placeholder="宽度" />
-            </n-form-item>
-            <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
-              <n-input-number :value="customHeight" @update:value="(val) => $emit('update:customHeight', val || 400)" :min="100" :max="3000" placeholder="高度" />
-            </n-form-item>
-            <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
-          </div>
-
-          <n-divider style="margin: 16px 0;" />
-          <BackgroundSettings :background-settings="backgroundSettings" />
-        </div>
-      </n-collapse-item>
-      
       <!-- 个人收藏模板 -->
       <n-collapse-item name="4" class="personal-templates-section">
         <template #header>
