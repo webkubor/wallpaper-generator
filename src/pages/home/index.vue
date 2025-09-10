@@ -93,6 +93,7 @@ import { useWallpaper } from '@/hooks/useWallpaper';
 import { analyzeHexColor } from '@/utils/colorUtils';
 import { createDragHandler } from '@/utils/dragUtils';
 
+
 import {
   PhoneFrame,
   TabletFrame,
@@ -101,18 +102,13 @@ import {
   ComboDevices,
   CustomFrame,
   SettingsToolbar,
-  WatermarkSettings,
-  TitleSettings,
-  BackgroundSettings,
-  PersonalTemplates,
-  UploadSimple,
   MobileBottomSheet,
   MobileEditorControls,
   type UploadFileInfo
 } from './components/imports.ts'
 
 
-const { personalTemplatesRef, loadTemplate } = useWallpaper()
+const { loadTemplate } = useWallpaper()
 const { 
   imageUrl, 
   watermarkImageUrl,
