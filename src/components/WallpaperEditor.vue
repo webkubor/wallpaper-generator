@@ -334,13 +334,28 @@ const confirmCustomSize = () => {
   }
 };
 
-const handleImageUpload = (file: UploadFileInfo) => {
+const handleImageUpload = async (file: UploadFileInfo) => {
   const actualFile = file.file;
   if (actualFile && actualFile.type.startsWith('image/')) {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      cropperSource.value = e.target?.result as string;
-      showCropperModal.value = true;
+    reader.onload = async (e) => {
+      const img = new Image();
+      img.src = e.target?.result as string;
+      await img.decode();
+      
+      // 计算图片和设备比例是否一致
+      const imgAspect = img.width / img.height;
+      const deviceAspect = currentDevice.value.width / currentDevice.value.height;
+      
+      if (Math.abs(imgAspect - deviceAspect) < 0.01) {
+        // 比例一致，直接使用图片
+        imageUrl.value = img.src;
+        window.$message.success('图片已自动适配设备尺寸');
+      } else {
+        // 比例不一致，显示裁剪界面
+        cropperSource.value = img.src;
+        showCropperModal.value = true;
+      }
     };
     reader.readAsDataURL(actualFile);
   } else {
