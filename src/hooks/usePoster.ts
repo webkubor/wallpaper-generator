@@ -34,9 +34,17 @@ export function usePoster() {
   const subtitle = ref('金庸笔下最隐秘的伏笔')
   const showSubtitle = ref(true)
   
+  // 背景配置
+  const backgroundType = ref('solid')
+  const mainColor = ref('#1A1A1A')
+  const gradientStart = ref('#1A1A1A')
+  const gradientEnd = ref('#4A4A4A')
+  const gradientAngle = ref(45)
+  const backgroundImage = ref('')
+  const backgroundSize = ref('cover')
+  
   // 颜色配置
   const textColor = ref('#000000')
-  const mainColor = ref('#1A1A1A')
   const subtitleColor = ref('#FFFFFF')
   const titleStrokeColor = ref('#DC143C')
   
@@ -70,6 +78,25 @@ export function usePoster() {
   
   // 字体选项
   const fontOptions = ref<Array<{ label: string, value: string }>>(posterConfig.fontOptions)
+  
+  // 背景类型选项
+  const backgroundTypeOptions = [
+    { label: '纯色', value: 'solid' },
+    { label: '渐变', value: 'gradient' },
+    { label: '图片', value: 'image' }
+  ]
+
+  // 背景尺寸选项
+  const backgroundSizeOptions = [
+    { label: '覆盖', value: 'cover' },
+    { label: '包含', value: 'contain' },
+    { label: '拉伸', value: '100% 100%' },
+    { label: '原始尺寸', value: 'auto' },
+    { label: '平铺', value: 'repeat' },
+    { label: '水平平铺', value: 'repeat-x' },
+    { label: '垂直平铺', value: 'repeat-y' },
+    { label: '不重复', value: 'no-repeat' }
+  ]
   
   // 格式化副标题（支持换行）
   const formatSubtitle = computed(() => {
@@ -136,9 +163,35 @@ export function usePoster() {
   }))
   
   // 海报样式
-  const posterStyle = computed(() => ({
-    backgroundColor: mainColor.value,
-  }))
+  const posterStyle = computed(() => {
+    let background = mainColor.value
+    let bgSize = undefined
+    let bgRepeat = undefined
+    
+    if (backgroundType.value === 'gradient') {
+      background = `linear-gradient(${gradientAngle.value}deg, ${gradientStart.value}, ${gradientEnd.value})`
+    } else if (backgroundType.value === 'image' && backgroundImage.value) {
+      background = `url(${backgroundImage.value})`
+      
+      // 处理背景尺寸和重复模式
+      if (backgroundSize.value.includes('repeat')) {
+        bgRepeat = backgroundSize.value
+        bgSize = 'auto'
+      } else {
+        bgSize = backgroundSize.value
+        bgRepeat = 'no-repeat'
+      }
+    }
+    
+    return {
+      background,
+      backgroundSize: backgroundType.value === 'image' ? bgSize : undefined,
+      backgroundPosition: backgroundType.value === 'image' ? 'center' : undefined,
+      backgroundRepeat: backgroundType.value === 'image' ? bgRepeat : undefined,
+      fontFamily: selectedFont.value,
+      position: 'relative' as const
+    }
+  })
   
   // 更新位置为居中
   const updatePositions = () => {
@@ -222,6 +275,18 @@ export function usePoster() {
     })
   }
   
+  // 处理背景图片上传
+  const handleBackgroundUpload = (options: any) => {
+    const { file } = options
+    if (file.file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        backgroundImage.value = e.target?.result as string
+      }
+      reader.readAsDataURL(file.file)
+    }
+  }
+
   // 下载海报
   const downloadPoster = async () => {
     if (!posterRef.value) return
@@ -264,6 +329,16 @@ export function usePoster() {
     titleFontFamily,
     subtitleFontFamily,
     
+    // 背景配置
+    backgroundType,
+    gradientStart,
+    gradientEnd,
+    gradientAngle,
+    backgroundImage,
+    backgroundSize,
+    backgroundTypeOptions,
+    backgroundSizeOptions,
+    
     // 排版配置
     titleVertical,
     subtitleVertical,
@@ -293,6 +368,7 @@ export function usePoster() {
     // 方法
     updatePositions,
     applyTemplate,
+    handleBackgroundUpload,
     downloadPoster
   }
 }
