@@ -86,7 +86,7 @@ export const defaultWatermarkSettings: WatermarkSettings = {
   fontSize: 24,
   color: '#000000',
   opacity: 0.5,
-  fontFamily: 'Wuxia',
+  fontFamily: 'wuxia',
   position: 'bottom-right',
   padding: 20,
   rotation: 0,
@@ -127,7 +127,7 @@ const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 export const defaultTitleSettings: TitleSettings = {
   show: false,
   text: '默认标题',
-  fontFamily: 'Wuxia',
+  fontFamily: 'wuxia',
   color: '#ffffff',
   fontSize: 24, // 默认字体大小
   direction: 'vertical',
@@ -185,9 +185,9 @@ watch(imageUrl, updateTextColorBasedOnImage, { immediate: true });
 // 定义统一的字体选项，供整个应用使用
 export const fontOptions: FontOption[] = [
   { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
-  { label: '细雨体', value: 'drizzle' },
   { label: '可爱体', value: 'cute' },
   { label: '古典风', value: 'AncientStyle' },
+  { label: '武侠风', value: 'wuxia' },
   { label: '细雨体', value: 'drizzle' },
   { label: '默认字体', value: 'system-ui, sans-serif' }
 ];
