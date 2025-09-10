@@ -1,12 +1,12 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    // 主页由 App.vue 自身渲染，不需要单独组件
-    component: { render: () => null }
+    component: () => import('@/pages/home/index.vue'),
+    meta: { title: '壁纸生成器' }
   },
   {
     path: '/xhs',

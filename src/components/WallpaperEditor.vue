@@ -76,8 +76,8 @@
 
     <!-- 移动端控制组件 -->
     <MobileEditorControls v-if="isMobile" />
-    <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow" :title="mobileDrawerTitle">
-      <div class="mobile-drawer-body compact">
+    <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow">
+      <div class="mbs-body compact">
           <!-- 上传 -->
           <template v-if="mobileActivePanel === 'upload'">
             <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => handleImageUpload(file)">
@@ -143,21 +143,9 @@ import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '@/composables/useWallpaper';
+import { analyzeHexColor } from '@/utils/colorUtils';
 import { createDragHandler } from '../utils/dragUtils';
 import { type Template } from '../utils/indexedDB';
-
-import { 
-  NModal,
-  NButton,
-  NTooltip,
-  NIcon,
-  NUpload,
-  NFormItem,
-  NSelect,
-  NSwitch,
-  NInputNumber,
-  NSpace
-} from 'naive-ui';
 
 // 设备框架组件
 import PhoneFrame from './iphone/PhoneFrame.vue';
@@ -196,7 +184,6 @@ const previewAreaRef = ref<HTMLElement | null>(null);
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
-// 下载状态已移至App.vue
 
 const titleStyle = computed(() => {
   const style: any = {
@@ -206,38 +193,13 @@ const titleStyle = computed(() => {
     fontWeight: 500
   };
 
-  // 计算合适的阴影颜色（与标题颜色形成对比）
-  const calculateShadowColor = (color: string) => {
-    // 判断颜色是浅色还是深色
-    const isLightColor = (color: string) => {
-      if (color.startsWith('#')) {
-        // 十六进制颜色转换为RGB
-        const hex = color.replace('#', '');
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        // 计算亮度
-        return (r * 0.299 + g * 0.587 + b * 0.114) > 186;
-      } else if (color.startsWith('rgb')) {
-        // 提取RGB值
-        const rgb = color.match(/\d+/g);
-        if (rgb && rgb.length >= 3) {
-          const [r, g, b] = rgb.map(Number);
-          return (r * 0.299 + g * 0.587 + b * 0.114) > 186;
-        }
-      }
-      return true; // 默认认为是浅色
-    };
-
-    // 浅色标题使用深色阴影，深色标题使用浅色阴影
-    return isLightColor(color) ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)';
-  };
-
   if (titleSettings.value.shadowEffect === 'default') {
-    // 根据标题颜色自动计算对比阴影
-    const shadowColor = calculateShadowColor(titleSettings.value.color);
-    style.textShadow = `2px 2px 4px ${shadowColor}, 0 0 8px ${shadowColor}`;
-    style.filter = 'drop-shadow(1px 1px 1px rgba(0,0,0,0.3))'; // 添加额外的阴影增强效果
+    // 使用colorUtils计算合适的阴影颜色
+    analyzeHexColor(titleSettings.value.color).then(result => {
+      const shadowColor = result.isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
+      style.textShadow = `2px 2px 4px ${shadowColor}, 0 0 8px ${shadowColor}`;
+      style.filter = 'drop-shadow(1px 1px 1px rgba(0,0,0,0.3))';
+    });
   } else if (titleSettings.value.shadowEffect === 'custom') {
     // 自定义阴影
     const shadowSize = titleSettings.value.shadowSize || 2;
@@ -298,24 +260,8 @@ const { isMobile, mobileDrawerShow } = useMobile();
 // 移动端抽屉
 type MobilePanel = 'upload' | 'preview' | 'title' | 'watermark' | 'background' | 'templates';
 const mobileActivePanel = ref<MobilePanel>('upload');
-const mobileDrawerTitle = computed(() => {
-  const map: Record<MobilePanel, string> = {
-    upload: '上传背景',
-    preview: '预览与设备',
-    title: '标题设置',
-    watermark: '水印设置',
-    background: '背景设置',
-    templates: '个人收藏'
-  };
-  return map[mobileActivePanel.value];
-});
 
-const openDrawer = (panel: MobilePanel) => {
-  // 桌面端不打开移动端弹窗
-  if (!isMobile.value) return;
-  mobileActivePanel.value = panel;
-  mobileDrawerShow.value = true;
-};
+
 
 
 // 确认自定义尺寸
@@ -595,7 +541,7 @@ const handleResetConfig = async () => {
 }
 
 /* 移动端抽屉紧凑样式 */
-.mobile-drawer-body.compact {
+.mbs-body.compact {
   display: grid;
   gap: 8px;
 }
