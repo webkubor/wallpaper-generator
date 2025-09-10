@@ -13,6 +13,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Poster',
     component: () => import('@/pages/poster/index.vue'),
     meta: { title: '小红书封面大字报' }
+  },
+  {
+    path: '/gemini',
+    name: 'Gemini',
+    component: () => import('@/pages/gemini/index.vue'),
+    meta: { title: 'Gemini AI 助手' }
   }
 ];
 
