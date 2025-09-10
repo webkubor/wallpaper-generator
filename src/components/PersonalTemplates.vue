@@ -129,7 +129,7 @@ const handleSaveName = async (template: Template) => {
   try {
     const updated: Template = { ...template, name: newName };
     await templateDB.saveTemplate(updated);
-    await loadTemplates();
+    await loadTemplates(); // 重新加载模板列表
     window.$message?.success('模板名称已更新');
   } catch (e) {
     console.error('更新模板名称失败:', e);
@@ -145,7 +145,7 @@ const handleSaveName = async (template: Template) => {
 const handleDeleteTemplate = async (id: string) => {
   try {
     await templateDB.deleteTemplate(id);
-    await loadTemplates(); // 重新加载模板列表
+    await loadTemplates(); // 确保删除后刷新列表
     window.$message.success('模板删除成功');
   } catch (error) {
     console.error('删除模板失败:', error);
@@ -318,6 +318,10 @@ defineExpose({
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  max-height: 400px; /* 固定高度 */
+  overflow-y: auto; /* 垂直滚动 */
+  padding-right: 8px; /* 为滚动条留出空间 */
+  grid-auto-rows: minmax(180px, auto); /* 设置最小行高 */
 }
 
 .template-card {
@@ -328,10 +332,15 @@ defineExpose({
   background: var(--n-card-color);
   border: 1px solid var(--n-border-color);
   transition: all 0.3s ease;
+  height: 100%; /* 确保卡片填满网格行高 */
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 10px 15px rgba(0, 0, 0, 0.1),
+      0 20px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1;
   }
 }
 
@@ -341,6 +350,7 @@ defineExpose({
   height: 100px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .template-thumbnail {

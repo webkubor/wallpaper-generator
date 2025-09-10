@@ -32,6 +32,12 @@ export interface TitleSettings {
   direction: 'horizontal' | 'vertical';
   offsetX: number;
   offsetY: number;
+  shadowEffect: 'none' | 'default' | 'custom';
+  shadowColor?: string;
+  shadowSize?: number;
+  strokeEnabled: boolean;
+  strokeColor: string;
+  strokeWidth: number;
 }
 
 export interface WatermarkSettings {
@@ -133,6 +139,12 @@ export const defaultTitleSettings: TitleSettings = {
   direction: 'vertical',
   offsetX: 0,
   offsetY: 0,
+  shadowEffect: 'default',
+  shadowColor: '#000000',
+  shadowSize: 2,
+  strokeEnabled: false,
+  strokeColor: '#000000',
+  strokeWidth: 1
 };
 const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});

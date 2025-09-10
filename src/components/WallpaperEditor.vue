@@ -74,66 +74,8 @@
         </div>
       </div>
 
-    <!-- Mobile action bar and drawer -->
-    <div v-if="isMobile" class="mobile-action-bar">
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('upload')">
-            <n-icon :component="UploadSimple" />
-          </n-button>
-        </template>
-        上传
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('preview')">
-            <n-icon :component="ImageSquare" />
-          </n-button>
-        </template>
-        预览/设备
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('title')">
-            <n-icon :component="TextT" />
-          </n-button>
-        </template>
-        标题
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('watermark')">
-            <n-icon :component="Droplets" />
-          </n-button>
-        </template>
-        水印
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('background')">
-            <n-icon :component="Gear" />
-          </n-button>
-        </template>
-        背景
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('templates')">
-            <n-icon :component="BookmarkSimple" />
-          </n-button>
-        </template>
-        收藏
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="handleResetConfig">
-            <n-icon :component="ArrowCounterClockwise" />
-          </n-button>
-        </template>
-        重置
-      </n-tooltip>
-    </div>
-
+    <!-- 移动端控制组件 -->
+    <MobileEditorControls v-if="isMobile" />
     <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow" :title="mobileDrawerTitle">
       <div class="mobile-drawer-body compact">
           <!-- 上传 -->
@@ -232,6 +174,7 @@ import PersonalTemplates from './PersonalTemplates.vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise } from '@phosphor-icons/vue';
 import MobileBottomSheet from './common/MobileBottomSheet.vue';
+import MobileEditorControls from './MobileEditorControls.vue';
 
 
 const { 
@@ -255,13 +198,66 @@ const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
 // 下载状态已移至App.vue
 
-const titleStyle = computed(() => ({
-  fontFamily: titleSettings.value.fontFamily,
-  color: titleSettings.value.color,
-  fontSize: `${titleSettings.value.fontSize}px`,
-  fontWeight: 500,
-  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-}));
+const titleStyle = computed(() => {
+  const style: any = {
+    fontFamily: titleSettings.value.fontFamily,
+    color: titleSettings.value.color,
+    fontSize: `${titleSettings.value.fontSize}px`,
+    fontWeight: 500
+  };
+
+  // 计算合适的阴影颜色（与标题颜色形成对比）
+  const calculateShadowColor = (color: string) => {
+    // 判断颜色是浅色还是深色
+    const isLightColor = (color: string) => {
+      if (color.startsWith('#')) {
+        // 十六进制颜色转换为RGB
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        // 计算亮度
+        return (r * 0.299 + g * 0.587 + b * 0.114) > 186;
+      } else if (color.startsWith('rgb')) {
+        // 提取RGB值
+        const rgb = color.match(/\d+/g);
+        if (rgb && rgb.length >= 3) {
+          const [r, g, b] = rgb.map(Number);
+          return (r * 0.299 + g * 0.587 + b * 0.114) > 186;
+        }
+      }
+      return true; // 默认认为是浅色
+    };
+
+    // 浅色标题使用深色阴影，深色标题使用浅色阴影
+    return isLightColor(color) ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)';
+  };
+
+  if (titleSettings.value.shadowEffect === 'default') {
+    // 根据标题颜色自动计算对比阴影
+    const shadowColor = calculateShadowColor(titleSettings.value.color);
+    style.textShadow = `2px 2px 4px ${shadowColor}, 0 0 8px ${shadowColor}`;
+    style.filter = 'drop-shadow(1px 1px 1px rgba(0,0,0,0.3))'; // 添加额外的阴影增强效果
+  } else if (titleSettings.value.shadowEffect === 'custom') {
+    // 自定义阴影
+    const shadowSize = titleSettings.value.shadowSize || 2;
+    style.textShadow = `0 ${shadowSize}px ${shadowSize * 2}px ${titleSettings.value.shadowColor || 'rgba(0,0,0,0.5)'}`;
+  }
+
+  // 添加描边效果
+  style.textStroke = '1px rgba(0,0,0,0.3)';
+  style.WebkitTextStroke = '1px rgba(0,0,0,0.3)';
+  style.paintOrder = 'stroke fill'; // 确保描边在填充下方
+  
+  // 添加描边效果（如果启用）
+  if (titleSettings.value.strokeEnabled) {
+    style.textStroke = `${titleSettings.value.strokeWidth}px ${titleSettings.value.strokeColor}`;
+    style.WebkitTextStroke = `${titleSettings.value.strokeWidth}px ${titleSettings.value.strokeColor}`;
+    style.paintOrder = 'stroke fill'; // 确保描边在填充下方
+  }
+  
+  return style;
+});
 
 const titleContainerStyle = computed((): CSSProperties => ({
   position: 'absolute',
@@ -506,6 +502,7 @@ const handleResetConfig = async () => {
   z-index: 1;
   transform-origin: center center;
   background-color: transparent; /* 确保背景透明 */
+    filter: drop-shadow(rgba(0, 0, 0, 0.5) -10px 5px 10px);
 }
 
 .draggable {
