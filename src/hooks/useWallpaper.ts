@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import demoWallpaper from '@/assets/demo.png'
 import { analyzeImageColor } from '@/utils/colorUtils'
+import type { Template } from '@/utils/indexedDB';
 
 // 类型定义
 export interface Device {
@@ -220,6 +221,25 @@ const resetConfig = async () => {
   await updateTextColorBasedOnImage(imageUrl.value);
 };
 
+// 模板相关功能
+const personalTemplatesRef = ref<{ loadTemplates: () => Promise<void> } | null>(null);
+
+const loadTemplate = (template: Template) => {
+  try {
+    Object.assign(watermarkSettings.value, template.config.watermarkSettings);
+    Object.assign(titleSettings.value, template.config.titleSettings);
+    Object.assign(previewSettings.value, template.config.previewSettings);
+    // 仅应用字体颜色，避免影响 PC 端背景设置
+    if (template.config.backgroundSettings?.fontColor) {
+      backgroundSettings.value.fontColor = template.config.backgroundSettings.fontColor;
+    }
+    window.$message.success(`已加载模板: ${template.name}`);
+  } catch (error) {
+    console.error('加载模板失败:', error);
+    window.$message.error('加载模板失败');
+  }
+};
+
 // 使用壁纸生成器
 export const useWallpaper = () => {
 
@@ -351,5 +371,7 @@ export const useWallpaper = () => {
     shadowEffect,  // 导出阴影效果
     updateTextColorBasedOnImage,  // 导出颜色更新函数
     resetConfig,  // 导出重置配置函数
+    personalTemplatesRef,  // 导出模板引用
+    loadTemplate  // 导出加载模板函数
   }
 }

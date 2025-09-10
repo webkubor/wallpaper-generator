@@ -172,7 +172,6 @@ const formatTemplateDescription = (template: Template) => {
   }
   
   // 水印信息
-  // 按需精简：不显示水印内容
   
   // 标题信息
   if (config.titleSettings?.show && config.titleSettings?.text) {
@@ -187,10 +186,7 @@ onMounted(() => {
   loadTemplates();
 });
 
-// 暴露方法给父组件
-defineExpose({
-  loadTemplates
-});
+// 不再需要暴露方法，通过 useWallpaper 直接管理
 </script>
 
 <style scoped lang="scss">

@@ -167,5 +167,50 @@ const handleResetConfig = async () => {
 </script>
 
 <style scoped>
-/* 移动端样式保持不变 */
+/* 移动端操作栏样式 */
+.mobile-action-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 999px;
+  padding: 6px 8px;
+  display: flex;
+  gap: 6px;
+  z-index: 2000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* 移动端抽屉紧凑样式 */
+.mobile-drawer-body.compact {
+  display: grid;
+  gap: 8px;
+}
+
+/* 缩小表单项的垂直间距 */
+:deep(.n-form-item) {
+  margin-bottom: 8px;
+}
+
+/* 缩小 label 字号与内边距 */
+:deep(.n-form-item .n-form-item-label) {
+  font-size: 12px;
+  padding-bottom: 4px;
+}
+
+/* 选择器与数字输入宽度拉满 */
+:deep(.n-select),
+:deep(.n-input-number) {
+  width: 100%;
+}
+
+/* 自定义尺寸区域布局更紧凑 */
+.custom-size-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
 </style>

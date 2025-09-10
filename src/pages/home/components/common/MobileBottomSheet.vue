@@ -10,8 +10,64 @@
           <div class="mbs-title">{{ title }}</div>
           <button class="mbs-close" type="button" aria-label="关闭" @click="close">✕</button>
         </div>
-        <div class="mbs-body">
-          <slot />
+        <div class="mbs-body compact">
+          <!-- 上传 -->
+          <template v-if="activePanel === 'upload'">
+            <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => emit('image-upload', file)">
+              <n-button size="small" block>
+                <template #icon>
+                  <n-icon :component="UploadSimple" />
+                </template>
+                选择图片
+              </n-button>
+            </n-upload>
+          </template>
+
+          <!-- 预览/设备 -->
+          <template v-else-if="activePanel === 'preview'">
+            <n-form-item label="设备" size="small">
+              <n-select size="small" v-model:value="previewSettings.selectedDevice" 
+                :options="deviceOptions" />
+            </n-form-item>
+            <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" size="small">
+              <n-switch size="small" v-model:value="previewSettings.hasNotch" />
+            </n-form-item>
+            <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
+              <n-form-item label="宽度" size="small">
+                <n-input-number size="small" v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
+              </n-form-item>
+              <n-form-item label="高度" size="small">
+                <n-input-number size="small" v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
+              </n-form-item>
+              <n-button type="primary" size="small" color="#f4d03f" @click="emit('confirm-custom-size')">确定</n-button>
+            </div>
+          </template>
+
+          <!-- 标题设置 -->
+          <template v-else-if="activePanel === 'title'">
+            <n-form-item label="显示标题" size="small">
+              <n-switch size="small" :value="titleSettings.show" 
+                @update:value="(val) => emit('update:show', val)" />
+            </n-form-item>
+            <TitleSettings v-if="titleSettings.show" :title-settings="titleSettings" 
+              @update:title-settings="(val) => emit('update:title-settings', val)" />
+          </template>
+
+          <!-- 水印设置 -->
+          <template v-else-if="activePanel === 'watermark'">
+            <WatermarkSettings />
+          </template>
+
+          <!-- 背景设置 -->
+          <template v-else-if="activePanel === 'background'">
+            <BackgroundSettings :background-settings="backgroundSettings" 
+              @update:background-settings="(val) => emit('update:backgroundSettings', val)" />
+          </template>
+
+          <!-- 个人收藏 -->
+          <template v-else-if="activePanel === 'templates'">
+            <PersonalTemplates @load-template="(template) => emit('load-template', template)" />
+          </template>
         </div>
       </div>
     </transition>
@@ -19,16 +75,32 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useWallpaper } from '@/hooks/useWallpaper'
+import { PhUploadSimple as UploadSimple} from '@phosphor-icons/vue'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
   title: { type: String, default: '' },
-  closeOnMask: { type: Boolean, default: true },
+  closeOnMask: { type: Boolean, default: true }
 })
+
+const { 
+  previewSettings,
+  customWidth,
+  customHeight,
+  deviceOptions,
+  titleSettings,
+  backgroundSettings,
+  
+} = useWallpaper()
+
+const activePanel = ref('upload')
 
 const emit = defineEmits<{
   (e: 'update:show', v: boolean): void
+  (e: 'update:backgroundSettings', val: any): void
+  (e: 'load-template', template: any): void
 }>()
 
 const close = () => emit('update:show', false)

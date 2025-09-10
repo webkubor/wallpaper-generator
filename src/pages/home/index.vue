@@ -76,95 +76,43 @@
 
     <!-- 移动端控制组件 -->
     <MobileEditorControls v-if="isMobile" />
-    <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow">
-      <div class="mbs-body compact">
-          <!-- 上传 -->
-          <template v-if="mobileActivePanel === 'upload'">
-            <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => handleImageUpload(file)">
-              <n-button size="small" block>
-                <template #icon>
-                  <n-icon :component="UploadSimple" />
-                </template>
-                选择图片
-              </n-button>
-            </n-upload>
-          </template>
-
-          <!-- 预览/设备 -->
-          <template v-else-if="mobileActivePanel === 'preview'">
-            <n-form-item label="设备" size="small">
-              <n-select size="small" :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
-            </n-form-item>
-            <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" size="small">
-              <n-switch size="small" :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
-            </n-form-item>
-            <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
-              <n-form-item label="宽度" size="small">
-                <n-input-number size="small" v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
-              </n-form-item>
-              <n-form-item label="高度" size="small">
-                <n-input-number size="small" v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
-              </n-form-item>
-              <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
-            </div>
-          </template>
-
-          <!-- 标题设置 -->
-          <template v-else-if="mobileActivePanel === 'title'">
-            <n-form-item label="显示标题" size="small">
-              <n-switch size="small" :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
-            </n-form-item>
-            <TitleSettings v-if="titleSettings.show" />
-          </template>
-
-          <!-- 水印设置 -->
-          <template v-else-if="mobileActivePanel === 'watermark'">
-            <WatermarkSettings />
-          </template>
-
-          <!-- 背景设置 -->
-          <template v-else-if="mobileActivePanel === 'background'">
-            <BackgroundSettings :background-settings="backgroundSettings" />
-          </template>
-
-          <!-- 个人收藏 -->
-          <template v-else-if="mobileActivePanel === 'templates'">
-            <PersonalTemplates ref="personalTemplatesRef" @load-template="loadTemplate" />
-          </template>
-      </div>
-    </MobileBottomSheet>
+    <MobileBottomSheet 
+      v-if="isMobile" 
+      :show="mobileDrawerShow"
+      @update:show="mobileDrawerShow = $event"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, type CSSProperties } from 'vue';
-// 尺寸与移动端判定从自定义 hooks 获取
 import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useWallpaper } from '@/hooks/useWallpaper';
 import { analyzeHexColor } from '@/utils/colorUtils';
 import { createDragHandler } from '@/utils/dragUtils';
-import { type Template } from '@/utils/indexedDB';
 
-// 设备框架组件
-import PhoneFrame from './components/iphone/PhoneFrame.vue';
-import TabletFrame from './components/ipad/TabletFrame.vue';
-import MacFrame from './components/mac/MacFrame.vue';
-import CarFrame from './components/car/CarFrame.vue';
-import ComboDevices from './components/combo/ComboDevices.vue';
-import CustomFrame from './components/custom/CustomFrame.vue';
-import SettingsToolbar from './components/SettingsToolbar.vue';
-import WatermarkSettings from './components/toolbar/WatermarkSettings.vue';
-import TitleSettings from './components/toolbar/TitleSettings.vue';
-import BackgroundSettings from './components/toolbar/BackgroundSettings.vue';
-import PersonalTemplates from './components/PersonalTemplates.vue';
-import type { UploadFileInfo } from 'naive-ui';
-import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise } from '@phosphor-icons/vue';
-import MobileBottomSheet from './components/common/MobileBottomSheet.vue';
-import MobileEditorControls from './components/MobileEditorControls.vue';
+import {
+  PhoneFrame,
+  TabletFrame,
+  MacFrame,
+  CarFrame,
+  ComboDevices,
+  CustomFrame,
+  SettingsToolbar,
+  WatermarkSettings,
+  TitleSettings,
+  BackgroundSettings,
+  PersonalTemplates,
+  UploadSimple,
+  MobileBottomSheet,
+  MobileEditorControls,
+  type UploadFileInfo
+} from './components/imports.ts'
 
 
+const { personalTemplatesRef, loadTemplate } = useWallpaper()
 const { 
   imageUrl, 
   watermarkImageUrl,
@@ -242,26 +190,12 @@ const titleDragStyle = computed((): CSSProperties => {
   };
 });
 
-// 设备下拉选项
-const deviceOptions = computed(() => {
-  try {
-    return previewSettings.value.devices.map((d: any) => ({ label: d.name, value: d.id }));
-  } catch {
-    return [] as Array<{ label: string; value: string }>; 
-  }
-});
 const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
 
 // 小屏判断与移动端抽屉开关（统一从 hooks 提供）
 const { isMobile, mobileDrawerShow } = useMobile();
-
-// 移动端抽屉
-type MobilePanel = 'upload' | 'preview' | 'title' | 'watermark' | 'background' | 'templates';
-const mobileActivePanel = ref<MobilePanel>('upload');
-
-
 
 
 // 确认自定义尺寸
@@ -357,31 +291,8 @@ const canvasStyle = computed(() => ({
   height: `${currentDevice.value.height}px`,
 }));
 
-// 个人模板组件引用
-const personalTemplatesRef = ref<{ loadTemplates: () => Promise<void> } | null>(null);
 
-// 加载模板配置
-const loadTemplate = (template: Template) => {
-  try {
-    Object.assign(watermarkSettings.value, template.config.watermarkSettings);
-    Object.assign(titleSettings.value, template.config.titleSettings);
-    Object.assign(previewSettings.value, template.config.previewSettings);
-    // 仅应用字体颜色，避免影响 PC 端背景设置
-    if (template.config.backgroundSettings?.fontColor) {
-      backgroundSettings.value.fontColor = template.config.backgroundSettings.fontColor;
-    }
-    window.$message.success(`已加载模板: ${template.name}`);
-  } catch (error) {
-    console.error('加载模板失败:', error);
-    window.$message.error('加载模板失败');
-  }
-};
 
-// 暴露函数给父组件
-defineExpose({
-  previewAreaRef,
-  loadTemplates: () => personalTemplatesRef.value?.loadTemplates()
-});
 
 // 重置配置
 const handleResetConfig = async () => {
@@ -512,21 +423,6 @@ const handleResetConfig = async () => {
   }
 }
 
-/* 移动端底部工具栏 */
-.mobile-action-bar {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 16px;
-  background: var(--n-card-color);
-  border: 1px solid var(--n-border-color);
-  border-radius: 999px;
-  padding: 6px 8px;
-  display: flex;
-  gap: 6px;
-  z-index: 2000;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-}
 
 /* 拖拽状态样式 */
 .dragging {
