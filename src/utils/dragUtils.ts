@@ -1,21 +1,5 @@
 import { ref } from 'vue';
-
-/**
- * 拖拽处理器接口
- */
-export interface DragHandlers {
-  onMouseDown: (e: MouseEvent) => void;
-}
-
-/**
- * 辅助线配置
- */
-export interface GuideLineOptions {
-  showGuideLines?: boolean;
-  containerSelector?: string;
-  lineColor?: string;
-  lineWidth?: number;
-}
+import type { DragHandlers, GuideLineOptions } from '@/types/interfaces/utils';
 
 /**
  * 创建增强的拖拽处理器，支持辅助线

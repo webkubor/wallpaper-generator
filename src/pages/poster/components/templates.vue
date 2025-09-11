@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import posterConfig from './poster-templates.json';
-import type { Template } from './types';
+import type { Template } from '@/types/interfaces/poster';
 
 
 // 当前选中的模板

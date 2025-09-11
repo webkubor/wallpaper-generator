@@ -76,7 +76,8 @@ import { ref, onMounted } from 'vue';
 import { NIcon, NButton, NInput } from 'naive-ui';
 import { formatDisplayTime } from '@/utils/time';
 import { PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
-import { templateDB, type Template } from '@/utils/indexedDB';
+import { templateDB } from '@/utils/indexedDB';
+import type { Template } from '@/types/interfaces/utils';
 
 // Props
 defineProps<{

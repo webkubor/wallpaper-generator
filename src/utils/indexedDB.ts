@@ -1,17 +1,5 @@
 // IndexedDB 工具函数
-export interface Template {
-  id: string;
-  name: string;
-  config: {
-    watermarkSettings: any;
-    titleSettings: any;
-    previewSettings: any;
-    backgroundSettings: any;
-    downloadOption: string;
-  };
-  previewImage: string; // base64 图片数据
-  timestamp: string;
-}
+import type { Template } from '@/types/interfaces/utils';
 
 class TemplateDB {
   private dbName = 'WallpaperTemplates';

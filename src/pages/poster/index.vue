@@ -2,7 +2,13 @@
   <div class="xhs-page">
     <PosterToolbar />
     <div class="canvas-wrap">
-      <div class="poster" ref="posterRef" :style="posterStyle">
+      <div class="poster" ref="posterRef" :style="[posterStyle, posterInnerStyle]">
+        <!-- 背景图片层 -->
+        <img v-if="backgroundType === 'image' && backgroundImage" 
+             :src="backgroundImage" 
+             class="poster-background-image" 
+             alt="背景图片" />
+        
         <div class="poster-inner">
           <div class="poster-title draggable" v-if="title" :style="titleStyle"
             @mousedown="titleDragHandler.onMouseDown">
@@ -36,11 +42,14 @@ const {
   showSubtitle,
   formatSubtitle,
   showLightingEffect,
+  backgroundType,
+  backgroundImage,
   
   // 样式计算
   titleStyle,
   subtitleStyle,
   posterStyle,
+  posterInnerStyle,
   
   // 引用
   posterRef,
@@ -124,34 +133,34 @@ onBeforeUnmount(() => {
 
 
 
-    .poster-inner {
+    .poster-background-image {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
+      object-fit: cover;
+      border-radius: 16px;
       z-index: 1;
+    }
 
+    .poster-inner {
       &::before {
         content: "";
         position: absolute;
-        top: -50%;
-        left: -30%;
-        width: 160%;
-        height: 200%;
-        background: linear-gradient(120deg,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0.2) 30%,
-            rgba(255, 255, 255, 0.05) 70%,
-            transparent 100%);
-        transform: rotate(-25deg);
-        border-radius: 50%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at 30% 20%,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.05) 30%,
+          rgba(255, 255, 255, 0.02) 60%,
+          transparent 100%
+        );
         pointer-events: none;
-        opacity: v-bind('showLightingEffect ? 1 : 0');
-        transition: opacity 0.3s ease;
+        z-index: 2;
       }
 
       .poster-title {
@@ -163,6 +172,7 @@ onBeforeUnmount(() => {
         max-width: 90%;
         max-height: 85%;
         z-index: 10;
+        position: relative;
         transition: transform 0.2s ease;
       }
 
@@ -173,6 +183,7 @@ onBeforeUnmount(() => {
         word-break: break-all;
         max-width: 90%;
         z-index: 10;
+        position: relative;
         transition: transform 0.2s ease;
       }
     }

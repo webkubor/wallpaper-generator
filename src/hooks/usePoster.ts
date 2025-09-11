@@ -4,29 +4,7 @@ import { createDragHandler } from '@/utils/dragUtils'
 import { captureAndDownload } from '@/utils/captureUtils'
 import { formatFileTimestamp } from '@/utils/time'
 import posterConfig from '@/pages/poster/components/poster-templates.json'
-
-export interface PosterTemplate {
-  title: string
-  subtitle: string
-  textColor: string
-  mainColor: string
-  titleSize: number
-  subtitleSize: number
-  selectedFont: string
-  subtitleFont: string
-  titleVertical: boolean
-  subtitleVertical: boolean
-  titleStroke: boolean
-  titleStrokeColor: string
-  subtitleColor: string
-  titleShadow: string
-  subtitleShadow: string
-}
-
-export interface Position {
-  x: number
-  y: number
-}
+import type { PosterTemplate, Position } from '@/types/interfaces/poster'
 
 export function usePoster() {
   // 基础文本内容
@@ -164,33 +142,56 @@ export function usePoster() {
   
   // 海报样式
   const posterStyle = computed(() => {
-    let background = mainColor.value
-    let bgSize = undefined
-    let bgRepeat = undefined
-    
-    if (backgroundType.value === 'gradient') {
-      background = `linear-gradient(${gradientAngle.value}deg, ${gradientStart.value}, ${gradientEnd.value})`
-    } else if (backgroundType.value === 'image' && backgroundImage.value) {
-      background = `url(${backgroundImage.value})`
-      
-      // 处理背景尺寸和重复模式
-      if (backgroundSize.value.includes('repeat')) {
-        bgRepeat = backgroundSize.value
-        bgSize = 'auto'
-      } else {
-        bgSize = backgroundSize.value
-        bgRepeat = 'no-repeat'
-      }
-    }
-    
-    return {
-      background,
-      backgroundSize: backgroundType.value === 'image' ? bgSize : undefined,
-      backgroundPosition: backgroundType.value === 'image' ? 'center' : undefined,
-      backgroundRepeat: backgroundType.value === 'image' ? bgRepeat : undefined,
+    const style: any = {
       fontFamily: selectedFont.value,
       position: 'relative' as const
     }
+    
+    return style
+  })
+  
+  // 海报内部样式（包含背景）
+  const posterInnerStyle = computed(() => {
+    console.log('posterInnerStyle computing...', {
+      backgroundType: backgroundType.value,
+      hasBackgroundImage: !!backgroundImage.value
+    });
+    
+    const style: any = {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '20px',
+      position: 'relative' as const,
+      zIndex: 1
+    }
+    
+    if (backgroundType.value === 'gradient') {
+      style.backgroundImage = `linear-gradient(${gradientAngle.value}deg, ${gradientStart.value}, ${gradientEnd.value})`
+      style.backgroundColor = 'transparent'
+    } else if (backgroundType.value === 'image' && backgroundImage.value) {
+      // 背景图片现在使用单独的img标签，这里设置透明背景
+      style.backgroundColor = 'transparent'
+      style.backgroundImage = 'none'
+    } else {
+      // 纯色背景
+      style.backgroundColor = mainColor.value
+      style.backgroundImage = 'none'
+    }
+    
+    console.log('posterInnerStyle computed:', {
+      backgroundType: backgroundType.value,
+      backgroundImage: backgroundImage.value ? 'has image data' : 'no image',
+      style
+    });
+    
+    // 强制触发响应式更新
+    console.log('Force reactive update check:', Date.now());
+    
+    return style
   })
   
   // 更新位置为居中
@@ -276,14 +277,61 @@ export function usePoster() {
   }
   
   // 处理背景图片上传
-  const handleBackgroundUpload = (options: any) => {
-    const { file } = options
-    if (file.file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        backgroundImage.value = e.target?.result as string
+  const handleBackgroundUpload = (fileInfo: any) => {
+    try {
+      console.log('handleBackgroundUpload received:', fileInfo, typeof fileInfo);
+      
+      let file: File;
+      if (fileInfo instanceof File) {
+        file = fileInfo;
+      } else if (fileInfo && fileInfo.file instanceof File) {
+        file = fileInfo.file;
+      } else if (fileInfo && fileInfo.file && fileInfo.file.file instanceof File) {
+        file = fileInfo.file.file;
+      } else {
+        console.error('Invalid file parameter:', fileInfo);
+        window.$message?.error('无效的文件参数');
+        return;
       }
-      reader.readAsDataURL(file.file)
+      
+      console.log('Extracted file:', file, file instanceof File);
+
+      if (!file.type.startsWith('image/')) {
+        window.$message?.error('请上传图片文件');
+        return;
+      }
+
+      // 读取图片并设置为背景
+       const reader = new FileReader();
+       reader.onload = (e) => {
+         try {
+           const dataUrl = e.target?.result as string;
+           console.log('FileReader result:', dataUrl ? dataUrl.substring(0, 50) + '...' : 'null');
+           
+           backgroundImage.value = dataUrl;
+           backgroundType.value = 'image';
+           
+           console.log('Updated backgroundImage:', backgroundImage.value ? backgroundImage.value.substring(0, 50) + '...' : 'null');
+           console.log('Updated backgroundType:', backgroundType.value);
+           
+           // 强制触发响应式更新
+           nextTick(() => {
+             console.log('Force trigger posterInnerStyle after nextTick')
+           })
+           
+           window.$message?.success('背景图片上传成功');
+         } catch (error) {
+           console.error('图片处理失败:', error);
+           window.$message?.error('图片处理失败');
+         }
+       };
+      reader.onerror = () => {
+        window.$message?.error('图片读取失败');
+      };
+      reader.readAsDataURL(file);
+    } catch (error: any) {
+      console.error('背景图片上传失败:', error);
+      window.$message?.error(error?.message || '背景图片上传失败');
     }
   }
 
@@ -357,6 +405,7 @@ export function usePoster() {
     titleStyle,
     subtitleStyle,
     posterStyle,
+    posterInnerStyle,
     
     // 引用
     posterRef,

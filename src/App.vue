@@ -46,7 +46,8 @@ import { ref,computed } from "vue";
 import { useTheme } from '@/hooks/useTheme';
 import { useRoute } from 'vue-router';
 import { useWallpaper } from './hooks/useWallpaper';
-import { templateDB, type Template } from './utils/indexedDB';
+import { templateDB } from './utils/indexedDB';
+import type { Template } from '@/types/interfaces/utils';
 import { captureWallpaper } from './utils/captureUtils';
 import { formatFileTimestamp } from './utils/time';
 

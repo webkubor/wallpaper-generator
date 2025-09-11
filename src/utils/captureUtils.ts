@@ -1,19 +1,6 @@
 import html2canvas from 'html2canvas';
 import { formatNow } from './time';
-
-/**
- * HTML元素截图选项
- */
-export interface CaptureOptions {
-  backgroundColor?: string | null;
-  scale?: number;
-  useCORS?: boolean;
-  allowTaint?: boolean;
-  foreignObjectRendering?: boolean;
-  logging?: boolean;
-  width?: number;
-  height?: number;
-}
+import type { CaptureOptions } from '@/types/interfaces/utils';
 
 /**
  * HTML元素转换为Canvas并下载
