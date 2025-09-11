@@ -243,61 +243,54 @@ const loadTemplate = (template: Template) => {
   }
 };
 
-const handleImageUpload = async (file: any) => {
+const handleImageUpload = (fileInfo: any) => {
   try {
-    // 1. 验证文件类型和大小
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    console.log('handleImageUpload received:', fileInfo, typeof fileInfo);
     
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error('只支持 JPG/PNG/WEBP 格式的图片');
+    let file: File;
+    if (fileInfo instanceof File) {
+      file = fileInfo;
+    } else if (fileInfo && fileInfo.file instanceof File) {
+      file = fileInfo.file;
+    } else if (fileInfo && fileInfo.file && fileInfo.file.file instanceof File) {
+      file = fileInfo.file.file;
+    } else {
+      console.error('Invalid file parameter:', fileInfo);
+      window.$message.error('无效的文件参数');
+      return;
     }
     
-    if (file.size > maxSize) {
-      throw new Error('图片大小不能超过 5MB');
+    console.log('Extracted file:', file, file instanceof File);
+
+    if (!file.type.startsWith('image/')) {
+      window.$message.error('请上传图片文件');
+      return;
     }
 
-    // 2. 读取图片并检查比例
+    // 读取图片并直接设置为背景
     const reader = new FileReader();
-    return new Promise((resolve, reject) => {
-      reader.onload = async (e) => {
-        try {
-          const img = new Image();
-          img.src = e.target?.result as string;
-          await img.decode();
-          
-          // 计算图片和设备比例是否一致
-          const imgAspect = img.width / img.height;
-          const deviceAspect = currentDevice.value.width / currentDevice.value.height;
-          
-          if (Math.abs(imgAspect - deviceAspect) < 0.01) {
-            // 比例一致，直接使用图片
-            imageUrl.value = img.src;
-            await updateTextColorBasedOnImage(img.src);
-            window.$message.success('图片已自动适配设备尺寸');
-            resolve(img.src);
-          } else {
-            // 比例不一致，显示裁剪界面
-            showCropperModal.value = true;
-            cropperSource.value = img.src;
-            resolve(null);
-          }
-        } catch (error) {
-          console.error('图片处理失败:', error);
-          window.$message.error('图片处理失败');
-          reject(error);
-        }
-      };
-      reader.onerror = () => {
-        window.$message.error('图片读取失败');
-        reject(new Error('图片读取失败'));
-      };
-      reader.readAsDataURL(file);
-    });
-  } catch (error) {
+    reader.onload = async (e) => {
+      try {
+        const img = new Image();
+        img.src = e.target?.result as string;
+        await img.decode();
+        
+        // 直接使用图片，不进行比例检查
+        imageUrl.value = img.src;
+        await updateTextColorBasedOnImage(img.src);
+        window.$message.success('背景图片上传成功');
+      } catch (error) {
+        console.error('图片处理失败:', error);
+        window.$message.error('图片处理失败');
+      }
+    };
+    reader.onerror = () => {
+      window.$message.error('图片读取失败');
+    };
+    reader.readAsDataURL(file);
+  } catch (error: any) {
     console.error('图片上传失败:', error);
-    window.$message.error(error.message || '图片上传失败');
-    throw error;
+    window.$message.error(error?.message || '图片上传失败');
   }
 };
 

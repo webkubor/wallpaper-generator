@@ -7,7 +7,7 @@
       v-model:custom-width="customWidth"
       v-model:custom-height="customHeight"
       @reset-config="handleResetConfig"
-      @image-upload="handleImageUpload"
+      @image-upload="wallpaperHandleImageUpload"
       @confirm-custom-size="confirmCustomSize"
       @load-template="loadTemplate"
     />
@@ -123,6 +123,8 @@ const {
   resetConfig
 } = useWallpaper();
 
+const { handleImageUpload: wallpaperHandleImageUpload } = useWallpaper();
+
 const previewAreaRef = ref<HTMLElement | null>(null);
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
@@ -206,34 +208,6 @@ const confirmCustomSize = () => {
   }
 };
 
-const handleImageUpload = async (file: UploadFileInfo) => {
-  const actualFile = file.file;
-  if (actualFile && actualFile.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const img = new Image();
-      img.src = e.target?.result as string;
-      await img.decode();
-      
-      // 计算图片和设备比例是否一致
-      const imgAspect = img.width / img.height;
-      const deviceAspect = currentDevice.value.width / currentDevice.value.height;
-      
-      if (Math.abs(imgAspect - deviceAspect) < 0.01) {
-        // 比例一致，直接使用图片
-        imageUrl.value = img.src;
-        window.$message.success('图片已自动适配设备尺寸');
-      } else {
-        // 比例不一致，显示裁剪界面
-        cropperSource.value = img.src;
-        showCropperModal.value = true;
-      }
-    };
-    reader.readAsDataURL(actualFile);
-  } else {
-    window.$message.error('请上传图片文件');
-  }
-};
 
 const confirmCrop = () => {
   cropperRef.value.getCropData((data: string) => {
