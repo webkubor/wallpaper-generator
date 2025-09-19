@@ -13,7 +13,7 @@
         <div class="mbs-body compact">
           <!-- 上传 -->
           <template v-if="activePanel === 'upload'">
-            <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => emit('image-upload', file)">
+            <n-upload :custom-request="() => {}" :show-file-list="false" @change="(info: any) => emit('image-upload', info.file)">
               <n-button size="small" block>
                 <template #icon>
                   <n-icon :component="UploadSimple" />
@@ -47,7 +47,7 @@
           <template v-else-if="activePanel === 'title'">
             <n-form-item label="显示标题" size="small">
               <n-switch size="small" :value="titleSettings.show" 
-                @update:value="(val) => emit('update:show', val)" />
+                @update:value="(val: boolean) => titleSettings.show = val" />
             </n-form-item>
             <TitleSettings v-if="titleSettings.show" :title-settings="titleSettings" 
               @update:title-settings="(val) => emit('update:title-settings', val)" />
@@ -78,6 +78,14 @@
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useWallpaper } from '@/hooks/useWallpaper'
 import { PhUploadSimple as UploadSimple} from '@phosphor-icons/vue'
+import { 
+  NButton, NFormItem, NIcon, NUpload, 
+  NSelect, NSwitch, NInputNumber 
+} from 'naive-ui'
+import TitleSettings from '../toolbar/TitleSettings.vue'
+import WatermarkSettings from '../toolbar/WatermarkSettings.vue'
+import BackgroundSettings from '../toolbar/BackgroundSettings.vue'
+import PersonalTemplates from '../PersonalTemplates.vue'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -101,6 +109,9 @@ const emit = defineEmits<{
   (e: 'update:show', v: boolean): void
   (e: 'update:backgroundSettings', val: any): void
   (e: 'load-template', template: any): void
+  (e: 'image-upload', file: any): void
+  (e: 'update:title-settings', val: any): void
+  (e: 'confirm-custom-size'): void
 }>()
 
 const close = () => emit('update:show', false)
