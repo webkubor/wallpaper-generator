@@ -61,8 +61,7 @@ export async function captureWallpaper(
 ): Promise<void> {
   const targetElement = downloadOption === 'withBackground' 
     ? previewArea
-    : (previewArea.querySelector('.wallpaper-content') || 
-       previewArea.querySelector('.preview-canvas') || 
+    :   (previewArea.querySelector('.preview-canvas') || 
        previewArea) as HTMLElement;
   
   const options: CaptureOptions = {
