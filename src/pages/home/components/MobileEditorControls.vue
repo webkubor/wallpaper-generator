@@ -59,6 +59,14 @@
     </n-tooltip>
     <n-tooltip placement="top" trigger="hover">
       <template #trigger>
+        <n-button quaternary circle @click="emit('open-wallpaper-library')">
+          <n-icon :component="ImageSquare" />
+        </n-button>
+      </template>
+      壁纸素材
+    </n-tooltip>
+    <n-tooltip placement="top" trigger="hover">
+      <template #trigger>
         <n-button quaternary circle @click="openGemini">
           <n-icon :component="ChatCircle" />
         </n-button>
@@ -171,6 +179,8 @@ const { handleImageUpload } = useWallpaper();
 const handleResetConfig = async () => {
   await resetConfig();
 };
+
+const emit = defineEmits(['open-wallpaper-library']);
 
 const openGemini = () => {
   window.location.hash = '/gemini';

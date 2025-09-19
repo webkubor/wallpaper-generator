@@ -19,6 +19,16 @@
           </n-tooltip>
           <n-tooltip trigger="hover">
             <template #trigger>
+              <n-button quaternary size="small" class="wallpaper-btn" @click="openWallpaperLibrary">
+                <template #icon>
+                  <n-icon :component="ImageSquare" />
+                </template>
+              </n-button>
+            </template>
+            壁纸素材
+          </n-tooltip>
+          <n-tooltip trigger="hover">
+            <template #trigger>
               <n-button quaternary size="small" class="ai-btn" @click="openGemini">
                 <template #icon>
                   <n-icon :component="ChatCircle" />
@@ -150,7 +160,7 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   resetConfig: [];
-
+  'open-wallpaper-library': [];
   confirmCustomSize: [];
   'update:customWidth': [value: number];
   'update:customHeight': [value: number];
@@ -170,6 +180,10 @@ const { handleImageUpload } = useWallpaper();
 
 const confirmCustomSize = () => {
   emit('confirmCustomSize');
+};
+
+const openWallpaperLibrary = () => {
+  emit('open-wallpaper-library');
 };
 
 const handleLoadTemplate = (template: any) => {

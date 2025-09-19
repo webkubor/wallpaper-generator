@@ -16,6 +16,7 @@ export { default as PersonalTemplates } from './PersonalTemplates.vue'
 // 移动端组件
 export { default as MobileBottomSheet } from './common/MobileBottomSheet.vue'
 export { default as MobileEditorControls } from './MobileEditorControls.vue'
+export { default as WallpaperLibraryModal } from './WallpaperLibraryModal.vue'
 
 // 图标
 export { 
@@ -25,7 +26,8 @@ export {
   PhDrop as Droplets, 
   PhGear as Gear, 
   PhBookmarkSimple as BookmarkSimple, 
-  PhArrowCounterClockwise as ArrowCounterClockwise 
+  PhArrowCounterClockwise as ArrowCounterClockwise,
+  PhChatCircle as ChatCircle
 } from '@phosphor-icons/vue'
 
 // 类型

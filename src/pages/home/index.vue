@@ -10,6 +10,7 @@
       @image-upload="wallpaperHandleImageUpload"
       @confirm-custom-size="confirmCustomSize"
       @load-template="loadTemplate"
+      @open-wallpaper-library="openWallpaperLibrary"
     />
 
     <!-- Center: Preview Area -->
@@ -81,6 +82,9 @@
       :show="mobileDrawerShow"
       @update:show="mobileDrawerShow = $event"
     />
+
+    <!-- 壁纸素材库弹窗 -->
+    <WallpaperLibraryModal ref="wallpaperLibraryRef" @select="handleWallpaperSelect" />
   </div>
 </template>
 
@@ -104,6 +108,7 @@ import {
   SettingsToolbar,
   MobileBottomSheet,
   MobileEditorControls,
+  WallpaperLibraryModal,
   type UploadFileInfo
 } from './components/imports.ts'
 
@@ -123,7 +128,17 @@ const {
   resetConfig
 } = useWallpaper();
 
-const { handleImageUpload: wallpaperHandleImageUpload } = useWallpaper();
+const { handleImageUpload: wallpaperHandleImageUpload, setBackgroundImage } = useWallpaper();
+
+const wallpaperLibraryRef = ref<InstanceType<typeof WallpaperLibraryModal>>();
+
+const openWallpaperLibrary = () => {
+  wallpaperLibraryRef.value?.open();
+};
+
+const handleWallpaperSelect = (bgUrl: string) => {
+  setBackgroundImage(bgUrl);
+};
 
 const previewAreaRef = ref<HTMLElement | null>(null);
 
