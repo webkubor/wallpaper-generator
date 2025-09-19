@@ -7,3 +7,14 @@ declare module '*.vue' {
 }
 
 declare module 'vue-cropper';
+// 声明全局消息提示类型
+declare global {
+  interface Window {
+    $message: {
+      success: (message: string) => void
+      error: (message: string) => void
+      warning: (message: string) => void
+      info: (message: string) => void
+    }
+  }
+}
