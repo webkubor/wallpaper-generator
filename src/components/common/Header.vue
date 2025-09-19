@@ -1,7 +1,7 @@
 <template>
   <n-layout-header class="header">
     <div class="title-container">
-      <div class="title-content">
+      <div class="title-content" @click="goHome">
         <h1 class="main-title">✨ 氛围壁纸工坊</h1>
         <p class="subtitle">风有归处，心有颜色。</p>
       </div>

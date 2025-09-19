@@ -17,6 +17,16 @@
             </template>
             重置所有设置
           </n-tooltip>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary size="small" class="ai-btn" @click="openGemini">
+                <template #icon>
+                  <n-icon :component="ChatCircle" />
+                </template>
+              </n-button>
+            </template>
+            AI助手
+          </n-tooltip>
         </div>
       </div>
     </template>
@@ -114,7 +124,14 @@ import {
   NCard, NCollapse, NCollapseItem, NFormItem, NIcon, NButton, NUpload,
   NSelect, NSwitch, NInputNumber, NTooltip, NDivider
 } from 'naive-ui';
-import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhDrop as Droplets } from "@phosphor-icons/vue";
+import { 
+  PhGear as Gear, 
+  PhArrowCounterClockwise as ArrowCounterClockwise, 
+  PhUploadSimple as UploadSimple, 
+  PhImage as ImageSquare, 
+  PhDrop as Droplets,
+  PhChatCircle as ChatCircle
+} from "@phosphor-icons/vue";
 import PersonalTemplates from './PersonalTemplates.vue';
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
@@ -157,6 +174,10 @@ const confirmCustomSize = () => {
 
 const handleLoadTemplate = (template: any) => {
   emit('loadTemplate', template);
+};
+
+const openGemini = () => {
+  window.location.hash = '/gemini';
 };
 
 </script>

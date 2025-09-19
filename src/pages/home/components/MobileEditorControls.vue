@@ -57,6 +57,14 @@
       </template>
       重置
     </n-tooltip>
+    <n-tooltip placement="top" trigger="hover">
+      <template #trigger>
+        <n-button quaternary circle @click="openGemini">
+          <n-icon :component="ChatCircle" />
+        </n-button>
+      </template>
+      AI助手
+    </n-tooltip>
   </div>
 
   <!-- 移动端抽屉 -->
@@ -112,7 +120,8 @@ import {
   PhDrop as Droplets,
   PhGear as Gear,
   PhBookmarkSimple as BookmarkSimple,
-  PhArrowCounterClockwise as ArrowCounterClockwise
+  PhArrowCounterClockwise as ArrowCounterClockwise,
+  PhChatCircle as ChatCircle
 } from '@phosphor-icons/vue';
 import MobileBottomSheet from './common/MobileBottomSheet.vue';
 import { computed, ref, type CSSProperties } from 'vue';
@@ -161,6 +170,10 @@ const { handleImageUpload } = useWallpaper();
 
 const handleResetConfig = async () => {
   await resetConfig();
+};
+
+const openGemini = () => {
+  window.location.hash = '/gemini';
 };
 </script>
 
