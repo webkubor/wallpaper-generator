@@ -166,24 +166,31 @@ const generateFileName = () => {
 
 // 下载壁纸函数
 const downloadWallpaper = async () => {
-  if (wallpaperEditorRef.value && wallpaperEditorRef.value.previewAreaRef) {
-    isDownloading.value = true;
+  const previewArea = document.querySelector('.preview-area') as HTMLElement;
+  if (!previewArea) {
+    window.$message.error('无法找到预览区域');
+    return;
+  }
+
+  isDownloading.value = true;
+  
+  try {
+    const filename = generateFileName();
+    await captureWallpaper(
+      previewArea,
+      downloadOption.value as 'withBackground' | 'withoutBackground',
+      filename
+    );
     
-    try {
-      await captureWallpaper(
-        wallpaperEditorRef.value.previewAreaRef,
-        downloadOption.value as 'withBackground' | 'withoutBackground',
-        generateFileName()
-      );
-      
-      // 导出成功后显示分享卡片
-      currentWallpaperImage.value = imageUrl.value || '';
-      showShareCard.value = true;
-    } catch (error) {
-      console.error('导出失败:', error);
-    } finally {
-      isDownloading.value = false;
-    }
+    // 导出成功后显示分享卡片
+    currentWallpaperImage.value = imageUrl.value || '';
+    showShareCard.value = true;
+    window.$message.success(`壁纸已导出: ${filename}`);
+  } catch (error) {
+    console.error('导出壁纸失败:', error);
+    window.$message.error('导出壁纸失败，请重试');
+  } finally {
+    isDownloading.value = false;
   }
 };
 

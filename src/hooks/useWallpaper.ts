@@ -244,6 +244,36 @@ const handleImageUpload = (fileInfo: any) => {
   }
 };
 
+// 设置背景图片函数
+const setBackgroundImage = (url: string) => {
+  if (!url) {
+    window.$message.error('无效的图片URL');
+    return;
+  }
+  
+  try {
+    // 创建一个新的图片对象来加载URL
+    const img = new Image();
+    img.onload = async () => {
+      // 图片加载成功后，设置为背景
+      imageUrl.value = url;
+      backgroundSettings.value.type = 'perspective'; // 确保设置为透视背景模式
+      await updateTextColorBasedOnImage(url);
+      window.$message.success('背景图片设置成功');
+    };
+    
+    img.onerror = () => {
+      window.$message.error('图片加载失败');
+    };
+    
+    // 开始加载图片
+    img.src = url;
+  } catch (error: any) {
+    console.error('设置背景图片失败:', error);
+    window.$message.error(error?.message || '设置背景图片失败');
+  }
+};
+
 // 使用壁纸生成器
 export const useWallpaper = () => {
 
@@ -375,6 +405,7 @@ export const useWallpaper = () => {
     resetConfig,  // 导出重置配置函数
     personalTemplatesRef,  // 导出模板引用
     loadTemplate,  // 导出加载模板函数
-    handleImageUpload  // 导出图片上传处理函数
+    handleImageUpload,  // 导出图片上传处理函数
+    setBackgroundImage  // 导出设置背景图片函数
   }
 }
