@@ -21,7 +21,7 @@
         class="perspective-bg"
         alt="Perspective Background"
       />
-        <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
+        <div class="preview-canvas" :style="canvasStyle">
           <!-- 设备框架 -->
           <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" :has-notch="previewSettings.hasNotch" />
           <TabletFrame v-if="currentDevice?.id === 'ipad' && currentDevice?.hasFrame" />
@@ -142,7 +142,6 @@ const handleWallpaperSelect = (bgUrl: string) => {
 
 const previewAreaRef = ref<HTMLElement | null>(null);
 
-const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
 

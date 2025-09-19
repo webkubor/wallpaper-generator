@@ -64,9 +64,13 @@ export async function captureWallpaper(
     :   (previewArea.querySelector('.preview-canvas') || 
        previewArea) as HTMLElement;
   
+       const rect = targetElement.getBoundingClientRect();
+       console.log(rect.width,rect.height);
   const options: CaptureOptions = {
     backgroundColor: downloadOption === 'withBackground' ? null : 'transparent',
     scale: 2,
+     width: rect.width,
+  height: rect.height,
     useCORS: true
   };
   
