@@ -8,11 +8,21 @@
         </div>
       </div>
       <div class="footer-right">
-        <div class="social-links">
+        <div class="footer-actions">
           <n-tooltip trigger="hover">
             <template #trigger>
-              <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
-                 target="_blank" 
+              <router-link to="/changelog" class="changelog-link">
+                <n-icon :component="List" class="changelog-icon" />
+                更新日志
+              </router-link>
+            </template>
+            查看版本更新内容
+          </n-tooltip>
+          <div class="social-links">
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
+                   target="_blank" 
                  class="social-link xiaohongshu">
                 <n-icon :component="Heart" class="social-icon" />
               </a>
@@ -27,6 +37,7 @@
             </template>
             发送邮件联系
           </n-tooltip>
+          </div>
         </div>
       </div>
     </div>
@@ -35,7 +46,7 @@
 
 <script setup lang="ts">
 import { NLayoutFooter, NIcon, NTooltip } from 'naive-ui';
-import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from "@phosphor-icons/vue";
+import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart, PhListBullets as List } from "@phosphor-icons/vue";
 </script>
 
 <style scoped lang="scss">
@@ -84,6 +95,39 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
   }
   
   .footer-right {
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .changelog-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(244, 208, 63, 0.12);
+      border: 1px solid rgba(244, 208, 63, 0.3);
+      color: var(--n-text-color);
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      
+      .changelog-icon {
+        width: 16px;
+        height: 16px;
+        color: #f4d03f;
+      }
+      
+      &:hover {
+        background: rgba(244, 208, 63, 0.2);
+        border-color: rgba(244, 208, 63, 0.5);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(244, 208, 63, 0.18);
+      }
+    }
+
     .social-links {
       display: flex;
       gap: 12px;
@@ -157,8 +201,12 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
     }
     .footer-right {
       width: 100%;
-      .social-links {
+      .footer-actions {
+        width: 100%;
         justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+      .social-links {
         .social-link { width: 32px; height: 32px; }
         .social-icon { width: 16px; height: 16px; }
       }

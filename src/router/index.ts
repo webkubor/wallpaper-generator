@@ -19,6 +19,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Gemini',
     component: () => import('@/pages/gemini/index.vue'),
     meta: { title: 'Gemini AI 助手' }
+  },
+  {
+    path: '/changelog',
+    name: 'Changelog',
+    component: () => import('@/pages/changelog/index.vue'),
+    meta: { title: '更新日志' }
   }
 ];
 
