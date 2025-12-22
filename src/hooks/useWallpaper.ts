@@ -15,6 +15,7 @@ import type {
 export const deviceTypes: Device[] = [
   { id: 'iphone', name: 'iPhone', width: 390, height: 780, hasFrame: true }, // iPhone 比例
   { id: 'ipad', name: 'iPad', width: 693, height: 520, hasFrame: true }, // iPad 4:3 比例
+  { id: 'mac', name: 'Mac', width: 960, height: 600, hasFrame: true }, // Mac 16:10 比例
   { id: 'car', name: '车机', width: 832, height: 468, hasFrame: true }, // 车机 16:9 比例
   { id: 'combo', name: '组合设备', width: 640, height: 800, hasFrame: true }, // 组合设备（mac+ipad+iphone）
   { id: 'custom', name: '自定义尺寸', width: 832, height: 468, hasFrame: false } 
@@ -32,13 +33,18 @@ export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) 
 
   const positions = {
     'top-left': { top: `${padding}px`, left: `${padding}px`, transform: baseTransform },
+    'top-center': { top: `${padding}px`, left: '50%', transform: `translateX(-50%) ${baseTransform}` },
     'top-right': { top: `${padding}px`, right: `${padding}px`, transform: baseTransform },
+    'center-left': { top: '50%', left: `${padding}px`, transform: `translateY(-50%) ${baseTransform}` },
+    'center-center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) ${baseTransform}` },
+    'center-right': { top: '50%', right: `${padding}px`, transform: `translateY(-50%) ${baseTransform}` },
     'bottom-left': { bottom: `${padding}px`, left: `${padding}px`, transform: baseTransform },
+    'bottom-center': { bottom: `${padding}px`, left: '50%', transform: `translateX(-50%) ${baseTransform}` },
     'bottom-right': { bottom: `${padding}px`, right: `${padding}px`, transform: baseTransform },
     'center': { top: '50%', left: '50%', transform: `translate(-50%, -50%) ${baseTransform}` }
   };
 
-  return positions[position as keyof typeof positions];
+  return positions[position as keyof typeof positions] || positions['bottom-right'];
 }
 
 // 默认水印设置

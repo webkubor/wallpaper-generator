@@ -1,5 +1,6 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import fly from 'flyio'
 import dayjs from 'dayjs'
 
@@ -145,9 +146,10 @@ export function useGemini(apiKey: string) {
   // 格式化消息内容（支持 Markdown）
   const formatMessage = (content: string) => {
     try {
-      return marked(content, { breaks: true })
+      const rendered = marked(content, { breaks: true })
+      return DOMPurify.sanitize(rendered, { USE_PROFILES: { html: true } })
     } catch (error) {
-      return content
+      return DOMPurify.sanitize(content)
     }
   }
 

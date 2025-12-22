@@ -45,7 +45,17 @@ export interface WatermarkSettings {
   color: string
   opacity: number
   fontFamily: string
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center'
+  position:
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'center-left'
+    | 'center-center'
+    | 'center-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
+    | 'center'
   padding: number
   rotation: number
   offsetX: number

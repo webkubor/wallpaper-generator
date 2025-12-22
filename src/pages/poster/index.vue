@@ -3,12 +3,6 @@
     <PosterToolbar />
     <div class="canvas-wrap">
       <div class="poster" ref="posterRef" :style="[posterStyle, posterInnerStyle]">
-        <!-- 背景图片层 -->
-        <img v-if="backgroundType === 'image' && backgroundImage" 
-             :src="backgroundImage" 
-             class="poster-background-image" 
-             alt="背景图片" />
-        
         <div class="poster-inner">
           <div class="poster-title draggable" v-if="title" :style="titleStyle"
             @mousedown="titleDragHandler.onMouseDown">
@@ -41,9 +35,6 @@ const {
   subtitle,
   showSubtitle,
   formatSubtitle,
-  showLightingEffect,
-  backgroundType,
-  backgroundImage,
   
   // 样式计算
   titleStyle,
@@ -64,6 +55,11 @@ const {
   downloadPoster
 } = usePoster()
 
+// 统一事件处理函数，避免重复绑定无法移除
+const handleDownloadPoster = () => {
+  downloadPoster()
+}
+
 // 监听副标题显示状态变化
 watch(showSubtitle, () => {
   nextTick(updatePositions)
@@ -71,7 +67,7 @@ watch(showSubtitle, () => {
 
 onMounted(() => {
   // 监听来自Header的下载事件
-  window.addEventListener('downloadPoster', downloadPoster)
+  window.addEventListener('downloadPoster', handleDownloadPoster)
 
   // 初始位置更新
   updatePositions()
@@ -89,6 +85,7 @@ onMounted(() => {
 
 // 组件卸载时移除事件监听
 onBeforeUnmount(() => {
+  window.removeEventListener('downloadPoster', handleDownloadPoster)
   window.removeEventListener('resize', updatePositions)
 })
 </script>
@@ -132,17 +129,6 @@ onBeforeUnmount(() => {
     overflow: hidden;
 
 
-
-    .poster-background-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 16px;
-      z-index: 1;
-    }
 
     .poster-inner {
       &::before {

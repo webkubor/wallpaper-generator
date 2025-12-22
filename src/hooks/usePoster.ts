@@ -173,9 +173,15 @@ export function usePoster() {
       style.backgroundImage = `linear-gradient(${gradientAngle.value}deg, ${gradientStart.value}, ${gradientEnd.value})`
       style.backgroundColor = 'transparent'
     } else if (backgroundType.value === 'image' && backgroundImage.value) {
-      // 背景图片现在使用单独的img标签，这里设置透明背景
+      const repeatModes = new Set(['repeat', 'repeat-x', 'repeat-y', 'no-repeat'])
+      const repeatValue = repeatModes.has(backgroundSize.value) ? backgroundSize.value : 'no-repeat'
+      const sizeValue = repeatModes.has(backgroundSize.value) ? 'auto' : backgroundSize.value
+
       style.backgroundColor = 'transparent'
-      style.backgroundImage = 'none'
+      style.backgroundImage = `url(${backgroundImage.value})`
+      style.backgroundRepeat = repeatValue
+      style.backgroundSize = sizeValue
+      style.backgroundPosition = 'center'
     } else {
       // 纯色背景
       style.backgroundColor = mainColor.value

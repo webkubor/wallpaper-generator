@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, ref, watch, type CSSProperties } from 'vue';
 import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
@@ -145,6 +145,45 @@ const previewAreaRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
 
+const titleShadow = ref('');
+const titleFilter = ref('');
+
+// 根据标题配置异步计算阴影样式
+const updateTitleShadow = async () => {
+  const { shadowEffect, color, shadowColor, shadowSize } = titleSettings.value;
+  if (shadowEffect === 'none') {
+    titleShadow.value = '';
+    titleFilter.value = '';
+    return;
+  }
+
+  if (shadowEffect === 'custom') {
+    const size = shadowSize || 2;
+    const customColor = shadowColor || 'rgba(0,0,0,0.5)';
+    titleShadow.value = `0 ${size}px ${size * 2}px ${customColor}`;
+    titleFilter.value = '';
+    return;
+  }
+
+  const result = await analyzeHexColor(color);
+  const shadowColorValue = result.isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
+  titleShadow.value = `2px 2px 4px ${shadowColorValue}, 0 0 8px ${shadowColorValue}`;
+  titleFilter.value = 'drop-shadow(1px 1px 1px rgba(0,0,0,0.3))';
+};
+
+watch(
+  () => [
+    titleSettings.value.shadowEffect,
+    titleSettings.value.color,
+    titleSettings.value.shadowColor,
+    titleSettings.value.shadowSize
+  ],
+  () => {
+    void updateTitleShadow();
+  },
+  { immediate: true }
+);
+
 const titleStyle = computed(() => {
   const style: any = {
     fontFamily: titleSettings.value.fontFamily,
@@ -153,17 +192,11 @@ const titleStyle = computed(() => {
     fontWeight: 500
   };
 
-  if (titleSettings.value.shadowEffect === 'default') {
-    // 使用colorUtils计算合适的阴影颜色
-    analyzeHexColor(titleSettings.value.color).then(result => {
-      const shadowColor = result.isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
-      style.textShadow = `2px 2px 4px ${shadowColor}, 0 0 8px ${shadowColor}`;
-      style.filter = 'drop-shadow(1px 1px 1px rgba(0,0,0,0.3))';
-    });
-  } else if (titleSettings.value.shadowEffect === 'custom') {
-    // 自定义阴影
-    const shadowSize = titleSettings.value.shadowSize || 2;
-    style.textShadow = `0 ${shadowSize}px ${shadowSize * 2}px ${titleSettings.value.shadowColor || 'rgba(0,0,0,0.5)'}`;
+  if (titleShadow.value) {
+    style.textShadow = titleShadow.value;
+  }
+  if (titleFilter.value) {
+    style.filter = titleFilter.value;
   }
 
   // 添加描边效果

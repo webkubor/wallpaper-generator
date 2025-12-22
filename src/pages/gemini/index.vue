@@ -35,7 +35,11 @@
           
           <div v-if="msg.error" class="error-info">
             <n-icon :component="IconWarning" /> {{ msg.error }}
-            <n-button size="tiny" @click="retryMessage(index)" v-if="msg.role === 'user'">
+            <n-button
+              v-if="msg.role === 'assistant' && index > 0 && chatHistory[index - 1]?.role === 'user'"
+              size="tiny"
+              @click="retryMessage(index - 1)"
+            >
               重试
             </n-button>
           </div>
