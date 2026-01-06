@@ -25,10 +25,12 @@ export default defineConfig({
           'useLoadingBar'
         ]
       }
-    ]
+    ],
+    dts: 'src/types/auto-imports.d.ts'
   }),
   Components({
-    resolvers: [NaiveUiResolver()]
+    resolvers: [NaiveUiResolver()],
+    dts: 'src/types/components.d.ts'
   })],
   css: {
     preprocessorOptions: {
