@@ -196,31 +196,25 @@ const downloadPoster = () => {
 
 const themeOverrides = computed(() => ({
   common: {
-    primaryColor: isDark.value ? '#ffd700' : '#1a1f36',
-    primaryColorHover: isDark.value ? '#ffed4e' : '#2d3348',
-    primaryColorPressed: isDark.value ? '#e6c200' : '#0f1419',
-    primaryColorSuppl: isDark.value ? 'rgba(255, 215, 0, 0.5)' : 'rgba(26, 31, 54, 0.5)'
+    primaryColor: isDark.value ? '#9aa7a1' : '#9aa7a1',
+    primaryColorHover: isDark.value ? '#a7b3ac' : '#8a968f',
+    primaryColorPressed: isDark.value ? '#7d8b84' : '#7d8b84',
+    primaryColorSuppl: isDark.value ? 'rgba(154, 167, 161, 0.5)' : 'rgba(154, 167, 161, 0.35)'
   },
   Card: {
     borderRadius: '16px',
-    color: isDark.value ? '#1e1e1e' : '#ffffff',
-    colorModal: isDark.value ? '#1e1e1e' : '#ffffff',
-    colorPopover: isDark.value ? '#1e1e1e' : '#ffffff',
+    color: isDark.value ? '#2f2e2b' : '#fbf7f1',
+    colorModal: isDark.value ? '#2f2e2b' : '#fbf7f1',
+    colorPopover: isDark.value ? '#2f2e2b' : '#fbf7f1',
     boxShadow: isDark.value 
-      ? '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)' 
-      : '0 8px 32px rgba(26, 31, 54, 0.15), 0 4px 16px rgba(26, 31, 54, 0.1)'
+      ? '0 10px 34px rgba(0, 0, 0, 0.35), 0 6px 18px rgba(0, 0, 0, 0.2)' 
+      : '0 16px 40px rgba(74, 63, 55, 0.12), 0 6px 18px rgba(74, 63, 55, 0.08)'
   },
   Button: {
     borderRadius: '12px',
-    colorPrimary: isDark.value 
-      ? 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)' 
-      : 'linear-gradient(135deg, #1a1f36 0%, #2d3348 100%)',
-    colorHoverPrimary: isDark.value 
-      ? 'linear-gradient(135deg, #ffed4e 0%, #fff176 100%)' 
-      : 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)',
-    colorPressedPrimary: isDark.value 
-      ? 'linear-gradient(135deg, #e6c200 0%, #ffd700 100%)' 
-      : 'linear-gradient(135deg, #0f1419 0%, #1a1f36 100%)'
+    colorPrimary: isDark.value ? '#9aa7a1' : '#c7b5a5',
+    colorHoverPrimary: isDark.value ? '#a7b3ac' : '#cdbbad',
+    colorPressedPrimary: isDark.value ? '#7d8b84' : '#b5a08f'
   },
   Collapse: {
     titleFontWeight: '600'

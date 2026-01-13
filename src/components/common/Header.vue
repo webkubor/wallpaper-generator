@@ -20,13 +20,13 @@
       <n-button tertiary class="xhs-button" @click="goXHS">
         小红书封面
       </n-button>
-      <n-button color="#f4d03f" strong secondary class="save-config-button" @click="$emit('saveConfig')">
+      <n-button type="primary" strong secondary class="save-config-button" @click="$emit('saveConfig')">
         <template #icon>
           <n-icon :component="FloppyDisk" />
         </template>
         保存配置
       </n-button>
-      <n-button type="primary" color="#f4d03f" strong secondary  class="download-button" @click="$emit('download')">
+      <n-button type="primary" strong secondary class="download-button" @click="$emit('download')">
         <template #icon>
           <n-icon :component="Download" />
         </template>
@@ -40,7 +40,7 @@
       </n-button>
     </div>
     <div class="header-actions" v-else>
-      <n-button color="#ffed4e" @click="$emit('downloadPoster')">
+      <n-button type="primary" @click="$emit('downloadPoster')">
         下载大字报
       </n-button>
       <n-button secondary @click="goHome">
@@ -80,9 +80,10 @@ const goHome = () => {
 
 <style scoped lang="scss">
 .header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(251, 247, 241, 0.7);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--morandi-line);
+  box-shadow: 0 12px 32px rgba(72, 62, 54, 0.12);
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
@@ -100,7 +101,7 @@ const goHome = () => {
       
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(244, 208, 63, 0.3);
+        box-shadow: 0 6px 16px rgba(154, 167, 161, 0.35);
       }
     }
     
@@ -111,7 +112,7 @@ const goHome = () => {
       
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 6px 14px rgba(73, 63, 55, 0.16);
       }
     }
   }
@@ -137,16 +138,16 @@ const goHome = () => {
         font-weight: 800;
         margin: 0;
         font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
-        color: var(--n-text-color);
+        color: var(--morandi-ink);
         line-height: 1.2;
       }
       
       .subtitle {
         font-size: 12px;
-        color: var(--n-text-color-disabled);
+        color: var(--morandi-ink-muted);
         margin: 0;
         font-style: italic;
-        opacity: 0.8;
+        opacity: 0.9;
         line-height: 1;
         font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
       }

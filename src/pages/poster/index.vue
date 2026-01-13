@@ -128,8 +128,8 @@ import type { Template } from './components/types';
 
 const title = ref('江湖秘辛');
 const subtitle = ref('金庸笔下最隐秘的伏笔');
-const textColor = ref('#000000');
-const mainColor = ref('#1A1A1A');
+const textColor = ref('#3f3a36');
+const mainColor = ref('#c9c0b5');
 const titleSize = ref(7.5);
 const subtitleSize = ref(1.75);
 
@@ -144,8 +144,8 @@ const subtitleVertical = ref('horizontal');
 
 // 文字描边
 const titleStroke = ref(true);
-const titleStrokeColor = ref('#DC143C');
-const subtitleColor = ref('#FFFFFF');
+const titleStrokeColor = ref('#b9968d');
+const subtitleColor = ref('#f8f4ee');
 const showLightingEffect = ref(true);
 
 // 副标题显示控制
@@ -160,8 +160,8 @@ watch(showSubtitle, () => {
 });
 
 // 文字阴影
-const titleShadow = ref('0 3px 15px rgba(0,0,0,0.8)');
-const subtitleShadow = ref('0 2px 8px rgba(0,0,0,0.6)');
+const titleShadow = ref('0 10px 28px rgba(58, 50, 44, 0.28)');
+const subtitleShadow = ref('0 6px 18px rgba(58, 50, 44, 0.22)');
 
 
 
@@ -367,36 +367,103 @@ const downloadPoster = async () => {
 
 <style scoped lang="scss">
 .xhs-page {
+  --panel-surface: var(--morandi-surface);
+  --panel-border: var(--morandi-line);
+  --panel-shadow: rgba(71, 61, 53, 0.16);
+  --panel-shadow-soft: rgba(71, 61, 53, 0.08);
+  position: relative;
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  gap: 28px;
+  padding: 28px 32px 40px;
   min-height: 100vh;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--morandi-ink);
+  background:
+    radial-gradient(1000px 700px at 12% -10%, rgba(198, 162, 156, 0.26), transparent 65%),
+    radial-gradient(900px 680px at 88% 8%, rgba(154, 166, 173, 0.26), transparent 60%),
+    linear-gradient(180deg, #f6f2ec 0%, #f1ece5 55%, #ece6dd 100%);
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(131, 120, 109, 0.08) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(0deg, rgba(131, 120, 109, 0.06) 0 1px, transparent 1px 26px);
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+  }
+
+  &::after {
+    content: "";
+    position: fixed;
+    width: 420px;
+    height: 420px;
+    right: -140px;
+    bottom: -160px;
+    background: radial-gradient(circle, rgba(196, 178, 163, 0.45) 0%, rgba(196, 178, 163, 0) 70%);
+    pointer-events: none;
+    opacity: 0.75;
+  }
 
   .toolbar {
-    width: max(30vw, 350px);
+    width: max(30vw, 360px);
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 20px;
+    padding: 22px;
     height: fit-content;
+    background: linear-gradient(180deg, rgba(251, 247, 241, 0.96) 0%, rgba(247, 242, 235, 0.98) 100%);
+    border-radius: 20px;
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 24px 60px var(--panel-shadow), 0 8px 22px var(--panel-shadow-soft);
+    backdrop-filter: blur(14px);
+    position: sticky;
+    top: 24px;
+    z-index: 2;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: radial-gradient(180px 120px at 20% 0%, rgba(154, 167, 161, 0.22), transparent 60%);
+      pointer-events: none;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
 
     .controls {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
       align-items: start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(248, 244, 238, 0.72);
+      border: 1px dashed rgba(163, 149, 138, 0.35);
 
       .control-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-size: 14px;
-        min-height: 36px;
+        gap: 10px;
+        font-size: 13px;
+        min-height: 40px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: rgba(252, 249, 244, 0.9);
+        border: 1px solid rgba(227, 219, 210, 0.9);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 
         span:first-child {
-          min-width: 80px;
-          font-weight: 500;
+          min-width: 72px;
+          font-weight: 600;
+          color: var(--morandi-ink-muted);
         }
 
         &.area-indicator {
@@ -408,7 +475,6 @@ const downloadPoster = async () => {
     }
   }
 
-
 }
 
 
@@ -416,19 +482,22 @@ const downloadPoster = async () => {
 .canvas-wrap {
   flex: 1;
   display: flex;
-  gap: 40px;
+  gap: 32px;
   align-items: flex-start;
+  position: relative;
+  z-index: 1;
 
   .poster {
-    width: min(50vw, 850px);
+    width: min(52vw, 860px);
     aspect-ratio: 3 / 4;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
-      0 8px 24px rgba(0, 0, 0, 0.08),
-      0 2px 8px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    border: 1px solid rgba(122, 112, 103, 0.28);
+    box-shadow: 0 32px 80px rgba(73, 63, 55, 0.22),
+      0 12px 26px rgba(73, 63, 55, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    background-image:
+      radial-gradient(120% 120% at 10% 0%, rgba(255, 255, 255, 0.2), transparent 55%),
+      radial-gradient(130% 130% at 90% 100%, rgba(255, 255, 255, 0.16), transparent 60%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -436,7 +505,16 @@ const downloadPoster = async () => {
     position: relative;
     overflow: hidden;
 
-
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 6px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 5px);
+      opacity: 0.3;
+      pointer-events: none;
+    }
 
     .poster-inner {
       width: 100%;
@@ -457,9 +535,9 @@ const downloadPoster = async () => {
         width: 160%;
         height: 200%;
         background: linear-gradient(120deg,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0.2) 30%,
-            rgba(255, 255, 255, 0.05) 70%,
+            rgba(255, 255, 255, 0.35) 0%,
+            rgba(255, 255, 255, 0.18) 30%,
+            rgba(255, 255, 255, 0.06) 70%,
             transparent 100%);
         transform: rotate(-25deg);
         border-radius: 50%;
@@ -478,6 +556,7 @@ const downloadPoster = async () => {
         max-height: 85%;
         z-index: 10;
         transition: transform 0.2s ease;
+        letter-spacing: 0.02em;
       }
 
       .poster-subtitle {
@@ -488,6 +567,7 @@ const downloadPoster = async () => {
         max-width: 90%;
         z-index: 10;
         transition: transform 0.2s ease;
+        letter-spacing: 0.03em;
       }
     }
   }
@@ -498,8 +578,8 @@ const downloadPoster = async () => {
 }
 
 .value {
-  color: var(--primary-color);
-  font-weight: 500;
+  color: var(--morandi-sage);
+  font-weight: 600;
   min-width: 40px;
   text-align: right;
 }
@@ -523,24 +603,123 @@ const downloadPoster = async () => {
 
 .draggable:active {
   cursor: grabbing;
-  opacity: 0.9;
+  opacity: 0.92;
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(73, 63, 55, 0.18);
+}
+
+.xhs-page :deep(.n-input) {
+  background: rgba(251, 247, 241, 0.9);
+  border-radius: 12px;
+}
+
+.xhs-page :deep(.n-input .n-input__border),
+.xhs-page :deep(.n-input .n-input__state-border) {
+  border-color: var(--morandi-line);
+}
+
+.xhs-page :deep(.n-input .n-input__state-border) {
+  box-shadow: 0 0 0 1px rgba(154, 167, 161, 0.28);
+}
+
+.xhs-page :deep(.n-input .n-input__input-el),
+.xhs-page :deep(.n-input .n-input__textarea-el) {
+  color: var(--morandi-ink);
+}
+
+.xhs-page :deep(.n-input .n-input__placeholder),
+.xhs-page :deep(.n-input .n-input__placeholder--show) {
+  color: var(--morandi-ink-muted);
+}
+
+.xhs-page :deep(.n-base-selection) {
+  border-radius: 12px;
+  background: rgba(251, 247, 241, 0.9);
+}
+
+.xhs-page :deep(.n-base-selection .n-base-selection__border),
+.xhs-page :deep(.n-base-selection .n-base-selection__state-border) {
+  border-color: var(--morandi-line);
+}
+
+.xhs-page :deep(.n-base-selection .n-base-selection__state-border) {
+  box-shadow: 0 0 0 1px rgba(154, 167, 161, 0.26);
+}
+
+.xhs-page :deep(.n-base-selection-label) {
+  color: var(--morandi-ink);
+}
+
+.xhs-page :deep(.n-base-selection-placeholder) {
+  color: var(--morandi-ink-muted);
+}
+
+.xhs-page :deep(.n-color-picker .n-color-picker-trigger) {
+  border-radius: 12px;
+  border-color: var(--morandi-line);
+}
+
+.xhs-page :deep(.n-switch__rail) {
+  background: #e4ddd3;
+}
+
+.xhs-page :deep(.n-switch--active .n-switch__rail) {
+  background: #9aa7a1;
+}
+
+.xhs-page :deep(.n-switch__button) {
+  box-shadow: 0 2px 6px rgba(73, 63, 55, 0.18);
+}
+
+.xhs-page :deep(.n-slider-rail) {
+  background: #e8e0d6;
+}
+
+.xhs-page :deep(.n-slider-fill) {
+  background: #9aa7a1;
+}
+
+.xhs-page :deep(.n-slider-handle) {
+  border-color: #9aa7a1;
+  box-shadow: 0 0 0 4px rgba(154, 167, 161, 0.15);
+}
+
+.xhs-page :deep(.n-button--text) {
+  border-radius: 999px;
+  padding: 6px 12px;
+  border: 1px solid var(--morandi-line);
+  background: rgba(248, 244, 238, 0.7);
+  color: var(--morandi-ink-muted);
+}
+
+.xhs-page :deep(.n-button--text:hover) {
+  background: rgba(233, 226, 217, 0.9);
+  color: var(--morandi-ink);
 }
 
 @media (max-width: 1024px) {
   .xhs-page {
     flex-direction: column;
-    padding: 16px;
+    padding: 20px 18px 32px;
   }
 
   .toolbar {
     width: 100%;
-    padding: 16px;
+    padding: 18px;
+    position: static;
   }
 
   .controls {
     grid-template-columns: 1fr;
+  }
+
+  .canvas-wrap {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .poster {
+    width: min(90vw, 720px);
   }
 }
 </style>

@@ -41,9 +41,9 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
 <style scoped lang="scss">
 .footer {
   padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(244, 208, 63, 0.2);
+  background: rgba(251, 247, 241, 0.6);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--morandi-line);
   font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
   
   .footer-content {
@@ -61,18 +61,18 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
       gap: 8px;
       
       .creator-icon {
-        color: #f4d03f;
+        color: var(--morandi-sage);
         font-size: 18px;
         animation: sparkle 2s ease-in-out infinite;
       }
       
       .creator-text {
         font-size: 14px;
-        color: var(--n-text-color);
+        color: var(--morandi-ink);
         opacity: 0.8;
         
         .highlight {
-          background: linear-gradient(135deg, #f4d03f 0%, #ff9a56 100%);
+          background: linear-gradient(135deg, #c7b5a5 0%, #9aa7a1 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -96,16 +96,16 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: rgba(244, 208, 63, 0.1);
-        border: 1px solid rgba(244, 208, 63, 0.3);
+        background: rgba(154, 167, 161, 0.12);
+        border: 1px solid rgba(154, 167, 161, 0.3);
         transition: all 0.3s ease;
         text-decoration: none;
         
         &:hover {
-          background: rgba(244, 208, 63, 0.2);
-          border-color: rgba(244, 208, 63, 0.5);
+          background: rgba(154, 167, 161, 0.22);
+          border-color: rgba(154, 167, 161, 0.55);
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(244, 208, 63, 0.2);
+          box-shadow: 0 4px 12px rgba(154, 167, 161, 0.22);
         }
         
         .social-icon {
@@ -117,12 +117,12 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
         }
         
         &.xiaohongshu:hover .social-icon {
-          color: #ff2442;
+          color: #b46a63;
           opacity: 1;
         }
         
         &.email:hover .social-icon {
-          color: #f4d03f;
+          color: #9aa7a1;
           opacity: 1;
         }
       }
