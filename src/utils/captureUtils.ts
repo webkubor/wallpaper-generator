@@ -57,30 +57,29 @@ export async function captureElement(
 }
 
 /**
- * 复制目标并去除缩放样式以便导出
+ * 临时清除 export-container 缩放，返回恢复函数
  */
-const cloneForCapture = (element: HTMLElement | null): HTMLElement | null => {
-  if (!element) return null;
-  const clone = element.cloneNode(true) as HTMLElement;
-  const exportContainer = clone.querySelector('.export-container') as HTMLElement | null;
-  if (exportContainer) {
-    exportContainer.style.transform = 'scale(1)';
-    exportContainer.style.transformOrigin = 'center center';
-  }
-  const rect = element.getBoundingClientRect();
-  clone.style.position = 'fixed';
-  clone.style.top = `${rect.top}px`;
-  clone.style.left = `${rect.left}px`;
-  clone.style.width = `${rect.width}px`;
-  clone.style.height = `${rect.height}px`;
-  clone.style.zIndex = '9999';
-  clone.style.opacity = '0';
-  clone.style.pointerEvents = 'none';
-  clone.style.userSelect = 'none';
-  clone.style.transition = 'none';
-  clone.style.overflow = 'visible';
-  document.body.appendChild(clone);
-  return clone;
+const disableScaleDuringCapture = (element: HTMLElement | null): (() => void) => {
+  if (!element) return () => {};
+  const exportContainers = element.matches('.export-container')
+    ? [element]
+    : Array.from(element.querySelectorAll<HTMLElement>('.export-container'));
+  const original = exportContainers.map((el) => ({
+    el,
+    transform: el.style.transform,
+    transformOrigin: el.style.transformOrigin
+  }));
+  exportContainers.forEach((el) => {
+    el.style.transform = 'scale(1)';
+    el.style.transformOrigin = 'center center';
+  });
+
+  return () => {
+    original.forEach(({ el, transform, transformOrigin }) => {
+      el.style.transform = transform;
+      el.style.transformOrigin = transformOrigin;
+    });
+  };
 };
 
 /**
@@ -111,14 +110,10 @@ export async function captureWallpaper(
     scale: 2,
     useCORS: true
   };
-  const cloneElement = cloneForCapture(targetElement);
-  const captureTarget = cloneElement || targetElement;
-  
+  const restoreScale = disableScaleDuringCapture(targetElement);
   try {
-    await captureAndDownload(captureTarget, filename, options);
+    await captureAndDownload(targetElement, filename, options);
   } finally {
-    if (cloneElement && cloneElement.parentElement) {
-      cloneElement.parentElement.removeChild(cloneElement);
-    }
+    restoreScale();
   }
 }
