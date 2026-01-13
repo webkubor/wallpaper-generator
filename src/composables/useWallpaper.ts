@@ -137,6 +137,7 @@ export const defaultTitleSettings: TitleSettings = {
 const titleSettings = ref<TitleSettings>({...defaultTitleSettings});
 const previewSettings = ref({...defaultPreviewSettings});
 const backgroundSettings = ref<BackgroundSettings>({...defaultBackgroundSettings});
+const showExportPreview = ref(false);
 
 // 自定义尺寸状态
 const customWidth = ref(832);
@@ -339,5 +340,6 @@ export const useWallpaper = () => {
     shadowEffect,  // 导出阴影效果
     updateTextColorBasedOnImage,  // 导出颜色更新函数
     resetConfig,  // 导出重置配置函数
+    showExportPreview, // 导出预览开关
   }
 }

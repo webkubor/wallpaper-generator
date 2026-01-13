@@ -20,6 +20,13 @@
         class="perspective-bg"
         alt="Perspective Background"
       />
+      
+      <!-- Export Preview UI -->
+      <div 
+        class="export-container" 
+        :class="{ 'preview-mode': showExportPreview }"
+        :style="exportContainerStyle"
+      >
         <div ref="previewCanvasRef" class="preview-canvas" :style="canvasStyle">
           <!-- 设备框架 -->
           <PhoneFrame v-if="currentDevice?.id === 'iphone' && currentDevice?.hasFrame" :has-notch="previewSettings.hasNotch" />
@@ -73,6 +80,7 @@
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>
+    </div>
 
     <!-- Mobile action bar and drawer -->
     <div v-if="isMobile" class="mobile-action-bar">
@@ -195,7 +203,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type CSSProperties } from 'vue';
+import { computed, ref, onMounted, onUnmounted, type CSSProperties } from 'vue';
 // 尺寸与移动端判定从自定义 hooks 获取
 import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
@@ -230,7 +238,7 @@ import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
 import PersonalTemplates from './PersonalTemplates.vue';
 import type { UploadFileInfo } from 'naive-ui';
-import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise } from '@phosphor-icons/vue';
+import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise, PhEye as Eye, PhEyeSlash as EyeSlash } from '@phosphor-icons/vue';
 import MobileBottomSheet from './common/MobileBottomSheet.vue';
 
 
@@ -245,16 +253,73 @@ const {
   backgroundSettings,
   customWidth,
   customHeight,
-  resetConfig
+  resetConfig,
+  showExportPreview
 } = useWallpaper();
 
 const previewAreaRef = ref<HTMLElement | null>(null);
+const previewAreaSize = ref({ width: 0, height: 0 });
 
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
 // 下载状态已移至App.vue
 
+// 计算预览缩放比例，确保设备完整显示且不压扁
+const previewScale = computed(() => {
+  if (!previewAreaSize.value.width || !previewAreaSize.value.height) return 1;
+  
+  const padding = 60; // 预览区域留白
+  const availableWidth = previewAreaSize.value.width - padding;
+  const availableHeight = previewAreaSize.value.height - padding;
+  
+  const deviceWidth = currentDevice.value.width;
+  const deviceHeight = currentDevice.value.height;
+  
+  const scaleX = availableWidth / deviceWidth;
+  const scaleY = availableHeight / deviceHeight;
+  
+  return Math.min(scaleX, scaleY, 1); // 最大缩放比例为 1
+});
+
+const updatePreviewSize = () => {
+  if (previewAreaRef.value) {
+    previewAreaSize.value = {
+      width: previewAreaRef.value.clientWidth,
+      height: previewAreaRef.value.clientHeight
+    };
+  }
+};
+
+let resizeObserver: ResizeObserver | null = null;
+
+onMounted(() => {
+  updatePreviewSize();
+  if (previewAreaRef.value) {
+    resizeObserver = new ResizeObserver(updatePreviewSize);
+    resizeObserver.observe(previewAreaRef.value);
+  }
+});
+
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
+});
+
+const exportContainerStyle = computed((): CSSProperties => ({
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 1,
+  padding: '10px',
+  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  transform: `scale(${previewScale.value})`,
+  transformOrigin: 'center center',
+  width: `${currentDevice.value.width}px`,
+  height: `${currentDevice.value.height}px`,
+}));
 const titleStyle = computed(() => ({
   fontFamily: titleSettings.value.fontFamily,
   color: titleSettings.value.color,
@@ -477,6 +542,31 @@ const handleResetConfig = async () => {
   width: 100%;
   height: 100%;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.preview-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.export-container {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  
+  &.preview-mode {
+    border-color: #f4d03f;
+    animation: border-blink 1.5s infinite;
+    box-shadow: 0 0 20px rgba(244, 208, 63, 0.3);
+  }
+}
+
+@keyframes border-blink {
+  0% { border-color: rgba(244, 208, 63, 1); }
+  50% { border-color: rgba(244, 208, 63, 0.2); }
+  100% { border-color: rgba(244, 208, 63, 1); }
 }
 
 .perspective-bg {

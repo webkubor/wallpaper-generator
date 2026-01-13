@@ -20,27 +20,64 @@
         </div>
       </div>
     </template>
-    <n-collapse default-expanded-names="1,3" style="height: 100%; overflow: auto;" :show-arrow="false">
-      <n-collapse-item name="1">
+    <n-collapse :default-expanded-names="['title', 'background']" style="height: 100%; overflow: auto;" :show-arrow="false">
+      
+      <!-- 1. 标题设置 (Top) -->
+      <n-collapse-item name="title">
         <template #header>
           <div class="collapse-header">
-            <n-icon :component="ImageSquare" class="header-icon" />
-            <span>基础设置</span>
+            <n-icon :component="TextT" class="header-icon" />
+            <span>标题设置</span>
           </div>
         </template>
         <div style="padding: 12px;">
-          <n-form-item label="壁纸" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
+          </n-form-item>
+          <TitleSettings v-if="titleSettings.show" />
+        </div>
+      </n-collapse-item>
+
+      <!-- 2. 背景设置 (From Basic) -->
+      <n-collapse-item name="background">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="ImageSquare" class="header-icon" />
+            <span>背景设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="上传壁纸" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
             <n-upload :custom-request="() => {}" :show-file-list="false" @change="handleImageUpload">
-              <n-button>
+              <n-button block>
                 <template #icon>
                   <n-icon :component="UploadSimple" />
                 </template>
                 选择图片
               </n-button>
             </n-upload>
-            </n-form-item>
+          </n-form-item>
+          <BackgroundSettings :background-settings="backgroundSettings" />
+        </div>
+      </n-collapse-item>
 
-          <n-form-item label="设备" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+      <!-- 3. 导出设置 (Renamed from Basic - Device/Size) -->
+      <n-collapse-item name="export">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="Gear" class="header-icon" />
+            <span>导出设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="预览导出区域" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch v-model:value="showExportPreview">
+              <template #checked>开启</template>
+              <template #unchecked>关闭</template>
+            </n-switch>
+          </n-form-item>
+
+          <n-form-item label="设备模型" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
             <n-select :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
           </n-form-item>
           
@@ -59,13 +96,11 @@
             </n-form-item>
             <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
           </div>
-
-          <n-divider style="margin: 16px 0;" />
-          <BackgroundSettings :background-settings="backgroundSettings" />
         </div>
       </n-collapse-item>
 
-      <n-collapse-item name="2">
+      <!-- 4. 水印设置 (Bottom) -->
+      <n-collapse-item name="watermark">
         <template #header>
           <div class="collapse-header">
             <n-icon :component="Droplets" class="header-icon" />
@@ -77,26 +112,11 @@
         </div>
       </n-collapse-item>
 
-      <n-collapse-item name="5">
+      <!-- 5. 个人收藏模板 -->
+      <n-collapse-item name="templates" class="personal-templates-section">
         <template #header>
           <div class="collapse-header">
-            <n-icon :component="Droplets" class="header-icon" />
-            <span>标题设置</span>
-          </div>
-        </template>
-        <div style="padding: 12px;">
-          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
-          </n-form-item>
-          <TitleSettings v-if="titleSettings.show" />
-        </div>
-      </n-collapse-item>
-
-      <!-- 个人收藏模板 -->
-      <n-collapse-item name="4" class="personal-templates-section">
-        <template #header>
-          <div class="collapse-header">
-            <n-icon :component="ImageSquare" class="header-icon" />
+            <n-icon :component="BookmarkSimple" class="header-icon" />
             <span>个人收藏</span>
           </div>
         </template>
@@ -106,15 +126,55 @@
       </n-collapse-item>
     </n-collapse>
     
+    <!-- Bottom Action Footer -->
+    <div class="settings-footer">
+      <n-space justify="space-between" align="center">
+        <n-space>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle @click="$emit('openSettings')">
+                <template #icon><n-icon :component="Gear" /></template>
+              </n-button>
+            </template>
+            系统设置
+          </n-tooltip>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle @click="$emit('saveConfig')">
+                <template #icon><n-icon :component="FloppyDisk" /></template>
+              </n-button>
+            </template>
+            保存配置
+          </n-tooltip>
+        </n-space>
+        
+        <n-button type="primary" color="#f4d03f" @click="$emit('saveTemplate')">
+          <template #icon>
+            <n-icon :component="Plus" />
+          </template>
+          存为模板
+        </n-button>
+      </n-space>
+    </div>
   </n-card>
 </template>
 
 <script setup lang="ts">
 import { 
   NCard, NCollapse, NCollapseItem, NFormItem, NIcon, NButton, NUpload,
-  NSelect, NSwitch, NInputNumber, NTooltip, NDivider
+  NSelect, NSwitch, NInputNumber, NTooltip, NSpace
 } from 'naive-ui';
-import { PhGear as Gear, PhArrowCounterClockwise as ArrowCounterClockwise, PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhDrop as Droplets } from "@phosphor-icons/vue";
+import { 
+  PhGear as Gear, 
+  PhArrowCounterClockwise as ArrowCounterClockwise, 
+  PhUploadSimple as UploadSimple, 
+  PhImage as ImageSquare, 
+  PhDrop as Droplets,
+  PhTextT as TextT,
+  PhBookmarkSimple as BookmarkSimple,
+  PhFloppyDisk as FloppyDisk,
+  PhPlus as Plus
+} from "@phosphor-icons/vue";
 import PersonalTemplates from './PersonalTemplates.vue';
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
@@ -139,6 +199,9 @@ const emit = defineEmits<{
   'update:customHeight': [value: number];
   togglePersonalTemplates: [];
   loadTemplate: [template: any];
+  saveConfig: [];
+  saveTemplate: [];
+  openSettings: [];
 }>();
 
 
@@ -146,7 +209,8 @@ const emit = defineEmits<{
 const { 
   previewSettings,
   deviceOptions,
-  titleSettings
+  titleSettings,
+  showExportPreview
 } = useWallpaper();
 
 const handleImageUpload = (options: { file: UploadFileInfo }) => {

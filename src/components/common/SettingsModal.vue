@@ -21,8 +21,8 @@
       <n-form-item label="下载选项">
         <n-radio-group v-model:value="downloadOption">
           <n-space vertical>
-            <n-radio value="withBackground">包含背景（下载整个预览区）</n-radio>
-            <n-radio value="withoutBackground">不包含背景（仅下载壁纸区域）</n-radio>
+            <n-radio value="withBackground">全尺寸（包含编辑器背景）</n-radio>
+            <n-radio value="withoutBackground">仅导出区域（设备 + 标题 + 水印）</n-radio>
           </n-space>
         </n-radio-group>
       </n-form-item>
