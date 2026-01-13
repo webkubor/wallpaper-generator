@@ -6,9 +6,12 @@ import Components from 'unplugin-vue-components/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path';
 
+const isVercel = process.env.VERCEL === '1'
+const isDev = process.env.NODE_ENV === 'development'
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'development' ? '/' : './',
+  base: isDev || isVercel ? '/' : './',
   resolve: {
     alias: [{
       find: '@',
