@@ -1,119 +1,119 @@
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image-more';
 import { formatNow } from './time';
 
-/**
- * HTML元素截图选项
- */
 export interface CaptureOptions {
   backgroundColor?: string | null;
   scale?: number;
-  useCORS?: boolean;
-  allowTaint?: boolean;
-  foreignObjectRendering?: boolean;
-  logging?: boolean;
+  pixelRatio?: number;
   width?: number;
   height?: number;
+  cacheBust?: boolean;
+  quality?: number;
+  style?: Record<string, string>;
+  filter?: (node: Node) => boolean;
+  shapeRendering?: string;
 }
 
-/**
- * HTML元素转换为Canvas并下载
- */
+interface DomToImageOptions {
+  width?: number;
+  height?: number;
+  pixelRatio?: number;
+  bgcolor?: string;
+  cacheBust?: boolean;
+  quality?: number;
+  style?: Record<string, string>;
+  filter?: (node: Node) => boolean;
+  shapeRendering?: string;
+}
+
+const resolveDomOptions = (element: HTMLElement, options: CaptureOptions = {}): DomToImageOptions => {
+  const rect = element.getBoundingClientRect();
+  const width = Math.max(1, Math.round(options.width ?? rect.width));
+  const height = Math.max(1, Math.round(options.height ?? rect.height));
+  const pixelRatio = Math.max(1, options.pixelRatio ?? options.scale ?? 2);
+  const style = {
+    ...options.style,
+    transform: 'scale(1)',
+    transformOrigin: 'center center'
+  };
+
+  return {
+    width,
+    height,
+    pixelRatio,
+    bgcolor: options.backgroundColor ?? undefined,
+    cacheBust: options.cacheBust ?? true,
+    quality: options.quality,
+    style,
+    filter: options.filter,
+    shapeRendering: options.shapeRendering
+  };
+};
+
+const loadImage = (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+};
+
 export async function captureAndDownload(
   element: HTMLElement,
   filename: string,
   options: CaptureOptions = {}
 ): Promise<void> {
-  const defaultOptions: CaptureOptions = {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true,
-    ...options
-  };
-  
-  const canvas = await html2canvas(element, defaultOptions);
+  const domOptions = resolveDomOptions(element, options);
+  const blob = await domtoimage.toBlob(element, domOptions);
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = canvas.toDataURL('image/png');
+  link.href = url;
   link.download = filename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
-/**
- * HTML元素转换为Canvas
- */
 export async function captureElement(
   element: HTMLElement,
   options: CaptureOptions = {}
 ): Promise<HTMLCanvasElement> {
-  const defaultOptions: CaptureOptions = {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true,
-    ...options
-  };
-  
-  return await html2canvas(element, defaultOptions);
+  const domOptions = resolveDomOptions(element, options);
+  const dataUrl = await domtoimage.toPng(element, domOptions);
+  const img = await loadImage(dataUrl);
+  const canvas = document.createElement('canvas');
+  canvas.width = domOptions.width ?? img.naturalWidth;
+  canvas.height = domOptions.height ?? img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  }
+  return canvas;
 }
 
-/**
- * 临时清除 export-container 缩放，返回恢复函数
- */
-const disableScaleDuringCapture = (element: HTMLElement | null): (() => void) => {
-  if (!element) return () => {};
-  const exportContainers = element.matches('.export-container')
-    ? [element]
-    : Array.from(element.querySelectorAll<HTMLElement>('.export-container'));
-  const original = exportContainers.map((el) => ({
-    el,
-    transform: el.style.transform,
-    transformOrigin: el.style.transformOrigin
-  }));
-  exportContainers.forEach((el) => {
-    el.style.transform = 'scale(1)';
-    el.style.transformOrigin = 'center center';
-  });
-
-  return () => {
-    original.forEach(({ el, transform, transformOrigin }) => {
-      el.style.transform = transform;
-      el.style.transformOrigin = transformOrigin;
-    });
-  };
-};
-
-/**
- * 生成带时间戳的文件名
- */
 export function generateTimestampFilename(prefix: string = 'capture', extension: string = 'png'): string {
   const ts = formatNow('YYYYMMDD-HHmmss');
   return `${prefix}-${ts}.${extension}`;
 }
 
-/**
- * 壁纸导出专用函数
- */
 export async function captureWallpaper(
   previewArea: HTMLElement,
   downloadOption: 'withBackground' | 'withoutBackground',
   filename: string
 ): Promise<void> {
-  const targetElement = downloadOption === 'withBackground' 
+  const targetElement = downloadOption === 'withBackground'
     ? previewArea
-    : (previewArea.querySelector('.export-container') || 
-       previewArea.querySelector('.wallpaper-content') || 
-       previewArea.querySelector('.preview-canvas') || 
+    : (previewArea.querySelector('.export-container') ||
+       previewArea.querySelector('.wallpaper-content') ||
+       previewArea.querySelector('.preview-canvas') ||
        previewArea) as HTMLElement;
-  
+
   const options: CaptureOptions = {
     backgroundColor: downloadOption === 'withBackground' ? null : 'transparent',
-    scale: 2,
-    useCORS: true
+    scale: 2
   };
-  const restoreScale = disableScaleDuringCapture(targetElement);
-  try {
-    await captureAndDownload(targetElement, filename, options);
-  } finally {
-    restoreScale();
-  }
+
+  await captureAndDownload(targetElement, filename, options);
 }

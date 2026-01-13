@@ -96,7 +96,7 @@ import { ref, computed, watch } from 'vue';
 import { NModal, NButton, NSpace } from 'naive-ui';
 import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
 import { formatNow, formatFileTimestamp } from '@/utils/time';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image-more';
 import { getContrastTextColor } from '../../utils/colorUtils';
 import { useQuotes } from '../../hooks/useQuotes';
 import { useWallpaper } from '../../composables/useWallpaper';
@@ -170,20 +170,24 @@ const handleUpdateShow = (value: boolean) => {
 
 const handleDownloadCard = async () => {
   if (!shareCardRef.value) return;
-  
+
   try {
-    const canvas = await html2canvas(shareCardRef.value, {
-      backgroundColor: selectedColor.value,
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    });
-    
+    const options = {
+      bgcolor: selectedColor.value,
+      pixelRatio: 2,
+      cacheBust: true,
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'center center'
+      }
+    };
+    const blob = await domtoimage.toBlob(shareCardRef.value, options);
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.download = `share-card-${formatFileTimestamp()}.png`;
-    link.href = canvas.toDataURL('image/png', 1.0);
+    link.href = url;
     link.click();
+    URL.revokeObjectURL(url);
   } catch (error) {
     console.error('下载卡片失败:', error);
   }
