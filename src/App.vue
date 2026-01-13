@@ -4,17 +4,20 @@
       <n-layout>
       <Header 
         :hide-actions="isXHS"
-        @save-template="saveAsTemplate"
-        @save-config="saveConfig"
         @download="downloadWallpaper"
-        @open-settings="showDownloadModal = true"
         @download-poster="downloadPoster"
       />
       <n-layout-content class="content">
         <router-view v-slot="{ Component }">
           <component :is="Component" v-if="isXHS" />
         </router-view>
-        <WallpaperEditor v-if="!isXHS" ref="wallpaperEditorRef" />
+        <WallpaperEditor 
+          v-if="!isXHS" 
+          ref="wallpaperEditorRef" 
+          @save-template="saveAsTemplate"
+          @save-config="saveConfig"
+          @open-settings="showDownloadModal = true"
+        />
       </n-layout-content>
       <Footer />
       <!-- 系统设置模态框 -->

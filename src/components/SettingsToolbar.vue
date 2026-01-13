@@ -1,5 +1,10 @@
 <template>
-  <n-card class="settings-panel" hoverable bordered content-style="padding: 0; height: 100%; overflow: auto;">
+  <n-card
+    class="settings-panel"
+    hoverable
+    bordered
+    content-style="padding: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden;"
+  >
     <template #header>
       <div class="settings-header">
         <div class="header-left">
@@ -20,7 +25,8 @@
         </div>
       </div>
     </template>
-    <n-collapse :default-expanded-names="['title', 'background']" style="height: 100%; overflow: auto;" :show-arrow="false">
+    <div class="settings-body">
+      <n-collapse :default-expanded-names="['title', 'background']" :show-arrow="false">
       
       <!-- 1. 标题设置 (Top) -->
       <n-collapse-item name="title">
@@ -124,7 +130,8 @@
           @load-template="handleLoadTemplate"
         />
       </n-collapse-item>
-    </n-collapse>
+      </n-collapse>
+    </div>
     
     <!-- Bottom Action Footer -->
     <div class="settings-footer">
@@ -260,7 +267,7 @@ const handleLoadTemplate = (template: any) => {
 .settings-panel {
   width: 380px;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -270,6 +277,22 @@ const handleLoadTemplate = (template: any) => {
 
 .settings-panel:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.settings-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 6px;
+}
+
+.settings-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--n-border-color);
+  background: var(--n-card-color);
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 .settings-header {

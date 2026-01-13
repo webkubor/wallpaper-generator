@@ -10,6 +10,9 @@
       @image-upload="handleImageUpload"
       @confirm-custom-size="confirmCustomSize"
       @load-template="loadTemplate"
+      @save-config="emit('save-config')"
+      @save-template="emit('save-template')"
+      @open-settings="emit('open-settings')"
     />
 
     <!-- Center: Preview Area -->
@@ -256,6 +259,12 @@ const {
   resetConfig,
   showExportPreview
 } = useWallpaper();
+
+const emit = defineEmits<{
+  'save-config': [];
+  'save-template': [];
+  'open-settings': [];
+}>();
 
 const previewAreaRef = ref<HTMLElement | null>(null);
 const previewAreaSize = ref({ width: 0, height: 0 });

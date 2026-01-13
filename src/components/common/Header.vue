@@ -5,38 +5,16 @@
         <h1 class="main-title">✨ 氛围壁纸工坊</h1>
         <p class="subtitle">风有归处，心有颜色。</p>
       </div>
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <n-button tertiary size="small" class="save-template-button" @click="$emit('saveTemplate')">
-            <template #icon>
-              <n-icon :component="Star" />
-            </template>
-          </n-button>
-        </template>
-        保存为个人模板
-      </n-tooltip>
     </div>
     <div class="header-actions" v-if="!hideActions">
       <n-button tertiary class="xhs-button" @click="goXHS">
         小红书封面
-      </n-button>
-      <n-button type="primary" strong secondary class="save-config-button" @click="$emit('saveConfig')">
-        <template #icon>
-          <n-icon :component="FloppyDisk" />
-        </template>
-        保存配置
       </n-button>
       <n-button type="primary" strong secondary class="download-button" @click="$emit('download')">
         <template #icon>
           <n-icon :component="Download" />
         </template>
         导出
-      </n-button>
-      <n-button @click="$emit('openSettings')" class="settings-button">
-        <template #icon>
-          <n-icon :component="Gear" />
-        </template>
-        设置
       </n-button>
     </div>
     <div class="header-actions" v-else>
@@ -51,9 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { NLayoutHeader, NButton, NIcon, NTooltip } from 'naive-ui';
+import { NLayoutHeader, NButton, NIcon } from 'naive-ui';
 import { useRouter } from 'vue-router';
-import { PhDownload as Download, PhGear as Gear, PhFloppyDisk as FloppyDisk, PhStar as Star } from "@phosphor-icons/vue";
+import { PhDownload as Download } from "@phosphor-icons/vue";
 
 interface Props {
   hideActions?: boolean;
@@ -62,10 +40,7 @@ interface Props {
 defineProps<Props>();
 
 defineEmits<{
-  saveTemplate: [];
-  saveConfig: [];
   download: [];
-  openSettings: [];
   downloadPoster: [];
 }>();
 
@@ -105,16 +80,6 @@ const goHome = () => {
       }
     }
     
-    .settings-button {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(73, 63, 55, 0.16);
-      }
-    }
   }
   
   .title-container {
@@ -186,17 +151,10 @@ const goHome = () => {
 
     .header-actions {
       justify-content: space-between;
-      .save-config-button,
-      .download-button,
-      .settings-button {
+      .download-button {
         font-size: 12px;
         padding: 0 8px;
         height: 30px;
-      }
-      /* 将“保存为模板”图标按钮更靠近标题区域显示为图标即可 */
-      :deep(.save-template-button) {
-        padding: 0 6px;
-        height: 28px;
       }
     }
   }

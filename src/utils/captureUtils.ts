@@ -57,6 +57,29 @@ export async function captureElement(
 }
 
 /**
+ * 复制目标并去除缩放样式以便导出
+ */
+const cloneForCapture = (element: HTMLElement | null): HTMLElement | null => {
+  if (!element) return null;
+  const clone = element.cloneNode(true) as HTMLElement;
+  const exportContainer = clone.querySelector('.export-container') as HTMLElement | null;
+  if (exportContainer) {
+    exportContainer.style.transform = 'scale(1)';
+    exportContainer.style.transformOrigin = 'center center';
+  }
+  clone.style.position = 'fixed';
+  clone.style.top = '-9999px';
+  clone.style.left = '-9999px';
+  clone.style.zIndex = '-9999';
+  clone.style.opacity = '0';
+  clone.style.pointerEvents = 'none';
+  clone.style.transition = 'none';
+  clone.style.overflow = 'visible';
+  document.body.appendChild(clone);
+  return clone;
+};
+
+/**
  * 生成带时间戳的文件名
  */
 export function generateTimestampFilename(prefix: string = 'capture', extension: string = 'png'): string {
@@ -84,6 +107,14 @@ export async function captureWallpaper(
     scale: 2,
     useCORS: true
   };
+  const cloneElement = cloneForCapture(targetElement);
+  const captureTarget = cloneElement || targetElement;
   
-  await captureAndDownload(targetElement, filename, options);
+  try {
+    await captureAndDownload(captureTarget, filename, options);
+  } finally {
+    if (cloneElement && cloneElement.parentElement) {
+      cloneElement.parentElement.removeChild(cloneElement);
+    }
+  }
 }
