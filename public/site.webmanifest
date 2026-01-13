@@ -4,12 +4,20 @@
   "description": "你的心情壁纸生成器，东方美学、水彩风、极简留白。",
   "icons": [
     {
-      "src": "/webkubor.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "theme_color": "#f4d03f",
   "background_color": "#1a1f36",

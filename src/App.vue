@@ -1,6 +1,7 @@
 <template>
   <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
       <n-global-style />
+      <PWAPrompt />
       <n-layout>
       <Header 
         :hide-actions="isXHS"
@@ -45,6 +46,7 @@ import Footer from '@/components/common/Footer.vue';
 import SettingsModal from '@/components/common/SettingsModal.vue';
 import Header from '@/components/common/Header.vue';
 import ShareCard from '@/components/common/ShareCard.vue';
+import PWAPrompt from '@/components/PWAPrompt.vue';
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from "naive-ui";
 import { useDark } from "@vueuse/core";
 import { computed, ref } from "vue";
