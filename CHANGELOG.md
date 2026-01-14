@@ -1,3 +1,8 @@
+## [0.0.1] - 2026-01-14
+
+### Fixes
+- 配置 Vercel 缓存头，禁用 html 和 sw.js 缓存以解决更新滞后问题
+
 # 更新日志（CHANGELOG）
 
 来源分支: master（线上分支）  | 实际引用: origin/master

@@ -6,3 +6,5 @@
 ## 2026-01-13
 - Vercel 部署配置：新增 vercel.json 并调整 Vite base 适配 Vercel 构建环境。
 - 修复构建：补充 workbox-window 依赖，解决 vite-plugin-pwa 构建时缺包。
+
+- [2026-01-14] v0.0.1: 优化 Vercel 缓存策略 (Cache-Control)
