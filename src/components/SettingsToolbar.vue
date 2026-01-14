@@ -1,0 +1,437 @@
+<template>
+  <n-card
+    class="settings-panel"
+    hoverable
+    bordered
+    content-style="padding: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden;"
+  >
+    <template #header>
+      <div class="settings-header">
+        <div class="header-left">
+          <n-icon :component="Gear" class="settings-icon" />
+          <span class="settings-title">创作面板</span>
+        </div>
+        <div class="header-actions">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary size="small" class="reset-btn" @click="$emit('resetConfig')">
+                <template #icon>
+                  <n-icon :component="ArrowCounterClockwise" />
+                </template>
+              </n-button>
+            </template>
+            重置所有设置
+          </n-tooltip>
+        </div>
+      </div>
+    </template>
+    <div class="settings-body">
+      <n-collapse :default-expanded-names="['title', 'background']" :show-arrow="false">
+      
+      <!-- 1. 标题设置 (Top) -->
+      <n-collapse-item name="title">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="TextT" class="header-icon" />
+            <span>标题设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="显示标题" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
+          </n-form-item>
+          <TitleSettings v-if="titleSettings.show" />
+        </div>
+      </n-collapse-item>
+
+      <!-- 2. 背景设置 (From Basic) -->
+      <n-collapse-item name="background">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="ImageSquare" class="header-icon" />
+            <span>背景设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="上传壁纸" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-upload :custom-request="() => {}" :show-file-list="false" @change="handleImageUpload">
+              <n-button block>
+                <template #icon>
+                  <n-icon :component="UploadSimple" />
+                </template>
+                选择图片
+              </n-button>
+            </n-upload>
+          </n-form-item>
+          <BackgroundSettings :background-settings="backgroundSettings" />
+        </div>
+      </n-collapse-item>
+
+      <!-- 3. 导出设置 (Renamed from Basic - Device/Size) -->
+      <n-collapse-item name="export">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="Gear" class="header-icon" />
+            <span>导出设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <n-form-item label="预览导出区域" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch v-model:value="showExportPreview">
+              <template #checked>开启</template>
+              <template #unchecked>关闭</template>
+            </n-switch>
+          </n-form-item>
+
+          <n-form-item label="设备模型" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-select :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
+          </n-form-item>
+          
+          <!-- iPhone 刘海开关 -->
+          <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+            <n-switch :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
+          </n-form-item>
+          
+          <!-- 自定义尺寸输入 -->
+          <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
+            <n-form-item label="宽度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+              <n-input-number :value="customWidth" @update:value="(val) => $emit('update:customWidth', val || 400)" :min="100" :max="3000" placeholder="宽度" />
+            </n-form-item>
+            <n-form-item label="高度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 0;">
+              <n-input-number :value="customHeight" @update:value="(val) => $emit('update:customHeight', val || 400)" :min="100" :max="3000" placeholder="高度" />
+            </n-form-item>
+            <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
+          </div>
+        </div>
+      </n-collapse-item>
+
+      <!-- 4. 水印设置 (Bottom) -->
+      <n-collapse-item name="watermark">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="Droplets" class="header-icon" />
+            <span>水印设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <WatermarkSettings />
+        </div>
+      </n-collapse-item>
+
+      <!-- 5. 个人收藏模板 -->
+      <n-collapse-item name="templates" class="personal-templates-section">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="BookmarkSimple" class="header-icon" />
+            <span>个人收藏</span>
+          </div>
+        </template>
+        <PersonalTemplates 
+          @load-template="handleLoadTemplate"
+        />
+      </n-collapse-item>
+      </n-collapse>
+    </div>
+    
+    <!-- Bottom Action Footer -->
+    <div class="settings-footer">
+      <n-space justify="space-between" align="center">
+        <n-space>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle @click="$emit('openSettings')">
+                <template #icon><n-icon :component="Gear" /></template>
+              </n-button>
+            </template>
+            系统设置
+          </n-tooltip>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle @click="$emit('saveConfig')">
+                <template #icon><n-icon :component="FloppyDisk" /></template>
+              </n-button>
+            </template>
+            保存配置
+          </n-tooltip>
+        </n-space>
+        
+        <n-button type="primary" color="#f4d03f" @click="$emit('saveTemplate')">
+          <template #icon>
+            <n-icon :component="Plus" />
+          </template>
+          存为模板
+        </n-button>
+      </n-space>
+    </div>
+  </n-card>
+</template>
+
+<script setup lang="ts">
+import { 
+  NCard, NCollapse, NCollapseItem, NFormItem, NIcon, NButton, NUpload,
+  NSelect, NSwitch, NInputNumber, NTooltip, NSpace
+} from 'naive-ui';
+import { 
+  PhGear as Gear, 
+  PhArrowCounterClockwise as ArrowCounterClockwise, 
+  PhUploadSimple as UploadSimple, 
+  PhImage as ImageSquare, 
+  PhDrop as Droplets,
+  PhTextT as TextT,
+  PhBookmarkSimple as BookmarkSimple,
+  PhFloppyDisk as FloppyDisk,
+  PhPlus as Plus
+} from "@phosphor-icons/vue";
+import PersonalTemplates from './PersonalTemplates.vue';
+import WatermarkSettings from './toolbar/WatermarkSettings.vue';
+import TitleSettings from './toolbar/TitleSettings.vue';
+import BackgroundSettings from './toolbar/BackgroundSettings.vue';
+import { useWallpaper } from '@/composables/useWallpaper';
+import type { UploadFileInfo } from 'naive-ui';
+
+interface Props {
+  backgroundSettings: any;
+  customWidth: number;
+  customHeight: number;
+  refreshTrigger?: number;
+}
+
+defineProps<Props>();
+
+const emit = defineEmits<{
+  resetConfig: [];
+  imageUpload: [file: UploadFileInfo];
+  confirmCustomSize: [];
+  'update:customWidth': [value: number];
+  'update:customHeight': [value: number];
+  togglePersonalTemplates: [];
+  loadTemplate: [template: any];
+  saveConfig: [];
+  saveTemplate: [];
+  openSettings: [];
+}>();
+
+
+// 直接使用 useWallpaper 获取数据
+const { 
+  previewSettings,
+  deviceOptions,
+  titleSettings,
+  showExportPreview
+} = useWallpaper();
+
+const handleImageUpload = (options: { file: UploadFileInfo }) => {
+  emit('imageUpload', options.file);
+};
+
+const confirmCustomSize = () => {
+  emit('confirmCustomSize');
+};
+
+const handleLoadTemplate = (template: any) => {
+  emit('loadTemplate', template);
+};
+
+</script>
+
+<style scoped lang="scss">
+.personal-templates-toggle {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: var(--n-card-color);
+  border: 1px solid var(--n-border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover {
+    background: var(--n-color-hover);
+    border-color: rgba(244, 208, 63, 0.5);
+  }
+  
+  .template-icon {
+    color: #f4d03f;
+    font-size: 16px;
+  }
+  
+  .toggle-label {
+    color: var(--n-text-color);
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.settings-panel {
+  width: 380px;
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.settings-panel:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.settings-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 6px;
+}
+
+.settings-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--n-border-color);
+  background: var(--n-card-color);
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .settings-icon {
+      font-size: 18px;
+      color: var(--n-text-color);
+      opacity: 0.8;
+    }
+    
+    .settings-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--n-text-color);
+    }
+  }
+  
+  .header-actions {
+    .reset-btn {
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: var(--n-color-hover);
+        transform: rotate(-15deg);
+      }
+    }
+  }
+}
+
+.collapse-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-icon {
+  color: var(--n-primary-color);
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  
+  span {
+    font-weight: 600;
+    font-size: 16px;
+  }
+}
+
+.settings-section {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.custom-size-inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.03);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .n-form-item {
+    flex: 1;
+    margin-bottom: 0;
+  }
+}
+
+/* 中等屏（<= 1024px）：收窄侧栏 */
+@media (max-width: 1024px) {
+  .settings-panel {
+    width: 320px;
+  }
+}
+
+/* 小屏（<= 768px）：侧栏全宽并置顶 */
+@media (max-width: 768px) {
+  .settings-panel {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  /* 隐藏创作面板的大标题，仅保留重置按钮 */
+  .settings-header {
+    padding: 0;
+    .header-left {
+      .settings-title { display: none; }
+    }
+  }
+
+  /* 隐藏与操作无关的个人收藏区域 */
+  .personal-templates-section {
+    display: none;
+  }
+
+  .custom-size-inputs {
+    flex-direction: column;
+    .n-form-item { width: 100%; }
+    .n-button { align-self: flex-start; }
+  }
+}
+
+/* 极小屏（<= 480px）：进一步压缩间距和触控优化 */
+@media (max-width: 480px) {
+  .settings-panel {
+    border-radius: 10px;
+  }
+  .settings-header {
+    padding: 2px 0;
+    .settings-title { font-size: 15px; }
+  }
+}
+</style>

@@ -1,0 +1,40 @@
+// 主题色变量
+:root {
+  // Morandi palette
+  --morandi-ink: #3f3a36;
+  --morandi-ink-muted: #6f665c;
+  --morandi-paper: #f5f1ea;
+  --morandi-surface: #fbf7f1;
+  --morandi-line: #e3dbd2;
+  --morandi-sage: #9aa7a1;
+  --morandi-clay: #c4b2a3;
+  --morandi-fog: #9aa6ad;
+  --morandi-rose: #c6a29c;
+
+  // Primary colors
+  --primary-color: var(--morandi-sage);
+  --primary-light: #b8c2bb;
+  --primary-dark: #7d8b84;
+
+  // Gradients
+  --gradient-primary: linear-gradient(135deg, #c7b5a5 0%, #9aa7a1 100%);
+}
+
+// Dark mode
+[data-theme="dark"] {
+  --morandi-ink: #e6e0d8;
+  --morandi-ink-muted: #b8afa5;
+  --morandi-paper: #2b2a27;
+  --morandi-surface: #2f2e2b;
+  --morandi-line: #3e3a35;
+  --morandi-sage: #9aa7a1;
+  --morandi-clay: #b29f91;
+  --morandi-fog: #93a0a6;
+  --morandi-rose: #b69a95;
+
+  --primary-color: var(--morandi-sage);
+  --primary-light: #b8c2bb;
+  --primary-dark: #7d8b84;
+
+  --gradient-primary: linear-gradient(135deg, #9aa7a1 0%, #7d8b84 100%);
+}

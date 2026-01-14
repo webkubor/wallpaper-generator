@@ -1,0 +1,214 @@
+{
+    "fontOptions": [
+        {
+            "label": "Alibaba PuHuiTi（阿里普惠体）",
+            "value": "Alibaba PuHuiTi"
+        },
+        {
+            "label": "SimSun（宋体）",
+            "value": "SimSun"
+        },
+        {
+            "label": "Helvetica Neue（经典）",
+            "value": "Helvetica Neue"
+        },
+        {
+            "label": "阿里妈妈方圆体（圆润）",
+            "value": "AlimamaFangYuanTiVF-Thin"
+        },
+        {
+            "label": "可爱字体（萌系）",
+            "value": "cute"
+        },
+        {
+            "label": "毛笔字体（艺术）",
+            "value": "drizzle"
+        },
+        {
+            "label": "古典风",
+            "value": "AncientStyle"
+        },
+        {
+            "label": "武侠风",
+            "value": "Wuxia"
+        }
+    ],
+    "templates": [
+        {
+            "id": "wuxia",
+            "name": "武侠风",
+            "description": "毛笔字体，竖排布局，红色描边",
+            "config": {
+                "title": "江湖秘辛",
+                "subtitle": "金庸笔下最隐秘的伏笔",
+                "textColor": "#000000",
+                "mainColor": "#1A1A1A",
+                "titleSize": 7.5,
+                "subtitleSize": 1.75,
+                "selectedFont": "Wuxia",
+                "subtitleFont": "Wuxia",
+                "titleVertical": true,
+                "subtitleVertical": false,
+                "titleStroke": true,
+                "titleStrokeColor": "#DC143C",
+                "subtitleColor": "#FFFFFF",
+                "titleShadow": "0 3px 15px rgba(0,0,0,0.8)",
+                "subtitleShadow": "0 2px 8px rgba(0,0,0,0.6)"
+            }
+        },
+        {
+            "id": "wuxia-qinggong",
+            "name": "武侠轻功盘点",
+            "description": "黑白主色+金色点缀，毛笔大字营造武侠感",
+            "config": {
+              "title": "盘点金庸笔下轻功天花板",
+              "subtitle": "江湖谁能凌空而行？",
+              "textColor": "#000000",
+              "mainColor": "#FFFFFF",
+              "titleSize": 7,
+              "subtitleSize": 1.75,
+              "selectedFont": "drizzle", 
+              "subtitleFont": "PingFang SC",
+              "titleVertical": true,
+              "subtitleVertical": false,
+              "titleStroke": true,
+              "titleStrokeColor": "#FFD700",
+              "subtitleColor": "#4A4A4A",
+              "titleShadow": "0 4px 12px rgba(0,0,0,0.35)",
+              "subtitleShadow": "0 2px 6px rgba(0,0,0,0.25)"
+            }
+          },
+        {
+            "id": "modern",
+            "name": "现代简约",
+            "description": "简洁字体，横排布局，无描边",
+            "config": {
+                "title": "设计美学",
+                "subtitle": "探索现代生活的艺术之美",
+                "textColor": "#2D3748",
+                "mainColor": "#F7FAFC",
+                "titleSize": 6.25,
+                "subtitleSize": 1.5,
+                "selectedFont": "PingFang SC",
+                "subtitleFont": "PingFang SC",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#718096",
+                "titleShadow": "0 2px 12px rgba(0,0,0,0.4)",
+                "subtitleShadow": "0 1px 6px rgba(0,0,0,0.35)"
+            }
+        },
+        {
+            "id": "cute",
+            "name": "可爱萌系",
+            "description": "圆润字体，彩色搭配，温馨风格",
+            "config": {
+                "title": "甜蜜日常",
+                "subtitle": "记录生活中的小确幸",
+                "textColor": "#FF6B9D",
+                "mainColor": "#FFF5F8",
+                "titleSize": 6.875,
+                "subtitleSize": 1.625,
+                "selectedFont": "cute",
+                "subtitleFont": "AlimamaFangYuanTiVF-Thin",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#A0AEC0",
+                "titleShadow": "0 2px 10px rgba(255,107,157,0.3)",
+                "subtitleShadow": "0 1px 5px rgba(160,174,192,0.2)"
+            }
+        },
+        {
+            "id": "luxury-tech",
+            "name": "黑金科幻",
+            "description": "黑色背景+金属金字，未来感与奢华结合",
+            "config": {
+              "title": "NEO FUTURE",
+              "subtitle": "Beyond the Digital Age",
+              "textColor": "#FFD700",
+              "mainColor": "#0A0A0A",
+              "titleSize": 8,
+              "subtitleSize": 1.875,
+              "selectedFont": "DIN Alternate",
+              "subtitleFont": "Helvetica Neue",
+              "titleVertical": false,
+              "subtitleVertical": false,
+              "titleStroke": true,
+              "titleStrokeColor": "#B8860B",
+              "subtitleColor": "#C0C0C0",
+              "titleShadow": "0 0 20px rgba(255,215,0,0.6), 0 4px 15px rgba(0,0,0,0.8)",
+              "subtitleShadow": "0 2px 8px rgba(0,0,0,0.7)"
+            }
+          },
+        {
+                "id": "fresh-healing",
+                "name": "清新治愈",
+                "description": "浅绿色调，清新自然，简洁温暖",
+                "config": {
+                  "title": "慢生活",
+                  "subtitle": "在日常里寻找治愈感",
+                  "textColor": "#2F855A",
+                  "mainColor": "#F0FFF4",
+                  "titleSize": 6.25,
+                  "subtitleSize": 1.625,
+                  "selectedFont": "Alibaba PuHuiTi",
+                  "subtitleFont": "HarmonyOS Sans SC",
+                  "titleVertical": false,
+                  "subtitleVertical": false,
+                  "titleStroke": false,
+                  "titleStrokeColor": "#2F855A",
+                  "subtitleColor": "#68D391",
+                  "titleShadow": "0 2px 8px rgba(47,133,90,0.25)",
+                  "subtitleShadow": "0 1px 4px rgba(104,211,145,0.2)"
+                }
+        },
+        {
+            "id": "cold-minimal",
+            "name": "高冷极简黑白风",
+            "description": "黑白配色，留白极简，高冷氛围",
+            "config": {
+                "title": "孤影行",
+                "subtitle": "冷冽江湖里的独行者",
+                "textColor": "#000000",
+                "mainColor": "#FFFFFF",
+                "titleSize": 6.875,
+                "subtitleSize": 1.5,
+                "selectedFont": "Helvetica Neue",
+                "subtitleFont": "PingFang SC",
+                "titleVertical": false,
+                "subtitleVertical": false,
+                "titleStroke": false,
+                "titleStrokeColor": "#000000",
+                "subtitleColor": "#4A4A4A",
+                "titleShadow": "none",
+                "subtitleShadow": "none"
+            }
+        },
+        {
+            "id": "chinese-retro",
+            "name": "国潮复古",
+            "description": "大红底+金色字，复古大字报感",
+            "config": {
+                "title": "国潮风尚",
+                "subtitle": "传统与现代的融合之美",
+                "textColor": "#FFD700",
+                "mainColor": "#B22222",
+                "titleSize": 7.5,
+                "subtitleSize": 1.75,
+                "selectedFont": "Source Han Sans SC",
+                "subtitleFont": "SimSun",
+                "titleVertical": true,
+                "subtitleVertical": false,
+                "titleStroke": true,
+                "titleStrokeColor": "#8B0000",
+                "subtitleColor": "#FFF8DC",
+                "titleShadow": "0 3px 12px rgba(139,0,0,0.6)",
+                "subtitleShadow": "0 2px 6px rgba(0,0,0,0.4)"
+            }
+        }
+    ]
+}

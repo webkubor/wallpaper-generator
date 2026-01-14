@@ -1,0 +1,56 @@
+
+  @font-face {
+    font-family: 'AlimamaFangYuanTiVF-Thin';
+    src: url('@/assets/fonts/AlimamaFangYuanTiVF-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'drizzle';
+    src: url('@/assets/fonts/drizzle.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'cute';
+    src: url('@/assets/fonts/cute.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+
+  
+  @font-face {
+    font-family: 'AncientStyle';
+    src: url('@/assets/fonts/AncientStyle.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Wuxia';
+    src: url('@/assets/fonts/Wuxia.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+
+ 
+  .chinese-cute {
+    font-family: 'cute';
+  }
+  .chinese-ai {
+    font-family: 'Wuxia';
+  }
+  .chinese-love {
+    font-family: 'drizzle';
+  }
+  .chinese-circle {
+    font-family: 'AlimamaFangYuanTiVF-Thin';
+  }
+
+  .chinese-500 {
+    font-family: 'AncientStyle';
+  }

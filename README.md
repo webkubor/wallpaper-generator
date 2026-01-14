@@ -1,93 +1,91 @@
-# wallpaper-generator
+# ✨ 氛围壁纸工坊
 
+> 风有归处，心有颜色。
 
+一个在线壁纸制作工具，让你在浏览器中轻松创建适配多种设备的精美壁纸。
 
-## Getting started
+## 🌟 产品特色
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### 🎨 简单易用的在线编辑
+- **所见即所得**：实时预览，调整即生效
+- **拖拽操作**：水印和标题支持鼠标拖拽定位
+- **一键上传**：直接拖拽图片到浏览器即可开始制作
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### 📱 多设备壁纸制作
+- **iPhone 壁纸**：完美适配 iOS 设备，支持刘海屏
+- **iPad 壁纸**：平板电脑专用尺寸
+- **Mac 壁纸**：桌面电脑显示器尺寸
+- **汽车中控屏**：车载系统壁纸
+- **自定义尺寸**：任意宽高比，满足特殊需求
 
-## Add your files
+### 🎭 个性化定制选项
+- **文字水印**：添加个性文字，多种字体和颜色可选
+- **图片水印**：上传 Logo 或图标作为水印
+- **标题设置**：为壁纸添加标题文字
+- **透明度调节**：精确控制水印透明度
+- **旋转角度**：360度自由旋转水印
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+### 💾 便捷的模板功能
+- **保存模板**：将喜欢的设置保存为模板
+- **快速应用**：一键应用已保存的模板
+- **模板管理**：查看和删除个人模板
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/webkubor/wallpaper-generator.git
-git branch -M main
-git push -uf origin main
-```
+### 个人用户
+- **手机壁纸制作**：为 iPhone、Android 制作个性化锁屏和桌面壁纸
+- **电脑壁纸**：制作适配 Mac、Windows 的桌面背景
+- **社交分享**：制作朋友圈、微博等社交媒体的展示图片
 
-## Integrate with your tools
+### 设计师和创作者
+- **作品展示**：快速制作设备展示图，展示设计作品
+- **客户提案**：制作专业的产品宣传素材
+- **品牌设计**：为品牌制作统一风格的多设备壁纸
 
-- [ ] [Set up project integrations](https://gitlab.com/webkubor/wallpaper-generator/-/settings/integrations)
+### 企业和团队
+- **品牌推广**：制作带有企业 Logo 的设备壁纸
+- **活动宣传**：快速制作活动海报的设备展示版本
+- **产品展示**：为 App 或网站制作多设备适配的展示图
 
-## Collaborate with your team
+## 📖 使用指南
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+### 5分钟快速上手
+1. **打开网站** - 在浏览器中访问壁纸工坊
+2. **上传图片** - 点击"选择图片"或直接拖拽图片到页面
+3. **选择设备** - 选择要制作的设备类型（iPhone、iPad、Mac等）
+4. **添加元素** - 根据需要添加文字水印、图片水印或标题
+5. **调整位置** - 用鼠标拖拽调整水印和标题的位置
+6. **导出壁纸** - 点击"导出"按钮下载制作好的壁纸
 
-## Test and Deploy
+### 进阶技巧
+- **保存模板**：制作满意的样式后，点击⭐保存为模板，下次可快速应用
+- **批量制作**：使用模板功能，可以快速为多张图片应用相同的样式
+- **精确调整**：使用设置面板中的数值输入，进行像素级的精确调整
 
-Use the built-in continuous integration in GitLab.
+## 🎨 界面特色
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- **简洁美观**：现代化的界面设计，支持深色和浅色主题
+- **操作直观**：所有操作都有实时预览，调整即可看到效果
+- **响应迅速**：纯前端实现，无需等待服务器处理
+- **数据安全**：所有图片和数据都在本地处理，不会上传到服务器
 
-***
+## ❓ 常见问题
 
-# Editing this README
+**Q: 制作的壁纸质量如何？**
+A: 导出的壁纸为高清 PNG 格式，保证最佳显示效果。
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+**Q: 支持哪些图片格式？**
+A: 支持 JPG、PNG、WebP 等常见图片格式。
 
-## Suggestions for a good README
+**Q: 可以离线使用吗？**
+A: 是的，网页加载完成后可以离线使用，所有功能都在浏览器中运行。
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+**Q: 制作的壁纸会被保存在服务器上吗？**
+A: 不会，所有图片处理都在您的浏览器中完成，保护您的隐私。
 
-## Name
-Choose a self-explaining name for your project.
+## 💡 使用建议
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- **图片选择**：选择高分辨率的图片作为背景，效果更佳
+- **水印设置**：水印透明度建议设置在 0.3-0.7 之间，既不会过于突兀，又能起到标识作用
+- **颜色搭配**：注意水印和标题的颜色与背景的对比度，确保清晰可见
+- **模板管理**：为不同用途的壁纸创建不同的模板，提高制作效率
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**让每一张壁纸都成为艺术品** ✨
