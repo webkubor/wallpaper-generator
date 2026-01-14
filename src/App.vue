@@ -58,7 +58,7 @@ import { formatFileTimestamp } from './utils/time';
 
 const isDark = useDark();
 const route = useRoute();
-const isXHS = computed(() => route.path === '/xhs');
+const isXHS = computed(() => route.name === 'Poster');
 const isDownloading = ref(false);
 const showDownloadModal = ref(false);
 const showShareCard = ref(false);

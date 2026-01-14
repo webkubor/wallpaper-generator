@@ -7,3 +7,5 @@ declare module '*.vue' {
 }
 
 declare module 'vue-cropper';
+
+declare const __APP_VERSION__: string;

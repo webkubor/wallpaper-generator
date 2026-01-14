@@ -46,10 +46,10 @@ defineEmits<{
 
 const router = useRouter();
 const goXHS = () => {
-  router.push('/xhs');
+  void router.push({ name: 'Poster' });
 };
 const goHome = () => {
-  router.push('/');
+  void router.push({ name: 'Home' });
 };
 </script>
 

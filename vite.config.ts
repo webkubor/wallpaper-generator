@@ -5,13 +5,29 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path';
+import fs from 'node:fs';
 
 const isVercel = process.env.VERCEL === '1'
 const isDev = process.env.NODE_ENV === 'development'
+const versionPath = path.resolve(__dirname, 'public/version.json')
+let appVersion = '0.0.0'
+
+try {
+  const raw = fs.readFileSync(versionPath, 'utf8')
+  const parsed = JSON.parse(raw)
+  if (typeof parsed?.latest === 'string') {
+    appVersion = parsed.latest
+  }
+} catch {
+  appVersion = '0.0.0'
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   base: isDev || isVercel ? '/' : './',
+  define: {
+    __APP_VERSION__: JSON.stringify(appVersion)
+  },
   resolve: {
     alias: [{
       find: '@',
