@@ -1,15 +1,27 @@
 <template>
   <div class="xhs-page">
     <div class="toolbar">
+      <div class="mode-switch">
+        <n-radio-group v-model:value="mode" name="mode" size="large" style="width: 100%">
+          <n-radio-button value="poster" style="width: 50%; text-align: center">
+            大字报模式
+          </n-radio-button>
+          <n-radio-button value="list" style="width: 50%; text-align: center">
+            清单引导模式
+          </n-radio-button>
+        </n-radio-group>
+      </div>
+
       <n-input v-model:value="title" placeholder="输入封面主标题（大字）" size="large" />
+      
       <div style="display: flex; align-items: center; gap: 8px;">
         <n-input
-  v-model:value="subtitle"
-  type="textarea"
-  :autosize="{ minRows: 1, maxRows: 4 }"
-  placeholder="输入副标题（可选，支持换行）"
-  style="flex: 1;"
-/>
+          v-model:value="subtitle"
+          type="textarea"
+          :autosize="{ minRows: 1, maxRows: 4 }"
+          placeholder="输入副标题（可选，支持换行）"
+          style="flex: 1;"
+        />
         <n-button text @click="showSubtitle = !showSubtitle" :style="{ color: showSubtitle ? '#18a058' : '#d03050' }">
           <template #icon>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -21,6 +33,26 @@
           </template>
         </n-button>
       </div>
+
+      <!-- 列表内容编辑区域 -->
+      <div v-if="mode === 'list'" class="controls list-controls">
+        <div class="control-header">
+          <span>列表内容</span>
+          <n-button size="tiny" secondary type="primary" @click="addListItem" :disabled="listItems.length >= 6">
+            + 添加
+          </n-button>
+        </div>
+        <div v-for="(item, index) in listItems" :key="index" class="list-input-item">
+          <span class="list-num">{{ index + 1 }}</span>
+          <n-input v-model:value="listItems[index]" placeholder="输入内容" size="small" />
+          <n-button text type="error" @click="removeListItem(index)" :disabled="listItems.length <= 1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </n-button>
+        </div>
+      </div>
+
       <div class="controls">
         <div class="control-item">
           <span>背景色</span>
@@ -95,11 +127,24 @@
             {{ title }}
           </div>
           <div class="poster-subtitle draggable" 
-     v-if="subtitle && showSubtitle" 
-     :style="subtitleStyle"
-     @mousedown="subtitleDragHandler.onMouseDown" 
-     v-html="formatSubtitle">
-</div>
+             v-if="subtitle && showSubtitle" 
+             :style="subtitleStyle"
+             @mousedown="subtitleDragHandler.onMouseDown" 
+             v-html="formatSubtitle">
+          </div>
+          
+          <!-- 清单列表容器 -->
+          <div class="poster-list-container draggable"
+             v-if="mode === 'list'"
+             :style="listStyle"
+             @mousedown="listDragHandler.onMouseDown">
+            <div v-for="(item, index) in listItems" :key="index" class="list-item">
+              <div class="item-num" :style="{ backgroundColor: textColor }">{{ index + 1 }}</div>
+              <div class="item-content" :style="{ fontFamily: subtitleFontFamily, color: textColor }">
+                {{ item }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -116,7 +161,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import type { CSSProperties } from 'vue';
-import { NInput, NSlider, NSwitch, NColorPicker, NSelect, NButton } from 'naive-ui';
+import { NInput, NSlider, NSwitch, NColorPicker, NSelect, NButton, NRadioGroup, NRadioButton } from 'naive-ui';
 import { createDragHandler } from '@/utils/dragUtils';
 import { captureAndDownload } from '@/utils/captureUtils';
 import { formatFileTimestamp } from '@/utils/time';
@@ -125,6 +170,14 @@ import Pretemplates from './components/templates.vue';
 import posterConfig from './components/poster-templates.json';
 import type { Template } from './components/types';
 
+// 模式定义
+type PosterMode = 'poster' | 'list';
+const mode = ref<PosterMode>('poster');
+const listItems = ref([
+  '第一步：确立核心主题',
+  '第二步：提炼关键信息',
+  '第三步：注重排版美感'
+]);
 
 const title = ref('江湖秘辛');
 const subtitle = ref('金庸笔下最隐秘的伏笔');
@@ -152,6 +205,37 @@ const showLightingEffect = ref(true);
 const showSubtitle = ref(true);
 const formatSubtitle = computed(() => {
   return subtitle.value ? subtitle.value.replace(/\n/g, '<br>') : '';
+});
+
+// 列表项操作
+const addListItem = () => {
+  if (listItems.value.length < 6) {
+    listItems.value.push('新增列表项内容');
+    nextTick(updatePositions);
+  }
+};
+
+const removeListItem = (index: number) => {
+  if (listItems.value.length > 1) {
+    listItems.value.splice(index, 1);
+    nextTick(updatePositions);
+  }
+};
+
+// 监听模式变化
+watch(mode, (newMode) => {
+  if (newMode === 'list') {
+    // 切换到列表模式时的默认调整
+    if (titleVertical.value === 'vertical') titleVertical.value = 'horizontal';
+    if (titleSize.value > 5) titleSize.value = 4;
+    if (subtitleSize.value > 2) subtitleSize.value = 1.5;
+    // 重置位置
+    nextTick(updatePositions);
+  } else {
+    // 切换回大字报模式
+    titleSize.value = 7.5;
+    nextTick(updatePositions);
+  }
 });
 
 // 监听副标题显示状态变化
@@ -221,6 +305,7 @@ const subtitleFontFamily = computed(() => {
 // 标题位置状态
 const titlePos = ref({ x: 0, y: 0 });
 const subtitlePos = ref({ x: 0, y: 0 });
+const listPos = ref({ x: 0, y: 0 });
 
 
 // 更新位置为居中
@@ -231,33 +316,60 @@ const updatePositions = () => {
 
     const titleEl = document.querySelector('.poster-title') as HTMLElement;
     const subtitleEl = document.querySelector('.poster-subtitle') as HTMLElement;
+    const listEl = document.querySelector('.poster-list-container') as HTMLElement;
     const posterRect = poster.getBoundingClientRect();
 
-    // 首先计算标题位置
-    if (titleEl) {
-      const titleRect = titleEl.getBoundingClientRect();
-      titlePos.value = {
-        x: (posterRect.width - titleRect.width) / 2,
-        y: (posterRect.height - titleRect.height) / 3 // 标题位于垂直方向1/3处
-      };
-    }
-
-    // 然后计算副标题位置
-    if (subtitleEl && showSubtitle.value) {
-      const subtitleRect = subtitleEl.getBoundingClientRect();
-      let newY = (posterRect.height - subtitleRect.height) * 2 / 3; // 默认在2/3处
-
-      // 如果存在标题，则放在标题下方
+    if (mode.value === 'poster') {
+      // 大字报模式：经典居中逻辑
       if (titleEl) {
-        const titleBottom = titlePos.value.y + titleEl.offsetHeight;
-        const spacing = 30; // 主副标题间距
-        newY = Math.max(newY, titleBottom + spacing);
+        const titleRect = titleEl.getBoundingClientRect();
+        titlePos.value = {
+          x: (posterRect.width - titleRect.width) / 2,
+          y: (posterRect.height - titleRect.height) / 3
+        };
+      }
+      if (subtitleEl && showSubtitle.value) {
+        const subtitleRect = subtitleEl.getBoundingClientRect();
+        let newY = (posterRect.height - subtitleRect.height) * 2 / 3;
+        if (titleEl) {
+          const titleBottom = titlePos.value.y + titleEl.offsetHeight;
+          const spacing = 30;
+          newY = Math.max(newY, titleBottom + spacing);
+        }
+        subtitlePos.value = {
+          x: (posterRect.width - subtitleRect.width) / 2,
+          y: newY
+        };
+      }
+    } else {
+      // 清单模式：上中下布局
+      let currentY = 60; // 顶部留白
+      
+      if (titleEl) {
+        const titleRect = titleEl.getBoundingClientRect();
+        titlePos.value = {
+          x: (posterRect.width - titleRect.width) / 2,
+          y: currentY
+        };
+        currentY += titleRect.height + 20;
+      }
+      
+      if (subtitleEl && showSubtitle.value) {
+        const subtitleRect = subtitleEl.getBoundingClientRect();
+        subtitlePos.value = {
+          x: (posterRect.width - subtitleRect.width) / 2,
+          y: currentY
+        };
+        currentY += subtitleRect.height + 30;
       }
 
-      subtitlePos.value = {
-        x: (posterRect.width - subtitleRect.width) / 2,
-        y: newY
-      };
+      if (listEl) {
+         const listRect = listEl.getBoundingClientRect();
+         listPos.value = {
+           x: (posterRect.width - listRect.width) / 2,
+           y: currentY
+         };
+      }
     }
   });
 };
@@ -275,6 +387,13 @@ const subtitleDragHandler = createDragHandler(
     subtitlePos.value = { x, y };
   },
   () => subtitlePos.value
+);
+
+const listDragHandler = createDragHandler(
+  (x, y) => {
+    listPos.value = { x, y };
+  },
+  () => listPos.value
 );
 
 // 主标题样式
@@ -695,6 +814,79 @@ const downloadPoster = async () => {
 .xhs-page :deep(.n-button--text:hover) {
   background: rgba(233, 226, 217, 0.9);
   color: var(--morandi-ink);
+}
+
+.poster-list-container {
+  .list-item {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.4);
+    
+    .item-num {
+      background: var(--morandi-ink);
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .item-content {
+      flex: 1;
+      font-size: 1.4em;
+      line-height: 1.4;
+      color: var(--morandi-ink);
+      font-weight: 500;
+      text-align: left;
+    }
+  }
+}
+
+.mode-switch {
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.list-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  .control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--morandi-ink-muted);
+    margin-bottom: 4px;
+  }
+  
+  .list-input-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .list-num {
+      font-size: 12px;
+      color: var(--morandi-ink-muted);
+      width: 16px;
+    }
+  }
 }
 
 @media (max-width: 1024px) {
