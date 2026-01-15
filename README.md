@@ -21,6 +21,21 @@
 - **小红书大字报**：内置专属生成器，一键制作高点击率封面
 - **模板保存**：支持本地保存个性化模板，随时复用
 
+## 🔎 功能索引
+
+> 快速定位功能到代码位置，方便知道要去哪改。
+
+| 功能 | 主要位置 | 说明 |
+| --- | --- | --- |
+| 壁纸编辑器主页 | `src/components/WallpaperEditor.vue` | 核心布局与交互逻辑 |
+| 壁纸状态管理 | `src/composables/useWallpaper.ts` | 缩放、背景、文字等数据 |
+| 小红书封面生成器 | `src/pages/poster/index.vue` | 生成器页面主逻辑 |
+| 小红书模板数据 | `src/pages/poster/components/poster-templates.json` | 预设模板配置 |
+| 背景/标题/水印设置 | `src/components/toolbar/` | 各类设置面板 |
+| 设备模型 | `src/components/*/` | iPhone/iPad/Mac/车载/自定义 |
+| 导出下载 | `src/utils/captureUtils.ts` | 截图导出逻辑 |
+| 模板存储 | `src/utils/indexedDB.ts` | 本地模板数据 |
+
 ---
 
 ## 🛠️ 开发指南与目录索引 (Development Guide)
