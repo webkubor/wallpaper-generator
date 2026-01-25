@@ -1,15 +1,16 @@
 <template>
   <BaseCard
     class="settings-panel"
-    :hoverable="true"
+    :hoverable="false"
     :bordered="true"
+    :glass="true"
     :content-style="{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }"
   >
     <template #header>
       <div class="settings-header">
         <div class="header-left">
           <Gear class="settings-icon" :size="18" weight="fill" />
-          <span class="settings-title">创作面板</span>
+          <span class="settings-title">氛围设计</span>
         </div>
         <div class="header-actions">
           <BaseButton variant="ghost" size="sm" class="reset-btn" @click="$emit('resetConfig')" title="重置所有设置">
@@ -24,16 +25,16 @@
     <div class="settings-body">
       <div class="collapse-group">
         <!-- 1. 标题设置 (Top) -->
-        <details class="collapse-item" open>
+        <details class="collapse-item" open style="--delay: 0.1s">
           <summary class="collapse-header">
             <div class="header-content">
               <TextT class="header-icon" :size="18" weight="fill" />
-              <span>标题设置</span>
+              <span>文字意境</span>
             </div>
           </summary>
           <div class="collapse-content">
             <div class="form-item">
-              <label class="form-label">显示标题</label>
+              <label class="form-label">展示标题</label>
               <BaseSwitch :model-value="titleSettings.show" @update:model-value="(val) => titleSettings.show = val" />
             </div>
             <TitleSettings v-if="titleSettings.show" />
@@ -41,21 +42,21 @@
         </details>
 
         <!-- 2. 背景设置 (From Basic) -->
-        <details class="collapse-item" open>
+        <details class="collapse-item" open style="--delay: 0.2s">
           <summary class="collapse-header">
             <div class="header-content">
               <ImageSquare class="header-icon" :size="18" weight="fill" />
-              <span>背景设置</span>
+              <span>底色与光影</span>
             </div>
           </summary>
           <div class="collapse-content">
             <div class="form-item">
-              <label class="form-label">上传壁纸</label>
+              <label class="form-label">导入壁纸</label>
               <FileUploader :show-file-list="false" @select="handleImageSelect" class="full-width-uploader">
                 <template #default>
                   <div class="upload-btn-content">
-                    <UploadSimple :size="16" />
-                    <span>选择图片</span>
+                    <UploadSimple :size="16" weight="bold" />
+                    <span>拾取灵感</span>
                   </div>
                 </template>
               </FileUploader>
@@ -65,11 +66,11 @@
         </details>
 
         <!-- 3. 水印设置 (Bottom) -->
-        <details class="collapse-item">
+        <details class="collapse-item" style="--delay: 0.3s">
           <summary class="collapse-header">
             <div class="header-content">
               <Droplets class="header-icon" :size="18" weight="fill" />
-              <span>水印设置</span>
+              <span>印记标识</span>
             </div>
           </summary>
           <div class="collapse-content">
@@ -78,23 +79,23 @@
         </details>
 
         <!-- 4. 导出设置 (Renamed from Basic - Device/Size) -->
-        <details class="collapse-item">
+        <details class="collapse-item" style="--delay: 0.4s">
           <summary class="collapse-header">
             <div class="header-content">
               <Gear class="header-icon" :size="18" weight="fill" />
-              <span>导出设置</span>
+              <span>导出规范</span>
             </div>
           </summary>
           <div class="collapse-content">
             <div class="form-item">
-              <label class="form-label">预览导出区域</label>
+              <label class="form-label">预览成片区域</label>
               <BaseSwitch v-model="showExportPreview">
-                <template #default>{{ showExportPreview ? '开启' : '关闭' }}</template>
+                <template #default>{{ showExportPreview ? '开' : '关' }}</template>
               </BaseSwitch>
             </div>
 
             <div class="form-item">
-              <label class="form-label">设备模型</label>
+              <label class="form-label">载体模型</label>
               <div class="select-wrapper">
                 <select v-model="previewSettings.selectedDevice" class="base-select">
                   <option v-for="opt in deviceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
@@ -104,31 +105,31 @@
             
             <!-- iPhone 刘海开关 -->
             <div v-if="previewSettings.selectedDevice === 'iphone'" class="form-item">
-              <label class="form-label">刘海 (iOS)</label>
+              <label class="form-label">刘海屏障</label>
               <BaseSwitch :model-value="previewSettings.hasNotch" @update:model-value="(val) => previewSettings.hasNotch = val" />
             </div>
             
             <!-- 自定义尺寸输入 -->
             <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
               <div class="form-item">
-                <label class="form-label">宽度</label>
+                <label class="form-label">宽</label>
                 <BaseInput type="number" :model-value="customWidth" @update:model-value="(val) => $emit('update:customWidth', Number(val) || 400)" :min="100" :max="3000" placeholder="宽度" />
               </div>
               <div class="form-item">
-                <label class="form-label">高度</label>
+                <label class="form-label">高</label>
                 <BaseInput type="number" :model-value="customHeight" @update:model-value="(val) => $emit('update:customHeight', Number(val) || 400)" :min="100" :max="3000" placeholder="高度" />
               </div>
-              <BaseButton variant="primary" size="sm" @click="confirmCustomSize">确定</BaseButton>
+              <BaseButton variant="primary" size="sm" @click="confirmCustomSize">定稿</BaseButton>
             </div>
           </div>
         </details>
 
         <!-- 5. 个人收藏模板 -->
-        <details class="collapse-item personal-templates-section">
+        <details class="collapse-item personal-templates-section" style="--delay: 0.5s">
           <summary class="collapse-header">
             <div class="header-content">
               <BookmarkSimple class="header-icon" :size="18" weight="fill" />
-              <span>个人收藏</span>
+              <span>时光收藏</span>
             </div>
           </summary>
           <div class="collapse-content">
@@ -276,17 +277,25 @@ const handleLoadTemplate = (template: any) => {
 
 .collapse-item {
   border-bottom: 1px solid var(--border-color);
+  opacity: 0;
+  animation: slide-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: var(--delay, 0s);
   
   &:last-child {
     border-bottom: none;
   }
   
   .collapse-header {
-    padding: 12px 16px;
+    padding: 16px 20px;
     cursor: pointer;
     list-style: none;
     user-select: none;
     position: relative;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
     
     &::-webkit-details-marker {
       display: none;
@@ -295,26 +304,29 @@ const handleLoadTemplate = (template: any) => {
     .header-content {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-weight: 600;
+      font-size: 15px;
       color: var(--text-primary);
       
       .header-icon {
         color: var(--color-brand);
+        filter: drop-shadow(0 2px 4px rgba(244, 208, 63, 0.2));
       }
     }
     
     &::after {
       content: '';
       position: absolute;
-      right: 16px;
+      right: 20px;
       top: 50%;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-right: 2px solid var(--text-secondary);
       border-bottom: 2px solid var(--text-secondary);
       transform: translateY(-70%) rotate(45deg);
-      transition: transform 0.2s;
+      transition: transform 0.3s ease;
+      opacity: 0.6;
     }
   }
   
@@ -323,7 +335,18 @@ const handleLoadTemplate = (template: any) => {
   }
   
   .collapse-content {
-    padding: 0 16px 16px;
+    padding: 0 20px 20px;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

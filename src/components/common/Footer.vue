@@ -32,17 +32,17 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
 
 <style scoped lang="scss">
 .footer {
-  padding: 16px 24px;
-  background: rgba(251, 247, 241, 0.6);
-  backdrop-filter: blur(18px);
+  padding: 20px 32px;
+  background: rgba(251, 247, 241, 0.4);
+  backdrop-filter: blur(10px);
   border-top: 1px solid var(--color-morandi-line);
-  font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
+  font-family: inherit;
   
   .footer-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
   
@@ -50,25 +50,22 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
     .creator-info {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       
       .creator-icon {
-        color: var(--color-morandi-sage);
-        animation: sparkle 2s ease-in-out infinite;
+        color: var(--color-brand);
+        opacity: 0.8;
       }
       
       .creator-text {
-        font-size: 14px;
-        color: var(--color-morandi-ink);
-        opacity: 0.8;
+        font-size: 13px;
+        color: var(--text-secondary);
+        letter-spacing: 0.02em;
         
         .highlight {
-          background: linear-gradient(135deg, #c7b5a5 0%, #9aa7a1 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          font-weight: 600;
-          margin-left: 4px;
+          color: var(--text-primary);
+          font-weight: 700;
+          margin-left: 2px;
         }
       }
     }
@@ -77,42 +74,21 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
   .footer-right {
     .social-links {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
       
       .social-link {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(154, 167, 161, 0.12);
-        border: 1px solid rgba(154, 167, 161, 0.3);
-        transition: all 0.3s ease;
-        text-decoration: none;
+        color: var(--text-secondary);
+        transition: all var(--transition-fast);
+        opacity: 0.6;
         
         &:hover {
-          background: rgba(154, 167, 161, 0.22);
-          border-color: rgba(154, 167, 161, 0.55);
+          opacity: 1;
+          color: var(--color-brand-active);
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(154, 167, 161, 0.22);
-        }
-        
-        .social-icon {
-          color: var(--text-primary);
-          opacity: 0.8;
-          transition: all 0.3s ease;
-        }
-        
-        &.xiaohongshu:hover .social-icon {
-          color: #b46a63;
-          opacity: 1;
-        }
-        
-        &.email:hover .social-icon {
-          color: #9aa7a1;
-          opacity: 1;
         }
       }
     }

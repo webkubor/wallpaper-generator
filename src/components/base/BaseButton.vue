@@ -63,12 +63,21 @@ const props = withDefaults(defineProps<Props>(), {
   outline: none;
   cursor: pointer;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   border-radius: var(--border-radius-sm);
   transition: all var(--transition-fast);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  gap: 6px;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px) scale(0.98);
+  }
 
   /* Sizes */
   &--sm {

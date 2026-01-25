@@ -3,7 +3,8 @@
     class="base-card"
     :class="{ 
       'base-card--hoverable': hoverable,
-      'base-card--bordered': bordered
+      'base-card--bordered': bordered,
+      'base-card--glass': glass
     }"
     :style="customStyle"
   >
@@ -38,6 +39,7 @@ interface Props {
   title?: string;
   hoverable?: boolean;
   bordered?: boolean;
+  glass?: boolean;
   contentStyle?: string | CSSProperties;
 }
 
@@ -45,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   hoverable: false,
   bordered: true,
+  glass: false,
 });
 
 const customStyle = computed(() => {
@@ -60,21 +63,29 @@ const customStyle = computed(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 
   &--bordered {
     border: 1px solid var(--border-color);
   }
 
+  &--glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
+  }
+
   &--hoverable {
     &:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(0, 0, 0, 0.05);
     }
   }
 
   &__header {
-    padding: 16px;
+    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -88,8 +99,9 @@ const customStyle = computed(() => {
 
   &__title {
     margin: 0;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
@@ -98,14 +110,14 @@ const customStyle = computed(() => {
 
   &__body {
     flex: 1;
-    padding: 16px;
+    padding: 24px;
     color: var(--text-primary);
   }
 
   &__footer {
-    padding: 12px 16px;
+    padding: 16px 24px;
     border-top: 1px solid var(--border-color);
-    background-color: var(--bg-body); // Slightly different bg for footer
+    background-color: rgba(0, 0, 0, 0.01); 
   }
 }
 </style>

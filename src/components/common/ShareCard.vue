@@ -246,103 +246,103 @@ const handleDownloadCard = async () => {
   width: 100%;
   background: #ffffff;
   border-radius: 12px;
-  padding: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.04);
   
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+  }
   
   .card-date-tag {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 28px;
     z-index: 1;
     position: relative;
     
     .date-dot {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: linear-gradient(45deg, #f4d03f, #f39c12);
-      box-shadow: 0 2px 4px rgba(244, 208, 63, 0.3);
+      background: var(--color-brand);
+      box-shadow: 0 0 8px rgba(244, 208, 63, 0.4);
     }
     
     span {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
     }
   }
   
   .card-quote-section {
     position: relative;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
     z-index: 1;
     
     .quote-mark {
-      font-size: 48px;
-      color: rgba(244, 208, 63, 0.6);
+      font-size: 64px;
+      font-family: serif;
+      color: var(--color-brand);
       line-height: 1;
       position: absolute;
+      opacity: 0.3;
       
       &:first-child {
-        top: -8px;
-        left: -8px;
+        top: -24px;
+        left: -12px;
       }
       
       &.quote-mark-end {
-        bottom: -16px;
-        right: -8px;
+        bottom: -32px;
+        right: -12px;
         transform: rotate(180deg);
       }
     }
     
     .card-quote {
-      font-size: 18px;
-      line-height: 1.6;
-      font-weight: 500;
+      font-size: 20px;
+      line-height: 1.7;
+      font-weight: 600;
       text-align: center;
-      padding: 16px 24px;
+      padding: 0 12px;
       position: relative;
+      color: var(--text-primary);
     }
   }
   
   .card-wallpaper {
-    height: 200px;
-    margin-bottom: 20px;
+    height: 220px;
+    margin-bottom: 24px;
     z-index: 1;
     position: relative;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      pointer-events: none;
-      opacity: 0.5;
-    }
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border: 4px solid #fff;
     
     .wallpaper-image {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
-      filter: saturate(0.95) brightness(0.98);
+      filter: saturate(1.05) contrast(1.02);
     }
     
     .wallpaper-placeholder {
@@ -368,22 +368,25 @@ const handleDownloadCard = async () => {
   .card-footer {
     z-index: 1;
     position: relative;
+    margin-top: auto;
     
     .watermark-section {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
+      opacity: 0.8;
       
       .watermark-icon {
         font-size: 14px;
-        opacity: 0.7;
+        color: var(--color-brand);
       }
       
       .card-watermark {
         font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
       }
     }
   }

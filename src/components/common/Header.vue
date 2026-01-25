@@ -55,58 +55,74 @@ const goHome = () => {
 
 <style scoped lang="scss">
 .header {
-  background: rgba(251, 247, 241, 0.7);
-  backdrop-filter: blur(18px);
+  background: rgba(251, 247, 241, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--color-morandi-line);
-  box-shadow: var(--shadow-sm);
-  padding: 16px 24px;
+  padding: 14px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: all var(--transition-normal);
+  animation: slide-down 0.8s cubic-bezier(0.23, 1, 0.32, 1);
   
   .header-actions {
     display: flex;
     align-items: center;
     gap: 16px;
     
-    .download-button {
+    .xhs-button {
       font-weight: 600;
+      opacity: 0.85;
+      &:hover { opacity: 1; }
+    }
+
+    .download-button {
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(244, 208, 63, 0.25);
     }
   }
   
   .title-container {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     
     .title-content {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
       
       .main-title {
-        font-size: 24px;
-        font-weight: 800;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
         margin: 0;
         font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
         color: var(--color-morandi-ink);
-        line-height: 1.2;
+        line-height: 1.1;
       }
       
       .subtitle {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--color-morandi-ink-muted);
         margin: 0;
-        font-style: italic;
-        opacity: 0.9;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-weight: 500;
+        opacity: 0.7;
         line-height: 1;
-        font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
       }
     }
   }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* 平板与小屏（<= 768px）适配 */

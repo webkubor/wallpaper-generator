@@ -35,6 +35,8 @@
       v-model:show="showShareCard"
       :wallpaper-image="currentWallpaperImage"
     />
+    <!-- 噪点纹理层 -->
+    <div class="noise-overlay"></div>
   </div>
 </template>
 <script setup lang="ts">
