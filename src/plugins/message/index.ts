@@ -2,6 +2,26 @@ import type { App } from 'vue';
 import { createApp } from 'vue';
 import { messageState, message } from './state';
 import Message from './Message.vue';
+import { playSound } from '@/composables/useSound';
+
+// Hook into message.success/error/warning
+const originalSuccess = message.success;
+message.success = (msg: string, duration?: number) => {
+  playSound('success');
+  return originalSuccess(msg, duration);
+};
+
+const originalError = message.error;
+message.error = (msg: string, duration?: number) => {
+  playSound('warning');
+  return originalError(msg, duration);
+};
+
+const originalWarning = message.warning;
+message.warning = (msg: string, duration?: number) => {
+  playSound('warning');
+  return originalWarning(msg, duration);
+};
 
 // 声明全局属性类型扩展
 declare module 'vue' {

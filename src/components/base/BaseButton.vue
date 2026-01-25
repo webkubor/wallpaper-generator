@@ -11,6 +11,7 @@
     ]"
     :disabled="disabled || loading"
     v-bind="$attrs"
+    @click="handleClick"
   >
     <!-- Loading Spinner -->
     <svg v-if="loading" class="base-btn__spinner" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,9 +32,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useSound } from '@/composables/useSound';
+
+const { play } = useSound();
 
 interface Props {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'text';
   size?: 'sm' | 'md' | 'lg';
   block?: boolean;
   circle?: boolean;
@@ -49,6 +53,12 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   loading: false
 });
+
+const handleClick = () => {
+  if (!props.disabled && !props.loading) {
+    play('click');
+  }
+};
 </script>
 
 <style scoped lang="scss">

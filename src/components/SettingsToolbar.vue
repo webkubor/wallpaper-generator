@@ -482,16 +482,31 @@ const handleLoadTemplate = (template: any) => {
 .upload-btn-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-primary);
+  font-weight: 500;
+  
+  &:hover {
+    background-color: rgba(244, 208, 63, 0.05);
+    border-color: var(--color-brand);
+    color: var(--color-brand-active);
+  }
 }
 
 :deep(.full-width-uploader) {
   width: 100%;
   flex: 1;
-  button {
-    width: 100%;
-  }
+  /* Remove base button styles if we are styling the content directly, 
+     BUT FileUploader uses a slot inside a div.
+     The click event is on the wrapper div in FileUploader.
+     So this inner div styling is purely visual. */
 }
 
 .empty-state {
