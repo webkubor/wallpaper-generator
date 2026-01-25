@@ -79,7 +79,7 @@
 
         <!-- 水印 -->
         <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle" @mousedown="watermarkDragHandler.onMouseDown">
-          <img v-if="watermarkImageUrl" :src="(watermarkImageUrl as string)" class="watermark-image" />
+          <img v-if="watermarkSettings.imageUrl" :src="watermarkSettings.imageUrl" class="watermark-image" />
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>
@@ -247,7 +247,6 @@ import MobileBottomSheet from './common/MobileBottomSheet.vue';
 
 const { 
   imageUrl, 
-  watermarkImageUrl,
   watermarkSettings,
   titleSettings,
   previewSettings,

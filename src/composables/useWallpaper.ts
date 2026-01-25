@@ -122,7 +122,6 @@ export const defaultBackgroundSettings: BackgroundSettings = {
 
 // Shared state
 const imageUrl = ref<string | null>(demoWallpaper);
-const watermarkImageUrl = ref<string | null>(null);
 const watermarkSettings = ref<WatermarkSettings>({...defaultWatermarkSettings});
 export const defaultTitleSettings: TitleSettings = {
   show: false,
@@ -320,7 +319,6 @@ export const useWallpaper = () => {
 
   return {
     imageUrl,
-    watermarkImageUrl,
     watermarkSettings,
     previewSettings,
     backgroundSettings,
