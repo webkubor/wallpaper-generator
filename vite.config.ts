@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path';
@@ -65,27 +64,13 @@ export default defineConfig({
     }
   }), AutoImport({
     imports: [
-      'vue',
-      {
-        'naive-ui': [
-          'useDialog',
-          'useMessage',
-          'useNotification',
-          'useLoadingBar'
-        ]
-      }
+      'vue'
     ],
     dts: 'src/types/auto-imports.d.ts'
   }),
   Components({
-    resolvers: [NaiveUiResolver()],
+    resolvers: [],
     dts: 'src/types/components.d.ts'
   })],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "@/styles/global.scss" as *;`
-      }
-    }
-  },
+  // 移除了 additionalData，避免重复注入全局样式
 })

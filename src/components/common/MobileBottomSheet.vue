@@ -71,7 +71,7 @@ onBeforeUnmount(() => toggleBodyScroll(false))
   right: 0;
   bottom: 0;
   z-index: 2001;
-  background: var(--n-card-color, #fff);
+  background: var(--bg-card, #fff);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   box-shadow: 0 -8px 24px rgba(0,0,0,0.12);
@@ -85,7 +85,7 @@ onBeforeUnmount(() => toggleBodyScroll(false))
   width: 36px;
   height: 4px;
   border-radius: 999px;
-  background: var(--n-border-color, rgba(0,0,0,0.12));
+  background: var(--border-color, rgba(0,0,0,0.12));
   margin: 8px auto 4px;
 }
 
@@ -95,12 +95,13 @@ onBeforeUnmount(() => toggleBodyScroll(false))
   justify-content: space-between;
   gap: 8px;
   padding: 6px 12px 8px;
-  border-bottom: 1px solid var(--n-border-color, rgba(0,0,0,0.08));
+  border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.08));
 }
 
 .mbs-title {
   font-size: 14px;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .mbs-close {
@@ -110,6 +111,7 @@ onBeforeUnmount(() => toggleBodyScroll(false))
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
+  color: var(--text-secondary);
 }
 
 .mbs-body {
@@ -122,5 +124,5 @@ onBeforeUnmount(() => toggleBodyScroll(false))
 .mbs-fade-enter-from, .mbs-fade-leave-to { opacity: 0; }
 
 .mbs-slide-up-enter-active, .mbs-slide-up-leave-active { transition: transform .22s ease; }
-.mbs-slide-up-enter-from, .mbs-slide-up-leave-to { transform: translateY(10%); }
+.mbs-slide-up-enter-from, .mbs-slide-up-leave-to { transform: translateY(100%); }
 </style>

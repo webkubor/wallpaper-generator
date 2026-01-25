@@ -34,31 +34,28 @@
           </div>
 
           <div class="pwa-actions">
-            <n-button
+            <BaseButton
               v-if="activeView === 'update'"
-              type="primary"
-              class="pwa-primary"
+              variant="primary"
               @click="refresh"
             >
               立即更新
-            </n-button>
-            <n-button
+            </BaseButton>
+            <BaseButton
               v-if="activeView === 'install'"
-              type="primary"
-              class="pwa-primary"
+              variant="primary"
               @click="install"
             >
               安装到桌面
-            </n-button>
-            <n-button
+            </BaseButton>
+            <BaseButton
               v-if="activeView === 'ready'"
-              type="primary"
-              class="pwa-primary"
+              variant="primary"
               @click="close"
             >
               好的
-            </n-button>
-            <n-button secondary @click="close">稍后</n-button>
+            </BaseButton>
+            <BaseButton variant="secondary" @click="close">稍后</BaseButton>
           </div>
         </div>
       </div>
@@ -68,7 +65,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { NButton } from 'naive-ui'
+import BaseButton from './base/BaseButton.vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { fetchVersionInfo, selectUpdateReleases, type Release } from '@/utils/versioning'
 
@@ -222,8 +219,8 @@ watch(needRefresh, (needsUpdate) => {
   background: linear-gradient(160deg, rgba(251, 247, 241, 0.98), rgba(239, 231, 223, 0.98));
   border-radius: 24px 24px 16px 16px;
   padding: 18px 20px 20px;
-  box-shadow: 0 24px 64px rgba(63, 58, 54, 0.2);
-  border: 1px solid rgba(227, 219, 210, 0.9);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
 }
 
 .pwa-handle {
@@ -237,14 +234,14 @@ watch(needRefresh, (needsUpdate) => {
 .pwa-title {
   font-size: 18px;
   font-weight: 700;
-  color: var(--morandi-ink);
+  color: var(--color-morandi-ink);
   text-align: center;
 }
 
 .pwa-desc {
   margin-top: 8px;
   font-size: 14px;
-  color: var(--morandi-ink-muted);
+  color: var(--color-morandi-ink-muted);
   text-align: center;
   line-height: 1.6;
 }
@@ -255,7 +252,7 @@ watch(needRefresh, (needsUpdate) => {
   justify-content: center;
   gap: 12px;
   font-size: 12px;
-  color: var(--morandi-ink-muted);
+  color: var(--color-morandi-ink-muted);
 }
 
 .pwa-changelog {
@@ -263,7 +260,7 @@ watch(needRefresh, (needsUpdate) => {
   padding: 12px 14px;
   background: rgba(154, 167, 161, 0.12);
   border-radius: 14px;
-  color: var(--morandi-ink);
+  color: var(--color-morandi-ink);
 }
 
 .pwa-changelog-title {
@@ -285,14 +282,14 @@ watch(needRefresh, (needsUpdate) => {
 
 .pwa-release-date {
   font-weight: 400;
-  color: var(--morandi-ink-muted);
+  color: var(--color-morandi-ink-muted);
 }
 
 .pwa-release-list {
   margin: 6px 0 0;
   padding-left: 18px;
   font-size: 12px;
-  color: var(--morandi-ink-muted);
+  color: var(--color-morandi-ink-muted);
   line-height: 1.6;
 }
 
@@ -301,7 +298,7 @@ watch(needRefresh, (needsUpdate) => {
   padding: 12px 14px;
   background: rgba(154, 167, 161, 0.12);
   border-radius: 14px;
-  color: var(--morandi-ink);
+  color: var(--color-morandi-ink);
   font-size: 13px;
   line-height: 1.7;
 }
@@ -316,11 +313,6 @@ watch(needRefresh, (needsUpdate) => {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.pwa-primary {
-  background: var(--gradient-primary);
-  border: none;
 }
 
 .pwa-slide-enter-active,

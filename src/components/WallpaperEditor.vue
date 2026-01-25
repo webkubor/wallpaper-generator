@@ -4,8 +4,10 @@
     <SettingsToolbar 
       v-if="!isMobile"
       :background-settings="backgroundSettings"
-      v-model:custom-width="customWidth"
-      v-model:custom-height="customHeight"
+      :custom-width="customWidth"
+      :custom-height="customHeight"
+      @update:custom-width="(val) => customWidth = val"
+      @update:custom-height="(val) => customHeight = val"
       @reset-config="handleResetConfig"
       @image-upload="handleImageUpload"
       @confirm-custom-size="confirmCustomSize"
@@ -44,9 +46,8 @@
             :imageUrl="imageUrl || ''"
           />
           
-          
           <!-- Cropper Modal -->
-          <n-modal v-model:show="showCropperModal" preset="card" style="width: 80vw; height: 80vh;" title="裁剪图片">
+          <BaseModal :show="showCropperModal" @update:show="showCropperModal = $event" title="裁剪图片" width="80vw">
             <div class="cropper-container">
               <VueCropper
                 ref="cropperRef"
@@ -62,12 +63,10 @@
               />
             </div>
             <template #footer>
-              <n-space justify="end">
-                <n-button @click="showCropperModal = false">取消</n-button>
-                <n-button type="primary" color="#f4d03f" @click="confirmCrop">确认</n-button>
-              </n-space>
+              <BaseButton variant="secondary" @click="showCropperModal = false">取消</BaseButton>
+              <BaseButton variant="primary" @click="confirmCrop">确认</BaseButton>
             </template>
-          </n-modal>
+          </BaseModal>
         </div>
 
         <!-- 标题 -->
@@ -92,102 +91,80 @@
 
     <!-- Mobile action bar and drawer -->
     <div v-if="isMobile" class="mobile-action-bar">
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('upload')">
-            <n-icon :component="UploadSimple" />
-          </n-button>
-        </template>
-        上传
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('preview')">
-            <n-icon :component="ImageSquare" />
-          </n-button>
-        </template>
-        预览/设备
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('title')">
-            <n-icon :component="TextT" />
-          </n-button>
-        </template>
-        标题
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('watermark')">
-            <n-icon :component="Droplets" />
-          </n-button>
-        </template>
-        水印
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('background')">
-            <n-icon :component="Gear" />
-          </n-button>
-        </template>
-        背景
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="openDrawer('templates')">
-            <n-icon :component="BookmarkSimple" />
-          </n-button>
-        </template>
-        收藏
-      </n-tooltip>
-      <n-tooltip placement="top" trigger="hover">
-        <template #trigger>
-          <n-button quaternary circle @click="handleResetConfig">
-            <n-icon :component="ArrowCounterClockwise" />
-          </n-button>
-        </template>
-        重置
-      </n-tooltip>
+      <BaseButton circle variant="secondary" @click="openDrawer('upload')" title="上传">
+        <template #icon><UploadSimple :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="openDrawer('preview')" title="预览/设备">
+        <template #icon><ImageSquare :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="openDrawer('title')" title="标题">
+        <template #icon><TextT :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="openDrawer('watermark')" title="水印">
+        <template #icon><Droplets :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="openDrawer('background')" title="背景">
+        <template #icon><Gear :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="openDrawer('templates')" title="收藏">
+        <template #icon><BookmarkSimple :size="20" /></template>
+      </BaseButton>
+      <BaseButton circle variant="secondary" @click="handleResetConfig" title="重置">
+        <template #icon><ArrowCounterClockwise :size="20" /></template>
+      </BaseButton>
     </div>
 
     <MobileBottomSheet v-if="isMobile" v-model:show="mobileDrawerShow" :title="mobileDrawerTitle">
       <div class="mobile-drawer-body compact">
           <!-- 上传 -->
           <template v-if="mobileActivePanel === 'upload'">
-            <n-upload :custom-request="() => {}" :show-file-list="false" @change="({ file }) => handleImageUpload(file)">
-              <n-button size="small" block>
-                <template #icon>
-                  <n-icon :component="UploadSimple" />
+            <div class="form-item">
+              <FileUploader :show-file-list="false" @select="handleFileSelectForUpload" class="full-width-uploader">
+                <template #default>
+                  <div class="upload-btn-content">
+                    <UploadSimple :size="16" />
+                    <span>选择图片</span>
+                  </div>
                 </template>
-                选择图片
-              </n-button>
-            </n-upload>
+              </FileUploader>
+            </div>
           </template>
 
           <!-- 预览/设备 -->
           <template v-else-if="mobileActivePanel === 'preview'">
-            <n-form-item label="设备" size="small">
-              <n-select size="small" :value="previewSettings.selectedDevice" @update:value="(val) => previewSettings.selectedDevice = val" :options="deviceOptions" />
-            </n-form-item>
-            <n-form-item v-if="previewSettings.selectedDevice === 'iphone'" label="刘海 (iOS)" size="small">
-              <n-switch size="small" :value="previewSettings.hasNotch" @update:value="(val) => previewSettings.hasNotch = val" />
-            </n-form-item>
+            <div class="form-item">
+              <label class="form-label">设备</label>
+              <div class="select-wrapper">
+                <select v-model="previewSettings.selectedDevice" class="base-select">
+                  <option v-for="opt in deviceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
+            </div>
+            
+            <div v-if="previewSettings.selectedDevice === 'iphone'" class="form-item">
+              <label class="form-label">刘海 (iOS)</label>
+              <BaseSwitch :model-value="previewSettings.hasNotch" @update:model-value="(val) => previewSettings.hasNotch = val" />
+            </div>
+            
             <div v-if="previewSettings.selectedDevice === 'custom'" class="custom-size-inputs">
-              <n-form-item label="宽度" size="small">
-                <n-input-number size="small" v-model:value="customWidth" :min="100" :max="3000" placeholder="宽度" />
-              </n-form-item>
-              <n-form-item label="高度" size="small">
-                <n-input-number size="small" v-model:value="customHeight" :min="100" :max="3000" placeholder="高度" />
-              </n-form-item>
-              <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
+              <div class="form-item">
+                <label class="form-label">宽度</label>
+                <BaseInput type="number" v-model="customWidth" :min="100" :max="3000" placeholder="宽度" />
+              </div>
+              <div class="form-item">
+                <label class="form-label">高度</label>
+                <BaseInput type="number" v-model="customHeight" :min="100" :max="3000" placeholder="高度" />
+              </div>
+              <BaseButton variant="primary" size="sm" @click="confirmCustomSize">确定</BaseButton>
             </div>
           </template>
 
           <!-- 标题设置 -->
           <template v-else-if="mobileActivePanel === 'title'">
-            <n-form-item label="显示标题" size="small">
-              <n-switch size="small" :value="titleSettings.show" @update:value="(val) => titleSettings.show = val" />
-            </n-form-item>
+            <div class="form-item">
+              <label class="form-label">显示标题</label>
+              <BaseSwitch :model-value="titleSettings.show" @update:model-value="(val) => titleSettings.show = val" />
+            </div>
             <TitleSettings v-if="titleSettings.show" />
           </template>
 
@@ -212,7 +189,6 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, type CSSProperties } from 'vue';
-// 尺寸与移动端判定从自定义 hooks 获取
 import { useMobile } from '@/hooks/useMobile';
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
@@ -220,20 +196,12 @@ import { useWallpaper } from '@/composables/useWallpaper';
 import { createDragHandler } from '../utils/dragUtils';
 import { type Template } from '../utils/indexedDB';
 
-import { 
-  NModal,
-  NButton,
-  NTooltip,
-  NIcon,
-  NUpload,
-  NFormItem,
-  NSelect,
-  NSwitch,
-  NInputNumber,
-  NSpace
-} from 'naive-ui';
+import BaseModal from './base/BaseModal.vue';
+import BaseButton from './base/BaseButton.vue';
+import BaseSwitch from './base/BaseSwitch.vue';
+import BaseInput from './base/BaseInput.vue';
+import FileUploader from './common/FileUploader.vue';
 
-// 设备框架组件
 import PhoneFrame from './iphone/PhoneFrame.vue';
 import TabletFrame from './ipad/TabletFrame.vue';
 import MacFrame from './mac/MacFrame.vue';
@@ -245,7 +213,7 @@ import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
 import PersonalTemplates from './PersonalTemplates.vue';
-import type { UploadFileInfo } from 'naive-ui';
+import type { UploadFileInfo } from 'naive-ui'; // Used only for type if needed, better replace
 import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise, PhEye as Eye, PhEyeSlash as EyeSlash } from '@phosphor-icons/vue';
 import MobileBottomSheet from './common/MobileBottomSheet.vue';
 
@@ -276,13 +244,12 @@ const previewAreaSize = ref({ width: 0, height: 0 });
 const previewCanvasRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 const watermarkRef = ref<HTMLElement | null>(null);
-// 下载状态已移至App.vue
 
-// 计算预览缩放比例，确保设备完整显示且不压扁
+// 计算预览缩放比例
 const previewScale = computed(() => {
   if (!previewAreaSize.value.width || !previewAreaSize.value.height) return 1;
   
-  const padding = 60; // 预览区域留白
+  const padding = 60;
   const availableWidth = previewAreaSize.value.width - padding;
   const availableHeight = previewAreaSize.value.height - padding;
   
@@ -292,7 +259,7 @@ const previewScale = computed(() => {
   const scaleX = availableWidth / deviceWidth;
   const scaleY = availableHeight / deviceHeight;
   
-  return Math.min(scaleX, scaleY, 1); // 最大缩放比例为 1
+  return Math.min(scaleX, scaleY, 1);
 });
 
 const updatePreviewSize = () => {
@@ -374,7 +341,7 @@ const showCropperModal = ref(false);
 const cropperSource = ref('');
 const cropperRef = ref<any>(null);
 
-// 小屏判断与移动端抽屉开关（统一从 hooks 提供）
+// 小屏判断与移动端抽屉开关
 const { isMobile, mobileDrawerShow } = useMobile();
 
 // 移动端抽屉
@@ -393,7 +360,6 @@ const mobileDrawerTitle = computed(() => {
 });
 
 const openDrawer = (panel: MobilePanel) => {
-  // 桌面端不打开移动端弹窗
   if (!isMobile.value) return;
   mobileActivePanel.value = panel;
   mobileDrawerShow.value = true;
@@ -403,7 +369,6 @@ const openDrawer = (panel: MobilePanel) => {
 // 确认自定义尺寸
 const confirmCustomSize = () => {
   if (previewSettings.value.selectedDevice === 'custom') {
-    // 找到自定义尺寸设备并更新其尺寸
     const customDeviceIndex = previewSettings.value.devices.findIndex((device: any) => device.id === 'custom');
     if (customDeviceIndex !== -1) {
       previewSettings.value.devices[customDeviceIndex].width = customWidth.value;
@@ -412,8 +377,17 @@ const confirmCustomSize = () => {
   }
 };
 
-const handleImageUpload = async (file: UploadFileInfo) => {
-  const actualFile = file.file;
+const handleImageUpload = (file: UploadFileInfo) => {
+  // Desktop upload
+  if (file.file) processFile(file.file);
+};
+
+const handleFileSelectForUpload = (info: { file: File, url: string }) => {
+  // Mobile upload
+  processFile(info.file);
+}
+
+const processFile = async (actualFile: File) => {
   if (actualFile && actualFile.type.startsWith('image/')) {
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -421,16 +395,13 @@ const handleImageUpload = async (file: UploadFileInfo) => {
       img.src = e.target?.result as string;
       await img.decode();
       
-      // 计算图片和设备比例是否一致
       const imgAspect = img.width / img.height;
       const deviceAspect = currentDevice.value.width / currentDevice.value.height;
       
       if (Math.abs(imgAspect - deviceAspect) < 0.01) {
-        // 比例一致，直接使用图片
         imageUrl.value = img.src;
         window.$message.success('图片已自动适配设备尺寸');
       } else {
-        // 比例不一致，显示裁剪界面
         cropperSource.value = img.src;
         showCropperModal.value = true;
       }
@@ -450,17 +421,17 @@ const confirmCrop = () => {
 };
 
 
-// 水印样式 - 字体、颜色等基本样式
+// 水印样式
 const watermarkStyle = computed(() => ({
   fontFamily: watermarkSettings.value.fontFamily,
   fontSize: `${watermarkSettings.value.fontSize}px`,
   color: watermarkSettings.value.color,
-  opacity: Math.min(watermarkSettings.value.opacity + 0.2, 1), // 增加基础透明度
+  opacity: Math.min(watermarkSettings.value.opacity + 0.2, 1),
   fontWeight: 800,
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.5)', // 增强文字阴影效果
-  letterSpacing: '1px', // 增加字间距
-  textStroke: '1px rgba(0, 0, 0, 0.3)', // 添加文字描边
-  WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)', // 兼容 Webkit 浏览器
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.6), 0 0 8px rgba(255, 255, 255, 0.5)',
+  letterSpacing: '1px',
+  textStroke: '1px rgba(0, 0, 0, 0.3)',
+  WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)',
 }));
 
 
@@ -502,7 +473,6 @@ const loadTemplate = (template: Template) => {
     Object.assign(watermarkSettings.value, template.config.watermarkSettings);
     Object.assign(titleSettings.value, template.config.titleSettings);
     Object.assign(previewSettings.value, template.config.previewSettings);
-    // 仅应用字体颜色，避免影响 PC 端背景设置
     if (template.config.backgroundSettings?.fontColor) {
       backgroundSettings.value.fontColor = template.config.backgroundSettings.fontColor;
     }
@@ -534,7 +504,7 @@ const handleResetConfig = async () => {
   flex-direction: row;
   gap: 20px;
   width: 100%;
-  height: calc(100vh - 150px); /* 减去头部(64px)和底部(40px)的高度以及一些间距 */
+  height: calc(100vh - 150px);
   padding: 10px;
   box-sizing: border-box;
   margin: 0 auto;
@@ -547,14 +517,14 @@ const handleResetConfig = async () => {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--border-radius-lg);
   padding: 20px;
   transition: all 0.3s ease;
   z-index: 1;
-  background: var(--n-body-color);
+  background: var(--bg-body);
   width: 100%;
   height: 100%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .preview-controls {
@@ -570,7 +540,7 @@ const handleResetConfig = async () => {
   border-radius: 8px;
   
   &.preview-mode {
-    border-color: #f4d03f;
+    border-color: var(--color-brand);
     animation: border-blink 1.5s infinite;
     box-shadow: 0 0 20px rgba(244, 208, 63, 0.3);
   }
@@ -589,14 +559,14 @@ const handleResetConfig = async () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(10px) brightness(0.8); /* 降低模糊度，提高亮度 */
+  filter: blur(10px) brightness(0.8);
   transform: scale(1.1);
   z-index: 0;
 }
 
 .cropper-container {
   width: 100%;
-  height: 100%;
+  height: 60vh;
 }
 
 .preview-canvas {
@@ -608,28 +578,28 @@ const handleResetConfig = async () => {
   max-height: 100%;
   z-index: 1;
   transform-origin: center center;
-  background-color: transparent; /* 确保背景透明 */
+  background-color: transparent;
 }
 
 .draggable {
   cursor: move;
-  touch-action: none; /* 禁用触摸滚动，优化拖拽体验 */
+  touch-action: none;
 }
 
 .watermark {
   position: absolute;
   display: flex;
   flex-direction: column;
-  z-index: 100; /* 增加z-index确保水印层级高于其他元素 */
+  z-index: 100;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  animation: pulse 2s infinite ease-in-out; /* 添加脉冲动画效果 */
+  animation: pulse 2s infinite ease-in-out;
 }
 
 .title-display {
   transition: all 0.3s ease;
-  z-index: 100; /* 增加z-index与水印层级一致 */
+  z-index: 100;
 }
 
 .title-display[style*="vertical-rl"] {
@@ -637,15 +607,9 @@ const handleResetConfig = async () => {
 }
 
 @keyframes pulse {
-  0% {
-    opacity: 0.9;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.9;
-  }
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
 }
 
 .watermark-image {
@@ -678,14 +642,14 @@ const handleResetConfig = async () => {
   left: 50%;
   transform: translateX(-50%);
   bottom: 16px;
-  background: var(--n-card-color);
-  border: 1px solid var(--n-border-color);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 999px;
   padding: 6px 8px;
   display: flex;
   gap: 6px;
   z-index: 2000;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 /* 拖拽状态样式 */
@@ -702,32 +666,70 @@ const handleResetConfig = async () => {
 
 /* 移动端抽屉紧凑样式 */
 .mobile-drawer-body.compact {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* 缩小表单项的垂直间距 */
-:deep(.n-form-item) {
-  margin-bottom: 8px;
-}
-
-/* 缩小 label 字号与内边距 */
-:deep(.n-form-item .n-form-item-label) {
-  font-size: 12px;
-  padding-bottom: 4px;
-}
-
-/* 选择器与数字输入宽度拉满 */
-:deep(.n-select),
-:deep(.n-input-number) {
+/* Common form styles for mobile */
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 100%;
 }
 
-/* 自定义尺寸区域布局更紧凑 */
+.form-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.select-wrapper {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--text-secondary);
+    pointer-events: none;
+  }
+}
+.base-select {
+  width: 100%;
+  appearance: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.03);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-sm);
+  outline: none;
+  cursor: pointer;
+  &:focus { background-color: #fff; border-color: var(--color-brand); }
+}
+
 .custom-size-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
   gap: 8px;
+  align-items: flex-end;
+}
+
+.upload-btn-content {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+:deep(.full-width-uploader) {
+  width: 100%;
+  .n-button, button {
+    width: 100%; 
+  }
 }
 </style>

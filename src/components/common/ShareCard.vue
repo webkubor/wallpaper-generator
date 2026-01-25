@@ -1,99 +1,98 @@
 <template>
-  <n-modal 
+  <BaseModal 
     :show="show" 
     @update:show="handleUpdateShow" 
+    width="420px"
+    :body-style="{ padding: 0 }"
     :mask-closable="false"
-    :close-on-esc="false"
-    class="share-modal"
   >
-    <div class="modal-container">
-      <!-- 自定义头部 -->
-      <div class="modal-header">
-        <div class="header-title">
-          <div class="title-icon">✨</div>
-          <span>分享卡片</span>
-        </div>
-        <button class="close-btn" @click="handleClose">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
+    <!-- 自定义头部 -->
+    <div class="modal-header">
+      <div class="header-title">
+        <div class="title-icon">✨</div>
+        <span>分享卡片</span>
       </div>
+      <button class="close-btn" @click="handleClose">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
 
-      <!-- 卡片内容 -->
-      <div class="modal-content" >
-        <div class="share-card" ref="shareCardRef" :class="`template-${currentTemplate}`" :style="{ backgroundColor: selectedColor, fontFamily: currentFont.value, color: textColor }">
-          <!-- 日期标签 -->
-          <div class="card-date-tag">
-            <div class="date-dot"></div>
-            <span>{{ currentDate }}</span>
-          </div>
-          
-          <!-- 文案区域 -->
-          <div class="card-quote-section">
-            <div class="quote-mark">"</div>
-            <div class="card-quote">{{ currentQuote }}</div>
-            <div class="quote-mark quote-mark-end">"</div>
-          </div>
-          
-          <!-- 壁纸展示区 -->
-          <div class="card-wallpaper">
-            <img v-if="wallpaperImage" :src="wallpaperImage" alt="壁纸" class="wallpaper-image" />
-            <div v-else class="wallpaper-placeholder">
-              <div class="placeholder-icon">🖼️</div>
-              <div class="placeholder-text">壁纸预览</div>
-            </div>
-          </div>
-          
-          <!-- 水印区域 -->
-          <div class="card-footer">
-            <div class="watermark-section">
-              <div class="watermark-icon">⚡</div>
-              <div class="card-watermark">{{ watermarkSettings.text || '氛围壁纸工坊' }}</div>
-            </div>
+    <!-- 卡片内容 -->
+    <div class="modal-content" >
+      <div class="share-card" ref="shareCardRef" :class="`template-${currentTemplate}`" :style="{ backgroundColor: selectedColor, fontFamily: currentFont.value, color: textColor }">
+        <!-- 日期标签 -->
+        <div class="card-date-tag">
+          <div class="date-dot"></div>
+          <span>{{ currentDate }}</span>
+        </div>
+        
+        <!-- 文案区域 -->
+        <div class="card-quote-section">
+          <div class="quote-mark">"</div>
+          <div class="card-quote">{{ currentQuote }}</div>
+          <div class="quote-mark quote-mark-end">"</div>
+        </div>
+        
+        <!-- 壁纸展示区 -->
+        <div class="card-wallpaper">
+          <img v-if="wallpaperImage" :src="wallpaperImage" alt="壁纸" class="wallpaper-image" />
+          <div v-else class="wallpaper-placeholder">
+            <div class="placeholder-icon">🖼️</div>
+            <div class="placeholder-text">壁纸预览</div>
           </div>
         </div>
-      </div>
-
-      <!-- 颜色选择 -->
-      <div class="card-controls">
-        <div class="color-palette">
-          <div class="color-options">
-            <button 
-              v-for="color in cardColors" 
-              :key="color"
-              class="color-btn"
-              :class="{ active: selectedColor === color }"
-              :style="{ backgroundColor: color }"
-              @click="selectedColor = color"
-            ></button>
+        
+        <!-- 水印区域 -->
+        <div class="card-footer">
+          <div class="watermark-section">
+            <div class="watermark-icon">⚡</div>
+            <div class="card-watermark">{{ watermarkSettings.text || '氛围壁纸工坊' }}</div>
           </div>
         </div>
-      </div>
-
-      <!-- 自定义底部 -->
-      <div class="modal-footer">
-        <n-space justify="end" :size="12">
-          <n-button circle secondary @click="refreshCard">
-            <template #icon>
-              <PhArrowsClockwise color="#f4d03f" />
-            </template>
-          </n-button>
-          <n-button color="#f4d03f" dashed @click="handleDownloadCard">
-            <template #icon>
-              <PhDownload />
-            </template>
-            下载卡片
-          </n-button>
-        </n-space>
       </div>
     </div>
-  </n-modal>
+
+    <!-- 颜色选择 -->
+    <div class="card-controls">
+      <div class="color-palette">
+        <div class="color-options">
+          <button 
+            v-for="color in cardColors" 
+            :key="color"
+            class="color-btn"
+            :class="{ active: selectedColor === color }"
+            :style="{ backgroundColor: color }"
+            @click="selectedColor = color"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自定义底部 -->
+    <div class="modal-footer">
+      <div class="footer-actions">
+        <BaseButton circle variant="secondary" @click="refreshCard" title="换一换">
+          <template #icon>
+            <PhArrowsClockwise color="#f4d03f" :size="20" weight="bold" />
+          </template>
+        </BaseButton>
+        <BaseButton variant="primary" @click="handleDownloadCard">
+          <template #icon>
+            <PhDownload :size="18" weight="bold" />
+          </template>
+          下载卡片
+        </BaseButton>
+      </div>
+    </div>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { NModal, NButton, NSpace } from 'naive-ui';
+import BaseModal from '../base/BaseModal.vue';
+import BaseButton from '../base/BaseButton.vue';
 import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
 import { formatNow, formatFileTimestamp } from '@/utils/time';
 import domtoimage from 'dom-to-image-more';
@@ -195,32 +194,13 @@ const handleDownloadCard = async () => {
 </script>
 
 <style scoped lang="scss">
-.share-modal {
-  :deep(.n-modal) {
-    padding: 0;
-  }
-}
-
-.modal-container {
-  width: 420px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(20px);
-  overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-}
-
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  background: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
   
   .header-title {
     display: flex;
@@ -228,7 +208,7 @@ const handleDownloadCard = async () => {
     gap: 8px;
     font-size: 16px;
     font-weight: 500;
-    color: #333;
+    color: var(--text-primary);
     
     .title-icon {
       font-size: 16px;
@@ -245,12 +225,12 @@ const handleDownloadCard = async () => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #999;
+    color: var(--text-secondary);
     transition: all 0.15s ease;
     
     &:hover {
       background: rgba(0, 0, 0, 0.04);
-      color: #666;
+      color: var(--text-primary);
     }
   }
 }
@@ -259,7 +239,7 @@ const handleDownloadCard = async () => {
   padding: 24px;
   display: flex;
   justify-content: center;
-  background: #ffffff;
+  background: var(--bg-card);
 }
 
 .share-card {
@@ -270,9 +250,7 @@ const handleDownloadCard = async () => {
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.06),
-    0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.04);
   
@@ -343,9 +321,7 @@ const handleDownloadCard = async () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 
-      inset 0 1px 2px rgba(0, 0, 0, 0.03),
-      0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-sm);
     border: 1px solid rgba(0, 0, 0, 0.04);
     
     &::before {
@@ -415,14 +391,21 @@ const handleDownloadCard = async () => {
 
 .modal-footer {
   padding: 16px 24px 20px;
-  background: #ffffff;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  
+  .footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+  }
 }
 
 .card-controls {
   padding: 16px 24px;
-  background: #fafbfc;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: var(--color-morandi-surface);
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -430,13 +413,13 @@ const handleDownloadCard = async () => {
   .color-palette {
     flex: 1;
     overflow: hidden;
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 12px 16px;
     box-shadow: 
       0 2px 8px rgba(0, 0, 0, 0.04),
       inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
     
     .color-options {
       display: flex;
@@ -476,11 +459,6 @@ const handleDownloadCard = async () => {
       }
     }
   }
-  
-  :deep(.n-button.n-button--circle) {
-    margin-left: 16px;
-    flex-shrink: 0;
-  }
 }
 
 @keyframes spin {
@@ -491,7 +469,7 @@ const handleDownloadCard = async () => {
 // 模板2样式 - 极简线条设计
 .share-card.template-2 {
   border: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-lg);
   
   .card-date-tag {
     border-bottom: 1px solid #eee;
@@ -581,7 +559,7 @@ const handleDownloadCard = async () => {
 .share-card.template-3 {
   background: #fefefe;
   border: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
   padding: 32px;
   
   .card-date-tag {

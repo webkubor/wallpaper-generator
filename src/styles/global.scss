@@ -11,8 +11,8 @@ html, body {
   width: 100%;
   font-family: 'AlimamaFangYuanTiVF-Thin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   transition: background-color 0.3s ease;
-  background-color: var(--morandi-paper);
-  color: var(--morandi-ink);
+  background-color: var(--bg-body);
+  color: var(--text-primary);
 }
 
 // 容器样式
@@ -25,7 +25,7 @@ html, body {
   flex-direction: column;
 }
 
-// 页面头部样式
+// 页面头部样式 - 迁移期间保留，虽然可能不再使用
 .wallpaper-generator__header {
   text-align: center;
   margin-bottom: 32px;
@@ -35,7 +35,7 @@ html, body {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 16px;
-    background: linear-gradient(45deg, var(--primary-color), var(--primary-color-hover));
+    background: linear-gradient(45deg, var(--color-brand), var(--color-brand-hover));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -43,7 +43,7 @@ html, body {
   
   p {
     font-size: 16px;
-    color: #666;
+    color: var(--text-secondary);
     max-width: 600px;
     margin: 0 auto;
   }
@@ -63,7 +63,7 @@ main {
   margin-top: auto;
   padding: 24px 0;
   text-align: center;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -84,17 +84,6 @@ main {
       font-size: 14px;
     }
   }
-}
-
-// General transitions for a smoother feel
-.n-card, .n-button {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-// Add a subtle lift effect on card hover
-.n-card[hoverable]:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--n-box-shadow-3) !important;
 }
 
 // Animation for content fade-in

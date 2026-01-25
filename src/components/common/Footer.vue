@@ -1,40 +1,32 @@
 <template>
-  <n-layout-footer class="footer">
+  <footer class="footer">
     <div class="footer-content">
       <div class="footer-left">
         <div class="creator-info">
-          <n-icon :component="Sparkles" class="creator-icon" />
+          <Sparkles class="creator-icon" :size="18" weight="fill" />
           <span class="creator-text">Created with ❤️ by <span class="highlight">webkubor(司南烛)</span></span>
         </div>
       </div>
       <div class="footer-right">
         <div class="social-links">
-          <n-tooltip trigger="hover">
-            <template #trigger>
-              <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
-                 target="_blank" 
-                 class="social-link xiaohongshu">
-                <n-icon :component="Heart" class="social-icon" />
-              </a>
-            </template>
-            访问我的小红书
-          </n-tooltip>
-          <n-tooltip trigger="hover">
-            <template #trigger>
-              <a href="mailto:webkubor@163.com" class="social-link email">
-                <n-icon :component="Envelope" class="social-icon" />
-              </a>
-            </template>
-            发送邮件联系
-          </n-tooltip>
+          <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
+             target="_blank" 
+             class="social-link xiaohongshu"
+             title="访问我的小红书">
+            <Heart class="social-icon" :size="18" weight="fill" />
+          </a>
+          <a href="mailto:webkubor@163.com" 
+             class="social-link email"
+             title="发送邮件联系">
+            <Envelope class="social-icon" :size="18" weight="fill" />
+          </a>
         </div>
       </div>
     </div>
-  </n-layout-footer>
+  </footer>
 </template>
 
 <script setup lang="ts">
-import { NLayoutFooter, NIcon, NTooltip } from 'naive-ui';
 import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from "@phosphor-icons/vue";
 </script>
 
@@ -43,7 +35,7 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
   padding: 16px 24px;
   background: rgba(251, 247, 241, 0.6);
   backdrop-filter: blur(18px);
-  border-top: 1px solid var(--morandi-line);
+  border-top: 1px solid var(--color-morandi-line);
   font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
   
   .footer-content {
@@ -61,14 +53,13 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
       gap: 8px;
       
       .creator-icon {
-        color: var(--morandi-sage);
-        font-size: 18px;
+        color: var(--color-morandi-sage);
         animation: sparkle 2s ease-in-out infinite;
       }
       
       .creator-text {
         font-size: 14px;
-        color: var(--morandi-ink);
+        color: var(--color-morandi-ink);
         opacity: 0.8;
         
         .highlight {
@@ -109,9 +100,7 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
         }
         
         .social-icon {
-          width: 18px;
-          height: 18px;
-          color: var(--n-text-color);
+          color: var(--text-primary);
           opacity: 0.8;
           transition: all 0.3s ease;
         }

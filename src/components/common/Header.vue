@@ -1,5 +1,5 @@
 <template>
-  <n-layout-header class="header">
+  <header class="header">
     <div class="title-container">
       <div class="title-content">
         <h1 class="main-title">✨ 氛围壁纸工坊</h1>
@@ -7,29 +7,29 @@
       </div>
     </div>
     <div class="header-actions" v-if="!hideActions">
-      <n-button tertiary class="xhs-button" @click="goXHS">
+      <BaseButton variant="secondary" class="xhs-button" @click="goXHS">
         小红书封面
-      </n-button>
-      <n-button type="primary" strong secondary class="download-button" @click="$emit('download')">
+      </BaseButton>
+      <BaseButton variant="primary" class="download-button" @click="$emit('download')">
         <template #icon>
-          <n-icon :component="Download" />
+          <Download :size="18" weight="bold" />
         </template>
         导出
-      </n-button>
+      </BaseButton>
     </div>
     <div class="header-actions" v-else>
-      <n-button type="primary" @click="$emit('downloadPoster')">
+      <BaseButton variant="primary" @click="$emit('downloadPoster')">
         下载大字报
-      </n-button>
-      <n-button secondary @click="goHome">
+      </BaseButton>
+      <BaseButton variant="secondary" @click="goHome">
         返回
-      </n-button>
+      </BaseButton>
     </div>
-  </n-layout-header>
+  </header>
 </template>
 
 <script setup lang="ts">
-import { NLayoutHeader, NButton, NIcon } from 'naive-ui';
+import BaseButton from '../base/BaseButton.vue';
 import { useRouter } from 'vue-router';
 import { PhDownload as Download } from "@phosphor-icons/vue";
 
@@ -57,12 +57,15 @@ const goHome = () => {
 .header {
   background: rgba(251, 247, 241, 0.7);
   backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--morandi-line);
-  box-shadow: 0 12px 32px rgba(72, 62, 54, 0.12);
+  border-bottom: 1px solid var(--color-morandi-line);
+  box-shadow: var(--shadow-sm);
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   
   .header-actions {
     display: flex;
@@ -70,28 +73,14 @@ const goHome = () => {
     gap: 16px;
     
     .download-button {
-      border-radius: 8px;
       font-weight: 600;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(154, 167, 161, 0.35);
-      }
     }
-    
   }
   
   .title-container {
     display: flex;
     align-items: center;
     gap: 12px;
-    
-    .logo {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-    }
     
     .title-content {
       display: flex;
@@ -103,13 +92,13 @@ const goHome = () => {
         font-weight: 800;
         margin: 0;
         font-family: 'AlimamaFangYuanTiVF-Thin', system-ui, sans-serif;
-        color: var(--morandi-ink);
+        color: var(--color-morandi-ink);
         line-height: 1.2;
       }
       
       .subtitle {
         font-size: 12px;
-        color: var(--morandi-ink-muted);
+        color: var(--color-morandi-ink-muted);
         margin: 0;
         font-style: italic;
         opacity: 0.9;
@@ -135,11 +124,6 @@ const goHome = () => {
       width: 100%;
       justify-content: flex-end;
       gap: 8px;
-
-      .n-button {
-        padding: 0 10px;
-        height: 32px;
-      }
     }
   }
 }
@@ -151,11 +135,7 @@ const goHome = () => {
 
     .header-actions {
       justify-content: space-between;
-      .download-button {
-        font-size: 12px;
-        padding: 0 8px;
-        height: 30px;
-      }
+      width: 100%;
     }
   }
 }

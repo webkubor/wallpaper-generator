@@ -1,40 +1,88 @@
-// 主题色变量
+// 核心设计系统变量 (Design Tokens)
 :root {
-  // Morandi palette
-  --morandi-ink: #3f3a36;
-  --morandi-ink-muted: #6f665c;
-  --morandi-paper: #f5f1ea;
-  --morandi-surface: #fbf7f1;
-  --morandi-line: #e3dbd2;
-  --morandi-sage: #9aa7a1;
-  --morandi-clay: #c4b2a3;
-  --morandi-fog: #9aa6ad;
-  --morandi-rose: #c6a29c;
+  /* =========================================
+     1. 基础色板 (Palette)
+     ========================================= */
+  
+  // 品牌色 (Brand) - 保持用户偏好的明亮黄
+  --color-brand: #f4d03f;
+  --color-brand-hover: #f7dc6f;
+  --color-brand-active: #d4b128;
+  --color-brand-text: #3f3a36; // 品牌色上的文本颜色
 
-  // Primary colors
-  --primary-color: var(--morandi-sage);
-  --primary-light: #b8c2bb;
-  --primary-dark: #7d8b84;
+  // 莫兰迪色系 (Morandi) - 用于背景与中性元素
+  --color-morandi-ink: #3f3a36;       // 主要文本
+  --color-morandi-ink-muted: #6f665c; // 次要文本
+  --color-morandi-paper: #f5f1ea;     // 全局背景
+  --color-morandi-surface: #fbf7f1;   // 卡片/浮层背景
+  --color-morandi-line: #e3dbd2;      // 边框
+  --color-morandi-sage: #9aa7a1;      // 辅助色
+  
+  // 功能色 (Functional)
+  --color-success: #4caf50;
+  --color-warning: #ff933b;
+  --color-error: #e91e63;
+  --color-info: #2196f3;
 
-  // Gradients
-  --gradient-primary: linear-gradient(135deg, #c7b5a5 0%, #9aa7a1 100%);
+  /* =========================================
+     2. 组件语义变量 (Component Semantics)
+     ========================================= */
+  
+  // 文本
+  --text-primary: var(--color-morandi-ink);
+  --text-secondary: var(--color-morandi-ink-muted);
+  --text-inverse: #ffffff;
+  
+  // 背景
+  --bg-body: var(--color-morandi-paper);
+  --bg-card: #ffffff; // 卡片通常用纯白或极淡色以突出
+  --bg-popover: #ffffff;
+  
+  // 边框
+  --border-color: var(--color-morandi-line);
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-full: 9999px;
+
+  // 阴影 (Elevation)
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.05);
+  
+  // 动效 (Motion)
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* =========================================
+     3. 布局 (Layout)
+     ========================================= */
+  --header-height: 64px;
+  --sidebar-width: 380px;
 }
 
-// Dark mode
+// 暗黑模式 (Dark Mode) - 预留支持
 [data-theme="dark"] {
-  --morandi-ink: #e6e0d8;
-  --morandi-ink-muted: #b8afa5;
-  --morandi-paper: #2b2a27;
-  --morandi-surface: #2f2e2b;
-  --morandi-line: #3e3a35;
-  --morandi-sage: #9aa7a1;
-  --morandi-clay: #b29f91;
-  --morandi-fog: #93a0a6;
-  --morandi-rose: #b69a95;
+  --color-brand: #f4d03f; // 品牌色保持，或微调
+  --color-brand-text: #000000;
 
-  --primary-color: var(--morandi-sage);
-  --primary-light: #b8c2bb;
-  --primary-dark: #7d8b84;
+  --color-morandi-ink: #e6e0d8;
+  --color-morandi-ink-muted: #b8afa5;
+  --color-morandi-paper: #1a1918;
+  --color-morandi-surface: #262523;
+  --color-morandi-line: #3e3a35;
+  
+  --bg-body: var(--color-morandi-paper);
+  --bg-card: var(--color-morandi-surface);
+  --bg-popover: #2f2e2b;
 
-  --gradient-primary: linear-gradient(135deg, #9aa7a1 0%, #7d8b84 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
+// 工具类 (Helpers)
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.bg-card { background-color: var(--bg-card); }

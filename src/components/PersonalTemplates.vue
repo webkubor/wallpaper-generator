@@ -19,10 +19,10 @@
             >
               {{ template.name }}
             </h4>
-            <n-input
+            <BaseInput
               v-else
-              v-model:value="editingName"
-              size="small"
+              :model-value="editingName"
+              @update:model-value="(val) => editingName = String(val)"
               autofocus
               placeholder="输入模板名称"
               @blur="() => handleSaveName(template)"
@@ -35,35 +35,35 @@
             <p class="template-description">{{ formatTemplateDescription(template) }}</p>
           </div>
           <div class="template-actions">
-            <n-button 
-              size="small" 
-              color="#f4d03f"
-              dashed
+            <BaseButton 
+              size="sm" 
+              variant="secondary"
+              class="action-btn"
               @click="$emit('loadTemplate', template)" 
-              class="load-btn"
+              title="加载模板"
             >
               <template #icon>
-                <n-icon :component="Download" />
+                <Download :size="16" />
                </template>
-            </n-button>
-            <n-button 
-              size="small" 
-              color="#ef4444"
-              dashed
+            </BaseButton>
+            <BaseButton 
+              size="sm" 
+              variant="danger"
+              class="action-btn"
               @click="handleDeleteTemplate(template.id)" 
-              class="delete-btn"
+              title="删除模板"
             >
               <template #icon>
-                <n-icon :component="Trash" />
+                <Trash :size="16" />
               </template>
-            </n-button>
+            </BaseButton>
           </div>
         </div>
       </div>
       
       <div v-else class="template-empty">
         <div class="empty-content">
-          <n-icon :component="ImageSquare" size="32" class="empty-icon" />
+          <ImageSquare :size="32" class="empty-icon" />
           <p class="empty-text">暂无个人模板</p>
         </div>
       </div>
@@ -73,10 +73,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { NIcon, NButton, NInput } from 'naive-ui';
 import { formatDisplayTime } from '../utils/time';
 import { PhDownload as Download, PhTrash as Trash, PhImage as ImageSquare } from "@phosphor-icons/vue";
 import { templateDB, type Template } from '../utils/indexedDB';
+import BaseButton from './base/BaseButton.vue';
+import BaseInput from './base/BaseInput.vue';
 
 // Props
 defineProps<{
@@ -139,8 +140,6 @@ const handleSaveName = async (template: Template) => {
   }
 };
 
-// 时间格式化改为复用通用工具函数（formatDisplayTime）
-
 // 删除模板
 const handleDeleteTemplate = async (id: string) => {
   try {
@@ -171,9 +170,6 @@ const formatTemplateDescription = (template: Template) => {
     parts.push(deviceNames[config.previewSettings.selectedDevice] || '未知设备');
   }
   
-  // 水印信息
-  // 按需精简：不显示水印内容
-  
   // 标题信息
   if (config.titleSettings?.show && config.titleSettings?.text) {
     parts.push(`标题: ${config.titleSettings.text}`);
@@ -203,117 +199,6 @@ defineExpose({
   transition: all 0.3s ease;
 }
 
-.template-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: rgba(244, 208, 63, 0.1);
-  border: 1px solid rgba(244, 208, 63, 0.3);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 0 auto;
-  
-  &:hover {
-    background: rgba(244, 208, 63, 0.2);
-    transform: scale(1.1);
-  }
-  
-  .chevron-icon {
-    color: #f4d03f;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-}
-
-/* 模板工坊头部样式 */
-.template-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  margin-bottom: 0;
-  margin-top: 8px;
-  background: var(--n-card-color);
-  border: 1px solid var(--n-border-color);
-  border-radius: 12px 12px 0 0;
-  
-  .header-content {
-    flex: 1;
-    
-    .workshop-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--n-text-color);
-      margin: 0 0 4px 0;
-      background: linear-gradient(135deg, #f4d03f 0%, #ff9a56 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .workshop-subtitle {
-      font-size: 14px;
-      color: var(--n-text-color-disabled);
-      margin: 0;
-      font-style: italic;
-      opacity: 0.8;
-    }
-  }
-  
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    
-    .star-icon {
-      font-size: 24px;
-      color: #f4d03f;
-      opacity: 0.6;
-      animation: twinkle 2s ease-in-out infinite alternate;
-    }
-    
-    .template-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      background: rgba(244, 208, 63, 0.1);
-      border: 1px solid rgba(244, 208, 63, 0.3);
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background: rgba(244, 208, 63, 0.2);
-        transform: scale(1.1);
-      }
-      
-      .chevron-icon {
-        color: #f4d03f;
-        font-size: 14px;
-        transition: all 0.3s ease;
-      }
-    }
-  }
-}
-
-@keyframes twinkle {
-  0% { opacity: 0.6; transform: scale(1); }
-  100% { opacity: 1; transform: scale(1.1); }
-}
-
-.template-content {
-  margin-top: 0;
-  padding: 16px;
-  background: var(--n-card-color);
-  border: 1px solid var(--n-border-color);
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-}
-
 .template-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -323,15 +208,15 @@ defineExpose({
 .template-card {
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: var(--border-radius-md);
   overflow: hidden;
-  background: var(--n-card-color);
-  border: 1px solid var(--n-border-color);
-  transition: all 0.3s ease;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-normal);
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
   }
 }
 
@@ -359,14 +244,15 @@ defineExpose({
   margin: 0 0 8px 0;
   font-size: 13px;
   font-weight: 600;
-  color: var(--n-text-color);
+  color: var(--text-primary);
   line-height: 1.4;
+  cursor: text;
 }
 
 .template-description {
   margin: 0;
   font-size: 11px;
-  color: var(--n-text-color-disabled);
+  color: var(--text-secondary);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -378,9 +264,16 @@ defineExpose({
 
 .template-actions {
   padding: 10px 12px;
-  border-top: 1px solid var(--n-border-color);
+  border-top: 1px solid var(--border-color);
   display: flex;
   gap: 6px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
 }
 
 .template-meta {
@@ -389,7 +282,7 @@ defineExpose({
 
 .template-time {
   font-size: 11px;
-  color: var(--n-text-color-disabled);
+  color: var(--text-secondary);
 }
 
 /* 响应式：小屏幕保持单列显示 */
@@ -398,11 +291,9 @@ defineExpose({
     grid-template-columns: 1fr;
   }
   .template-preview {
-    height: 120px; /* 小屏可适当增大预览高度，便于点击 */
+    height: 120px; 
   }
 }
-
-
 
 .template-empty {
   padding: 32px 20px;
@@ -416,13 +307,13 @@ defineExpose({
   gap: 8px;
   
   .empty-icon {
-    color: var(--n-text-color-disabled);
+    color: var(--text-secondary);
     opacity: 0.6;
   }
   
   .empty-text {
     margin: 0;
-    color: var(--n-text-color-disabled);
+    color: var(--text-secondary);
     font-size: 14px;
   }
 }

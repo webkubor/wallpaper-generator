@@ -5,6 +5,7 @@ import router from '@/router';
 
 // 引入样式文件
 import './styles/font.scss'
+import './styles/global.scss'
 
 // 创建应用实例
 const app = createApp(App)
