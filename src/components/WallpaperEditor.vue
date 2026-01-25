@@ -213,7 +213,6 @@ import WatermarkSettings from './toolbar/WatermarkSettings.vue';
 import TitleSettings from './toolbar/TitleSettings.vue';
 import BackgroundSettings from './toolbar/BackgroundSettings.vue';
 import PersonalTemplates from './PersonalTemplates.vue';
-import type { UploadFileInfo } from 'naive-ui'; // Used only for type if needed, better replace
 import { PhUploadSimple as UploadSimple, PhImage as ImageSquare, PhTextT as TextT, PhDrop as Droplets, PhGear as Gear, PhBookmarkSimple as BookmarkSimple, PhArrowCounterClockwise as ArrowCounterClockwise, PhEye as Eye, PhEyeSlash as EyeSlash } from '@phosphor-icons/vue';
 import MobileBottomSheet from './common/MobileBottomSheet.vue';
 
@@ -377,7 +376,7 @@ const confirmCustomSize = () => {
   }
 };
 
-const handleImageUpload = (file: UploadFileInfo) => {
+const handleImageUpload = (file: { file: File }) => {
   // Desktop upload
   if (file.file) processFile(file.file);
 };

@@ -25,7 +25,6 @@
     "@types/node": "^24.3.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.7.0",
-    "naive-ui": "^2.42.0",
     "sass": "^1.91.0",
     "sharp": "^0.34.5",
     "typescript": "~5.8.3",

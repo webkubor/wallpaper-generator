@@ -183,14 +183,6 @@ import BaseButton from './base/BaseButton.vue';
 import BaseSwitch from './base/BaseSwitch.vue';
 import BaseInput from './base/BaseInput.vue';
 import FileUploader from './common/FileUploader.vue';
-import type { UploadFileInfo } from 'naive-ui'; // Still need type? Maybe replace with custom
-
-// Replace UploadFileInfo with generic type
-interface FileInfo {
-  file: File | null;
-  url: string;
-}
-
 interface Props {
   backgroundSettings: any;
   customWidth: number;
@@ -202,7 +194,7 @@ defineProps<Props>();
 
 const emit = defineEmits<{
   resetConfig: [];
-  imageUpload: [file: UploadFileInfo]; // Keeping this for now to match parent
+  imageUpload: [file: { file: File }];
   confirmCustomSize: [];
   'update:customWidth': [value: number];
   'update:customHeight': [value: number];

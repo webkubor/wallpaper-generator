@@ -56,12 +56,8 @@ declare global {
   const useAttrs: typeof import('vue').useAttrs
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
-  const useDialog: typeof import('naive-ui').useDialog
   const useId: typeof import('vue').useId
-  const useLoadingBar: typeof import('naive-ui').useLoadingBar
-  const useMessage: typeof import('naive-ui').useMessage
   const useModel: typeof import('vue').useModel
-  const useNotification: typeof import('naive-ui').useNotification
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const watch: typeof import('vue').watch

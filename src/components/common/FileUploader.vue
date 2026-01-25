@@ -7,22 +7,24 @@
       :accept="accept" 
       @change="handleFileChange" 
     />
-    <n-button @click="triggerUpload" v-bind="$attrs">
-      <slot>{{ btnText }}</slot>
-    </n-button>
+    <div @click="triggerUpload" class="uploader-trigger">
+      <slot>
+        <BaseButton v-bind="$attrs">{{ btnText }}</BaseButton>
+      </slot>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { NButton } from 'naive-ui';
+import BaseButton from '../base/BaseButton.vue';
 
 interface Props {
   accept?: string;
   btnText?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   accept: 'image/*',
   btnText: '选择文件'
 });
@@ -46,7 +48,6 @@ const handleFileChange = (event: Event) => {
       if (e.target?.result) {
         emit('select', { file, url: e.target.result as string });
       }
-      // Reset input so the same file can be selected again if needed
       if (input) input.value = ''; 
     };
     reader.readAsDataURL(file);
@@ -59,6 +60,10 @@ const handleFileChange = (event: Event) => {
   display: none;
 }
 .file-uploader {
-  display: inline-block;
+  display: block;
+  width: 100%;
+}
+.uploader-trigger {
+  width: 100%;
 }
 </style>

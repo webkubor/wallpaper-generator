@@ -1,44 +1,41 @@
 <template>
-  <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
-      <n-global-style />
-      <PWAPrompt />
-      <n-layout>
-      <Header 
-        :hide-actions="isXHS"
-        @download="downloadWallpaper"
-        @download-poster="downloadPoster"
+  <div class="app-container" :class="{ 'dark-theme': isDark }">
+    <PWAPrompt />
+    <Header 
+      :hide-actions="isXHS"
+      @download="downloadWallpaper"
+      @download-poster="downloadPoster"
+    />
+    <main class="content">
+      <router-view v-slot="{ Component }">
+        <component :is="Component" v-if="isXHS" />
+      </router-view>
+      <WallpaperEditor 
+        v-if="!isXHS" 
+        ref="wallpaperEditorRef" 
+        @save-template="saveAsTemplate"
+        @save-config="saveConfig"
+        @open-settings="showDownloadModal = true"
       />
-      <n-layout-content class="content">
-        <router-view v-slot="{ Component }">
-          <component :is="Component" v-if="isXHS" />
-        </router-view>
-        <WallpaperEditor 
-          v-if="!isXHS" 
-          ref="wallpaperEditorRef" 
-          @save-template="saveAsTemplate"
-          @save-config="saveConfig"
-          @open-settings="showDownloadModal = true"
-        />
-      </n-layout-content>
-      <Footer />
-      <!-- 系统设置模态框 -->
-      <SettingsModal 
-        v-model:show="showDownloadModal"
-        v-model:isDark="isDark"
-        v-model:downloadOption="downloadOption"
-        v-model:fileNamePrefix="fileNamePrefix"
-        v-model:fileNameMode="fileNameMode"
-        :isDownloading="isDownloading"
-        @download="downloadWallpaper"
-      />
-      
-      <!-- 分享卡片弹窗 -->
-      <ShareCard 
-        v-model:show="showShareCard"
-        :wallpaper-image="currentWallpaperImage"
-      />
-    </n-layout>
-  </n-config-provider>
+    </main>
+    <Footer />
+    <!-- 系统设置模态框 -->
+    <SettingsModal 
+      v-model:show="showDownloadModal"
+      v-model:isDark="isDark"
+      v-model:downloadOption="downloadOption"
+      v-model:fileNamePrefix="fileNamePrefix"
+      v-model:fileNameMode="fileNameMode"
+      :isDownloading="isDownloading"
+      @download="downloadWallpaper"
+    />
+    
+    <!-- 分享卡片弹窗 -->
+    <ShareCard 
+      v-model:show="showShareCard"
+      :wallpaper-image="currentWallpaperImage"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import WallpaperEditor from '@/components/WallpaperEditor.vue';
@@ -47,9 +44,8 @@ import SettingsModal from '@/components/common/SettingsModal.vue';
 import Header from '@/components/common/Header.vue';
 import ShareCard from '@/components/common/ShareCard.vue';
 import PWAPrompt from '@/components/PWAPrompt.vue';
-import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from "naive-ui";
 import { useDark } from "@vueuse/core";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRoute } from 'vue-router';
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
@@ -198,40 +194,33 @@ const downloadPoster = () => {
   window.dispatchEvent(new CustomEvent('downloadPoster'));
 };
 
-
-const themeOverrides = computed(() => ({
-  common: {
-    primaryColor: isDark.value ? '#9aa7a1' : '#9aa7a1',
-    primaryColorHover: isDark.value ? '#a7b3ac' : '#8a968f',
-    primaryColorPressed: isDark.value ? '#7d8b84' : '#7d8b84',
-    primaryColorSuppl: isDark.value ? 'rgba(154, 167, 161, 0.5)' : 'rgba(154, 167, 161, 0.35)'
-  },
-  Card: {
-    borderRadius: '16px',
-    color: isDark.value ? '#2f2e2b' : '#fbf7f1',
-    colorModal: isDark.value ? '#2f2e2b' : '#fbf7f1',
-    colorPopover: isDark.value ? '#2f2e2b' : '#fbf7f1',
-    boxShadow: isDark.value 
-      ? '0 10px 34px rgba(0, 0, 0, 0.35), 0 6px 18px rgba(0, 0, 0, 0.2)' 
-      : '0 16px 40px rgba(74, 63, 55, 0.12), 0 6px 18px rgba(74, 63, 55, 0.08)'
-  },
-  Button: {
-    borderRadius: '12px',
-    colorPrimary: isDark.value ? '#9aa7a1' : '#c7b5a5',
-    colorHoverPrimary: isDark.value ? '#a7b3ac' : '#cdbbad',
-    colorPressedPrimary: isDark.value ? '#7d8b84' : '#b5a08f'
-  },
-  Collapse: {
-    titleFontWeight: '600'
+onMounted(() => {
+  // Apply theme class to body for global styles
+  if (isDark.value) {
+    document.body.classList.add('dark-theme');
+  } else {
+    document.body.classList.remove('dark-theme');
   }
-}));
+});
 </script>
 
 <style scoped lang="scss">
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .content {
   flex: 1;
   overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
-
-
 </style>
