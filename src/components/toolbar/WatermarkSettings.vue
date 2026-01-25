@@ -23,9 +23,7 @@
 
   <template v-if="watermarkSettings.type === 'image'">
     <n-form-item label="上传图片" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-      <n-upload :custom-request="customUpload" :show-file-list="false" accept="image/*">
-        <n-button>选择文件</n-button>
-      </n-upload>
+      <FileUploader @select="handleFileSelect" />
     </n-form-item>
   </template>
   <n-form-item label="透明度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
@@ -37,21 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NSlider, NUpload, NButton } from 'naive-ui';
+import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NSlider } from 'naive-ui';
 import { useWallpaper } from '@/composables/useWallpaper';
-import type { UploadCustomRequestOptions } from 'naive-ui';
+import FileUploader from '../common/FileUploader.vue';
 
 // 直接使用 useWallpaper 获取响应式数据
 const { watermarkSettings, fontOptions } = useWallpaper();
 
-const customUpload = async ({ file, onFinish }: UploadCustomRequestOptions) => {
-  if (file.file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      watermarkSettings.value.imageUrl = e.target?.result as string;
-      onFinish();
-    };
-    reader.readAsDataURL(file.file);
-  }
+const handleFileSelect = ({ url }: { url: string }) => {
+  watermarkSettings.value.imageUrl = url;
 };
 </script>

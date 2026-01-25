@@ -15,6 +15,7 @@ declare module 'vue' {
     CarFrame: typeof import('./../components/car/CarFrame.vue')['default']
     ComboDevices: typeof import('./../components/combo/ComboDevices.vue')['default']
     CustomFrame: typeof import('./../components/custom/CustomFrame.vue')['default']
+    FileUploader: typeof import('./../components/common/FileUploader.vue')['default']
     Footer: typeof import('./../components/common/Footer.vue')['default']
     Header: typeof import('./../components/common/Header.vue')['default']
     HomeIndicator: typeof import('./../components/common/HomeIndicator.vue')['default']
