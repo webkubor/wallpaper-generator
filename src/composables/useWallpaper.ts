@@ -83,7 +83,7 @@ export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) 
 // 默认水印设置
 export const defaultWatermarkSettings: WatermarkSettings = {
   type: 'text',
-  text: 'Design by 司南烛',
+  text: '岁在乙巳 司南烛 书',
   fontSize: 24,
   color: '#000000',
   opacity: 0.5,
