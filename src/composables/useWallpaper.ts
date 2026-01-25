@@ -66,7 +66,8 @@ export const getDeviceById = (id: string): Device | undefined => {
 // 水印位置样式计算
 export const getWatermarkPositionStyle = (watermarkSettings: WatermarkSettings) => {
   const { rotation, offsetX, offsetY, padding, position } = watermarkSettings;
-  const baseTransform = `rotate(${rotation}deg) translate(${offsetX}px, ${offsetY}px)`;
+  // Fix: Translate first (position), then rotate (orientation) to avoid axis rotation affecting drag direction
+  const baseTransform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg)`;
 
   const positions = {
     'top-left': { top: `${padding}px`, left: `${padding}px`, transform: baseTransform },

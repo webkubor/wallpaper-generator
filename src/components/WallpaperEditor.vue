@@ -82,7 +82,7 @@
             v-if="watermarkSettings.type === 'image' && watermarkSettings.imageUrl" 
             :src="watermarkSettings.imageUrl" 
             class="watermark-image" 
-            :style="{ height: watermarkSettings.fontSize + 'px' }"
+            :style="{ height: watermarkSettings.fontSize + 'px', opacity: watermarkSettings.opacity }"
           />
           <span v-if="watermarkSettings.type === 'text' && watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
