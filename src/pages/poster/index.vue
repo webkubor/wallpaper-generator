@@ -730,11 +730,12 @@ const downloadPoster = async () => {
       &::before {
         content: "";
         position: absolute;
-        inset: -50%;
+        top: 50%;
+        left: 50%;
         width: v-bind(lightingWidth + '%');
         height: v-bind(lightingWidth + '%');
         background: v-bind(lightingBackground);
-        transform: rotate(v-bind(lightingAngle + 'deg'));
+        transform: translate(-50%, -50%) rotate(calc(v-bind(lightingAngle) * 1deg));
         pointer-events: none;
         opacity: v-bind('showLightingEffect ? lightingIntensity : 0');
         transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
