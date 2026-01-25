@@ -88,6 +88,30 @@
           <span>光照效果</span>
           <BaseSwitch v-model="showLightingEffect" />
         </div>
+        <template v-if="showLightingEffect">
+          <div class="control-item">
+            <span>光照类型</span>
+            <div style="display:flex; gap:8px">
+              <BaseButton size="sm" :variant="lightingType === 'beam' ? 'primary' : 'secondary'" @click="lightingType = 'beam'">光束</BaseButton>
+              <BaseButton size="sm" :variant="lightingType === 'sunlight' ? 'primary' : 'secondary'" @click="lightingType = 'sunlight'">阳光</BaseButton>
+            </div>
+          </div>
+          <div class="control-item">
+            <span>光照角度</span>
+            <BaseSlider v-model="lightingAngle" :min="-180" :max="180" :step="5" style="width: 120px" />
+            <span class="value">{{ lightingAngle }}°</span>
+          </div>
+          <div class="control-item">
+            <span>光照范围</span>
+            <BaseSlider v-model="lightingWidth" :min="50" :max="300" :step="10" style="width: 120px" />
+            <span class="value">{{ lightingWidth }}%</span>
+          </div>
+          <div class="control-item">
+            <span>光照强度</span>
+            <BaseSlider v-model="lightingIntensity" :min="0" :max="1" :step="0.05" style="width: 120px" />
+            <span class="value">{{ Math.round(lightingIntensity * 100) }}%</span>
+          </div>
+        </template>
         <div class="control-item">
           <span>主标题描边</span>
           <BaseSwitch v-model="titleStroke" />
@@ -195,6 +219,36 @@ const titleStroke = ref(true);
 const titleStrokeColor = ref('#b9968d');
 const subtitleColor = ref('#f8f4ee');
 const showLightingEffect = ref(true);
+// 光照控制
+const lightingAngle = ref(-30);
+const lightingWidth = ref(200); // 范围百分比
+const lightingType = ref<'beam' | 'sunlight'>('beam');
+const lightingIntensity = ref(0.9);
+
+// 计算光照背景
+const lightingBackground = computed(() => {
+  if (lightingType.value === 'beam') {
+    // 柱状光：线性渐变，宽度影响透明度断点
+    // width 越小，中间亮区越窄? 或者 width 控制容器宽度。
+    // 这里 width 控制容器宽度，gradient 保持相对比例。
+    return `linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0.05) 55%,
+      transparent 70%
+    )`;
+  } else {
+    // 阳光：径向渐变/圆锥渐变模拟
+    return `radial-gradient(
+      circle at 50% 0%, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(255, 255, 255, 0.1) 40%, 
+      transparent 70%
+    )`;
+  }
+});
 
 // 副标题显示控制
 const showSubtitle = ref(true);
@@ -677,19 +731,12 @@ const downloadPoster = async () => {
         content: "";
         position: absolute;
         inset: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-          105deg,
-          transparent 30%,
-          rgba(255, 255, 255, 0.05) 45%,
-          rgba(255, 255, 255, 0.5) 50%,
-          rgba(255, 255, 255, 0.05) 55%,
-          transparent 70%
-        );
-        transform: rotate(-30deg);
+        width: v-bind(lightingWidth + '%');
+        height: v-bind(lightingWidth + '%');
+        background: v-bind(lightingBackground);
+        transform: rotate(v-bind(lightingAngle + 'deg'));
         pointer-events: none;
-        opacity: v-bind('showLightingEffect ? 0.9 : 0');
+        opacity: v-bind('showLightingEffect ? lightingIntensity : 0');
         transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         mix-blend-mode: soft-light;
         filter: blur(15px);
