@@ -5,6 +5,7 @@
         <div class="creator-info">
           <Sparkles class="creator-icon" :size="18" weight="fill" />
           <span class="creator-text">Created with ❤️ by <span class="highlight">webkubor(司南烛)</span></span>
+          <span class="version-tag">v{{ appVersion }}</span>
         </div>
       </div>
       <div class="footer-right">
@@ -28,6 +29,8 @@
 
 <script setup lang="ts">
 import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from "@phosphor-icons/vue";
+
+const appVersion = __APP_VERSION__;
 </script>
 
 <style scoped lang="scss">
@@ -67,6 +70,17 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
           font-weight: 700;
           margin-left: 2px;
         }
+      }
+
+      .version-tag {
+        font-size: 10px;
+        font-family: monospace;
+        padding: 2px 6px;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-secondary);
+        border-radius: 4px;
+        margin-left: 8px;
+        opacity: 0.7;
       }
     }
   }
