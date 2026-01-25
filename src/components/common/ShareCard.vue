@@ -336,7 +336,6 @@ const handleDownloadCard = async () => {
     align-items: center;
     justify-content: center;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-    border: 4px solid #fff;
     
     .wallpaper-image {
       width: 100%;
