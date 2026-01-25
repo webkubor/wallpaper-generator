@@ -294,7 +294,7 @@ const exportContainerStyle = computed((): CSSProperties => ({
   justifyContent: 'center',
   alignItems: 'center',
   zIndex: 1,
-  padding: '10px',
+  padding: '0',
   transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   transform: `scale(${previewScale.value})`,
   transformOrigin: 'center center',
