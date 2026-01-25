@@ -673,6 +673,29 @@ const downloadPoster = async () => {
       position: relative;
       z-index: 1;
 
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          105deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.05) 45%,
+          rgba(255, 255, 255, 0.5) 50%,
+          rgba(255, 255, 255, 0.05) 55%,
+          transparent 70%
+        );
+        transform: rotate(-30deg);
+        pointer-events: none;
+        opacity: v-bind('showLightingEffect ? 0.9 : 0');
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        mix-blend-mode: soft-light;
+        filter: blur(15px);
+        z-index: 20;
+      }
+
       .poster-title {
         font-weight: bold;
         text-align: center;
