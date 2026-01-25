@@ -537,20 +537,17 @@ const handleResetConfig = async () => {
 
 .export-container {
   transition: all 0.3s ease;
-  border: 2px solid transparent;
   border-radius: 8px;
   
   &.preview-mode {
-    border-color: var(--color-brand);
     animation: border-blink 1.5s infinite;
-    box-shadow: 0 0 20px rgba(244, 208, 63, 0.3);
   }
 }
 
 @keyframes border-blink {
-  0% { border-color: rgba(244, 208, 63, 1); }
-  50% { border-color: rgba(244, 208, 63, 0.2); }
-  100% { border-color: rgba(244, 208, 63, 1); }
+  0% { box-shadow: 0 0 0 2px rgba(244, 208, 63, 1), 0 0 20px rgba(244, 208, 63, 0.3); }
+  50% { box-shadow: 0 0 0 2px rgba(244, 208, 63, 0.2), 0 0 20px rgba(244, 208, 63, 0.1); }
+  100% { box-shadow: 0 0 0 2px rgba(244, 208, 63, 1), 0 0 20px rgba(244, 208, 63, 0.3); }
 }
 
 .perspective-bg {
