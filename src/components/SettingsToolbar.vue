@@ -23,6 +23,45 @@
     </template>
 
     <div class="settings-body">
+      <div class="quick-actions">
+        <div class="quick-title">快速操作</div>
+        <div class="quick-grid">
+          <div class="quick-item">
+            <div class="quick-label">背景图</div>
+            <FileUploader :show-file-list="false" @select="handleImageSelect" class="full-width-uploader">
+              <template #default>
+                <div class="upload-btn-content">
+                  <UploadSimple :size="16" weight="bold" />
+                  <span>灵感</span>
+                </div>
+              </template>
+            </FileUploader>
+          </div>
+
+          <div class="quick-item">
+            <div class="quick-label">载体模型</div>
+            <div class="select-wrapper">
+              <select v-model="previewSettings.selectedDevice" class="base-select">
+                <option v-for="opt in deviceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="quick-item">
+            <div class="quick-label">展示标题</div>
+            <BaseSwitch :model-value="titleSettings.show" @update:model-value="(val) => titleSettings.show = val" />
+          </div>
+
+          <div class="quick-item">
+            <div class="quick-label">导出预览</div>
+            <BaseSwitch v-model="showExportPreview">
+              <template #default>{{ showExportPreview ? '开' : '关' }}</template>
+            </BaseSwitch>
+          </div>
+        </div>
+        <div class="quick-hint">先选背景与载体，再细化文字与水印，最后导出。</div>
+      </div>
+
       <div class="collapse-group">
         <!-- 1. 标题设置 (Top) -->
         <details class="collapse-item" open style="--delay: 0.1s">
@@ -33,11 +72,8 @@
             </div>
           </summary>
           <div class="collapse-content">
-            <div class="form-item">
-              <label class="form-label">展示标题</label>
-              <BaseSwitch :model-value="titleSettings.show" @update:model-value="(val) => titleSettings.show = val" />
-            </div>
             <TitleSettings v-if="titleSettings.show" />
+            <div v-else class="empty-state">开启标题后可调整字体、大小与色彩。</div>
           </div>
         </details>
 
@@ -50,17 +86,6 @@
             </div>
           </summary>
           <div class="collapse-content">
-            <div class="form-item">
-              <label class="form-label">导入壁纸</label>
-              <FileUploader :show-file-list="false" @select="handleImageSelect" class="full-width-uploader">
-                <template #default>
-                  <div class="upload-btn-content">
-                    <UploadSimple :size="16" weight="bold" />
-                    <span>拾取灵感</span>
-                  </div>
-                </template>
-              </FileUploader>
-            </div>
             <BackgroundSettings :background-settings="backgroundSettings" />
           </div>
         </details>
@@ -87,21 +112,6 @@
             </div>
           </summary>
           <div class="collapse-content">
-            <div class="form-item">
-              <label class="form-label">预览成片区域</label>
-              <BaseSwitch v-model="showExportPreview">
-                <template #default>{{ showExportPreview ? '开' : '关' }}</template>
-              </BaseSwitch>
-            </div>
-
-            <div class="form-item">
-              <label class="form-label">载体模型</label>
-              <div class="select-wrapper">
-                <select v-model="previewSettings.selectedDevice" class="base-select">
-                  <option v-for="opt in deviceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-            </div>
             
             <!-- iPhone 刘海开关 -->
             <div v-if="previewSettings.selectedDevice === 'iphone'" class="form-item">
@@ -269,6 +279,45 @@ const handleLoadTemplate = (template: any) => {
   padding-bottom: 6px;
 }
 
+/* Quick Actions */
+.quick-actions {
+  padding: 16px 20px 12px;
+  background: linear-gradient(180deg, rgba(244, 208, 63, 0.08), rgba(244, 208, 63, 0.02));
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.quick-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.quick-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
 /* Collapse Styles */
 .collapse-group {
   display: flex;
@@ -363,16 +412,6 @@ const handleLoadTemplate = (template: any) => {
     color: var(--text-secondary);
     white-space: nowrap;
   }
-  
-  /* When using BaseInput which has label built-in, we might want to hide it or style it differently.
-     But here we wrap BaseSwitch/BaseInput in a flex container for "Label ... Control" layout.
-     If BaseInput has its own label, it might duplicate. 
-     BaseInput structure is vertical (label top). 
-     For settings, we often want Horizontal (Label Left, Control Right).
-     So we hide internal label of BaseInput if we provide external one, 
-     OR we use BaseInput in a way that fits.
-     Here I manually created .form-item with flex layout.
-  */
 }
 
 .custom-size-inputs {
@@ -450,9 +489,17 @@ const handleLoadTemplate = (template: any) => {
 :deep(.full-width-uploader) {
   width: 100%;
   flex: 1;
-  .n-button, button {
-    width: 100%; 
+  button {
+    width: 100%;
   }
+}
+
+.empty-state {
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: var(--border-radius-sm);
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 /* Responsive */
@@ -466,6 +513,10 @@ const handleLoadTemplate = (template: any) => {
   .settings-panel {
     width: 100%;
     height: auto;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
   }
   
   .settings-header {
