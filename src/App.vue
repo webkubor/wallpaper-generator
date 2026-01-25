@@ -10,13 +10,14 @@
       <router-view v-slot="{ Component }">
         <component :is="Component" v-if="isXHS" />
       </router-view>
-      <WallpaperEditor 
-        v-if="!isXHS" 
-        ref="wallpaperEditorRef" 
-        @save-template="saveAsTemplate"
-        @save-config="saveConfig"
-        @open-settings="showDownloadModal = true"
-      />
+        <WallpaperEditor 
+          v-if="!isXHS" 
+          ref="wallpaperEditorRef" 
+          @save-template="saveAsTemplate"
+          @save-config="saveConfig"
+          @open-settings="showDownloadModal = true"
+          @download="downloadWallpaper"
+        />
     </main>
     <Footer />
     <!-- 系统设置模态框 -->

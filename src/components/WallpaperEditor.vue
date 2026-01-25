@@ -15,6 +15,7 @@
       @save-config="emit('save-config')"
       @save-template="emit('save-template')"
       @open-settings="emit('open-settings')"
+      @download="emit('download')"
     />
 
     <!-- Center: Preview Area -->
@@ -235,6 +236,7 @@ const emit = defineEmits<{
   'save-config': [];
   'save-template': [];
   'open-settings': [];
+  'download': [];
 }>();
 
 const previewAreaRef = ref<HTMLElement | null>(null);

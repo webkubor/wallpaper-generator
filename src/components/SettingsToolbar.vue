@@ -161,12 +161,20 @@
           </BaseButton>
         </div>
         
-        <BaseButton variant="primary" @click="$emit('saveTemplate')">
-          <template #icon>
-            <Plus :size="16" weight="bold" />
-          </template>
-          存为模板
-        </BaseButton>
+        <div class="footer-right">
+          <BaseButton variant="secondary" @click="$emit('saveTemplate')">
+            <template #icon>
+              <Plus :size="16" weight="bold" />
+            </template>
+            存为模板
+          </BaseButton>
+          <BaseButton variant="primary" @click="$emit('download')">
+            <template #icon>
+              <Download :size="16" weight="bold" />
+            </template>
+            导出成片
+          </BaseButton>
+        </div>
       </div>
     </template>
   </BaseCard>
@@ -182,7 +190,8 @@ import {
   PhTextT as TextT,
   PhBookmarkSimple as BookmarkSimple,
   PhFloppyDisk as FloppyDisk,
-  PhPlus as Plus
+  PhPlus as Plus,
+  PhDownload as Download
 } from "@phosphor-icons/vue";
 import PersonalTemplates from './PersonalTemplates.vue';
 import WatermarkSettings from './toolbar/WatermarkSettings.vue';
@@ -214,6 +223,7 @@ const emit = defineEmits<{
   saveConfig: [];
   saveTemplate: [];
   openSettings: [];
+  download: [];
 }>();
 
 
@@ -476,6 +486,13 @@ const handleLoadTemplate = (template: any) => {
   .footer-left {
     display: flex;
     gap: 8px;
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 }
 

@@ -186,10 +186,10 @@ watch(imageUrl, updateTextColorBasedOnImage, { immediate: true });
 // 定义统一的字体选项，供整个应用使用
 export const fontOptions: FontOption[] = [
   { label: '阿里妈妈方圆体', value: 'AlimamaFangYuanTiVF-Thin' },
+  { label: '武侠风', value: 'Wuxia' },
   { label: '细雨体', value: 'drizzle' },
   { label: '可爱体', value: 'cute' },
   { label: '古典风', value: 'AncientStyle' },
-  { label: '细雨体', value: 'drizzle' },
   { label: '默认字体', value: 'system-ui, sans-serif' }
 ];
 
