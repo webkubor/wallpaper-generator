@@ -23,7 +23,7 @@
 
   <template v-if="watermarkSettings.type === 'image'">
     <n-form-item label="上传图片" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
-      <n-upload action="/api/upload" @finish="handleImageUpload">
+      <n-upload :custom-request="customUpload" :show-file-list="false" accept="image/*">
         <n-button>选择文件</n-button>
       </n-upload>
     </n-form-item>
@@ -39,16 +39,19 @@
 <script setup lang="ts">
 import { NFormItem, NInput, NSelect, NColorPicker, NRadioGroup, NRadioButton, NSlider, NUpload, NButton } from 'naive-ui';
 import { useWallpaper } from '@/composables/useWallpaper';
-import type { UploadFileInfo } from 'naive-ui';
+import type { UploadCustomRequestOptions } from 'naive-ui';
 
 // 直接使用 useWallpaper 获取响应式数据
 const { watermarkSettings, fontOptions } = useWallpaper();
 
-const handleImageUpload = ({ event }: { file: UploadFileInfo, event?: ProgressEvent }) => {
-  if (event && event.target) {
-    const xhr = event.target as XMLHttpRequest;
-    const response = JSON.parse(xhr.response);
-    watermarkSettings.value.imageUrl = response.url; 
+const customUpload = async ({ file, onFinish }: UploadCustomRequestOptions) => {
+  if (file.file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      watermarkSettings.value.imageUrl = e.target?.result as string;
+      onFinish();
+    };
+    reader.readAsDataURL(file.file);
   }
 };
 </script>
