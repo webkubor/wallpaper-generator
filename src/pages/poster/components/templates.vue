@@ -59,7 +59,7 @@ const applyTemplate = (template: Template) => {
     h3 {
       text-align: center;
       margin-bottom: 16px;
-      color: var(--text-color);
+      color: var(--text-primary);
     }
 
     .template-grid {
@@ -80,7 +80,7 @@ const applyTemplate = (template: Template) => {
 
 
   .template-card {
-  border: 1px solid var(--n-border-color);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
@@ -113,29 +113,25 @@ const applyTemplate = (template: Template) => {
   }
   
   &:hover {
-    border-color: var(--primary-color);
+    border-color: var(--color-brand);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
   }
   
   &.template-card-selected {
-    border-color: var(--primary-color);
+    border-color: var(--color-brand);
     background: rgba(212, 175, 55, 0.1);
-    color: var(--primary-color);
+    color: var(--color-brand);
     box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
     
     &::before {
       opacity: 1;
       background: linear-gradient(135deg, rgba(255, 235, 180, 0.25), transparent 70%);
     }
-    box-shadow: 0 0 0 2px var(--primary-color);
+    box-shadow: 0 0 0 2px var(--color-brand);
     
     .template-preview {
-      border-color: var(--primary-color);
-    }
-    
-    :deep(.n-card-header) {
-      color: var(--primary-color);
+      border-color: var(--color-brand);
     }
   }
 }
@@ -144,7 +140,7 @@ const applyTemplate = (template: Template) => {
   width: 100%;
   height: 120px;
   border-radius: 6px;
-  border: 1px solid var(--n-border-color);
+  border: 1px solid var(--border-color);
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
