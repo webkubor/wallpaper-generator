@@ -25,6 +25,9 @@
     <n-form-item label="上传图片" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
       <FileUploader @select="handleFileSelect" />
     </n-form-item>
+    <n-form-item label="大小" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
+      <n-slider v-model:value="watermarkSettings.fontSize" :min="20" :max="800" />
+    </n-form-item>
   </template>
   <n-form-item label="透明度" label-placement="left" label-style="padding-bottom: 0;" style="margin-bottom: 12px;">
     <n-slider v-model:value="watermarkSettings.opacity" :min="0" :max="1" :step="0.1" />

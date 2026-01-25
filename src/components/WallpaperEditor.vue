@@ -79,7 +79,12 @@
 
         <!-- 水印 -->
         <div ref="watermarkRef" class="watermark draggable" :style="watermarkPositionStyle" @mousedown="watermarkDragHandler.onMouseDown">
-          <img v-if="watermarkSettings.imageUrl" :src="watermarkSettings.imageUrl" class="watermark-image" />
+          <img 
+            v-if="watermarkSettings.imageUrl" 
+            :src="watermarkSettings.imageUrl" 
+            class="watermark-image" 
+            :style="{ height: watermarkSettings.fontSize + 'px' }"
+          />
           <span v-if="watermarkSettings.text" :style="watermarkStyle">{{ watermarkSettings.text }}</span>
         </div>
       </div>

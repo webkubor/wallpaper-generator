@@ -67,7 +67,20 @@
         </div>
       </n-collapse-item>
 
-      <!-- 3. 导出设置 (Renamed from Basic - Device/Size) -->
+      <!-- 3. 水印设置 (Bottom) -->
+      <n-collapse-item name="watermark">
+        <template #header>
+          <div class="collapse-header">
+            <n-icon :component="Droplets" class="header-icon" />
+            <span>水印设置</span>
+          </div>
+        </template>
+        <div style="padding: 12px;">
+          <WatermarkSettings />
+        </div>
+      </n-collapse-item>
+
+      <!-- 4. 导出设置 (Renamed from Basic - Device/Size) -->
       <n-collapse-item name="export">
         <template #header>
           <div class="collapse-header">
@@ -102,19 +115,6 @@
             </n-form-item>
             <n-button type="primary" size="small" color="#f4d03f" @click="confirmCustomSize">确定</n-button>
           </div>
-        </div>
-      </n-collapse-item>
-
-      <!-- 4. 水印设置 (Bottom) -->
-      <n-collapse-item name="watermark">
-        <template #header>
-          <div class="collapse-header">
-            <n-icon :component="Droplets" class="header-icon" />
-            <span>水印设置</span>
-          </div>
-        </template>
-        <div style="padding: 12px;">
-          <WatermarkSettings />
         </div>
       </n-collapse-item>
 
