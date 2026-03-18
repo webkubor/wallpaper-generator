@@ -1,0 +1,340 @@
+{
+  "schema_version": "1.0.0",
+  "name": "Product Wallpaper Studio",
+  "version": "1.0.0",
+  "description": "氛围壁纸生成器，支持 AI 自动化操作与导出。用户上传图片后，可为 iPhone、iPad、Mac、车载屏幕等设备生成精美壁纸，支持水印、标题、背景等个性化设置。",
+  "entry": "/src/main.ts",
+  "protocol": {
+    "type": "webmcp",
+    "version": "1.0"
+  },
+  "capabilities": {
+    "natural_language_control": true,
+    "batch_operations": true,
+    "auto_export": true
+  },
+  "tools": [
+    {
+      "name": "get_wallpaper_config",
+      "description": "获取当前壁纸的所有配置信息，包括水印设置、标题设置、预览设备、背景设置等。AI 应在修改配置前先调用此工具了解当前状态。",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      },
+      "returns": {
+        "description": "返回完整的配置对象",
+        "example": {
+          "imageUrl": "...",
+          "watermark": { "text": "@brand", "fontSize": 24, "color": "#ffffff" },
+          "title": { "show": true, "text": "早安", "fontSize": 48 },
+          "preview": { "selectedDevice": "iphone", "showDeviceBorder": true }
+        }
+      }
+    },
+    {
+      "name": "update_wallpaper_config",
+      "description": "更新壁纸配置。可批量修改水印、标题、设备、背景等设置。支持部分更新，只需传入需要修改的字段。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "watermark": {
+            "type": "object",
+            "description": "水印设置。支持文字水印或图片水印",
+            "properties": {
+              "text": { 
+                "type": "string", 
+                "description": "水印文字内容，如 '@我的品牌'"
+              },
+              "fontSize": { 
+                "type": "number", 
+                "description": "字体大小（像素）",
+                "minimum": 12,
+                "maximum": 200
+              },
+              "color": { 
+                "type": "string", 
+                "description": "文字颜色，支持 hex 格式如 '#ffffff'、'#ff0000'"
+              },
+              "opacity": { 
+                "type": "number", 
+                "description": "透明度，0-1 之间",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "fontFamily": { 
+                "type": "string", 
+                "description": "字体名称，可选值：'cute'（可爱）、'vampire-wars'（哥特）、'Wuxia'（武侠）、'drizzle'（手写）、'AncientStyle'（古风）"
+              },
+              "position": { 
+                "type": "string", 
+                "enum": ["top-left", "top-right", "bottom-left", "bottom-right", "center"],
+                "description": "水印位置"
+              },
+              "padding": { 
+                "type": "number", 
+                "description": "边距（像素）"
+              },
+              "rotation": { 
+                "type": "number", 
+                "description": "旋转角度（度）"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["text", "image"],
+                "description": "水印类型：文字或图片"
+              },
+              "imageUrl": {
+                "type": "string",
+                "description": "图片水印的 URL（当 type 为 image 时使用）"
+              },
+              "offsetX": {
+                "type": "number",
+                "description": "水平偏移量（像素），用于精确定位"
+              },
+              "offsetY": {
+                "type": "number",
+                "description": "垂直偏移量（像素），用于精确定位"
+              }
+            }
+          },
+          "title": {
+            "type": "object",
+            "description": "标题设置",
+            "properties": {
+              "show": { 
+                "type": "boolean", 
+                "description": "是否显示标题"
+              },
+              "text": { 
+                "type": "string", 
+                "description": "标题文字内容，如 '早安'、'Happy New Year'"
+              },
+              "fontFamily": { 
+                "type": "string", 
+                "description": "字体名称，同 watermark.fontFamily"
+              },
+              "color": { 
+                "type": "string", 
+                "description": "文字颜色，hex 格式"
+              },
+              "fontSize": { 
+                "type": "number", 
+                "description": "字体大小（像素）",
+                "minimum": 12,
+                "maximum": 300
+              },
+              "direction": { 
+                "type": "string", 
+                "enum": ["horizontal", "vertical"],
+                "description": "文字方向：horizontal（横排）或 vertical（竖排）"
+              },
+              "offsetX": {
+                "type": "number",
+                "description": "水平偏移量（像素）"
+              },
+              "offsetY": {
+                "type": "number",
+                "description": "垂直偏移量（像素）"
+              }
+            }
+          },
+          "preview": {
+            "type": "object",
+            "description": "预览设置，包括设备选择",
+            "properties": {
+              "selectedDevice": { 
+                "type": "string", 
+                "enum": ["iphone", "ipad", "mac", "car", "combo", "custom"],
+                "description": "选择的设备：iphone（iPhone）、ipad（iPad）、mac（Mac）、car（车载屏幕）、combo（组合展示）、custom（自定义尺寸）"
+              },
+              "showDeviceBorder": { 
+                "type": "boolean", 
+                "description": "是否显示设备边框（如 iPhone 外框）"
+              },
+              "hasNotch": { 
+                "type": "boolean", 
+                "description": "iPhone 是否显示刘海（仅对 iphone 设备有效）"
+              }
+            }
+          },
+          "background": {
+            "type": "object",
+            "description": "背景设置",
+            "properties": {
+              "type": { 
+                "type": "string", 
+                "enum": ["perspective", "color"],
+                "description": "背景类型：perspective（透视背景，使用模糊的原图）或 color（纯色背景）"
+              },
+              "color": { 
+                "type": "string", 
+                "description": "纯色背景的颜色值（当 type 为 color 时使用）"
+              }
+            }
+          }
+        }
+      },
+      "returns": {
+        "description": "返回更新结果和当前完整配置",
+        "properties": {
+          "success": { "type": "boolean" },
+          "currentConfig": { "type": "object" }
+        }
+      },
+      "examples": [
+        {
+          "description": "将标题改为'早安'，颜色设为白色",
+          "params": {
+            "title": { "text": "早安", "color": "#ffffff", "show": true }
+          }
+        },
+        {
+          "description": "切换到 iPhone 设备，隐藏边框",
+          "params": {
+            "preview": { "selectedDevice": "iphone", "showDeviceBorder": false }
+          }
+        },
+        {
+          "description": "设置深蓝色纯色背景",
+          "params": {
+            "background": { "type": "color", "color": "#1a1a2e" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_image_url",
+      "description": "更换壁纸的背景图片。支持传入图片 URL。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": { 
+            "type": "string", 
+            "description": "图片的 URL 地址。支持 http/https 链接或 base64 数据 URI"
+          }
+        },
+        "required": ["url"]
+      },
+      "returns": {
+        "properties": {
+          "success": { "type": "boolean" },
+          "imageUrl": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "export_wallpaper",
+      "description": "导出并下载壁纸。AI 完成所有设计调整后，调用此工具让用户下载最终壁纸。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "mode": { 
+            "type": "string", 
+            "enum": ["withBackground", "withoutBackground"],
+            "default": "withBackground",
+            "description": "导出模式：withBackground（带背景，包含透视或纯色背景）或 withoutBackground（仅设备+内容，透明背景）"
+          },
+          "filename": { 
+            "type": "string",
+            "description": "下载的文件名，默认自动生成如 'ai-wallpaper-123456.png'"
+          }
+        }
+      },
+      "returns": {
+        "properties": {
+          "success": { "type": "boolean" },
+          "filename": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "reset_wallpaper_config",
+      "description": "将所有壁纸配置重置为默认状态。用于开始新设计时清理之前的设置。",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      },
+      "returns": {
+        "properties": {
+          "success": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "name": "apply_template",
+      "description": "【预留】应用预设模板。支持一键应用完整的风格配置（如小红书风、商务风、极简风等）。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "templateId": {
+            "type": "string",
+            "enum": ["xiaohongshu", "business", "minimal", "vintage", "cute"],
+            "description": "模板 ID：xiaohongshu（小红书大字报）、business（商务简约）、minimal（极简留白）、vintage（复古胶片）、cute（可爱萌系）"
+          }
+        },
+        "required": ["templateId"]
+      }
+    },
+    {
+      "name": "set_watermark_position",
+      "description": "【预留】精确设置水印位置。可以通过坐标或预设位置快速定位水印。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "string",
+            "enum": ["top-left", "top-right", "bottom-left", "bottom-right", "center", "custom"],
+            "description": "预设位置"
+          },
+          "x": {
+            "type": "number",
+            "description": "自定义 X 坐标（当 position 为 custom 时使用）"
+          },
+          "y": {
+            "type": "number",
+            "description": "自定义 Y 坐标（当 position 为 custom 时使用）"
+          }
+        }
+      }
+    }
+  ],
+  "agent_guidelines": {
+    "description": "AI 操作指南",
+    "best_practices": [
+      "修改配置前先调用 get_wallpaper_config 了解当前状态",
+      "update_wallpaper_config 支持部分更新，只需传入需要修改的字段",
+      "导出前确保所有设置已调整完毕，再调用 export_wallpaper",
+      "用户说'帮我设计一张壁纸'时，可以主动推荐配色和布局方案"
+    ],
+    "common_workflows": [
+      {
+        "name": "快速设计并导出",
+        "steps": [
+          "1. get_wallpaper_config 获取当前状态",
+          "2. set_image_url 设置背景图（如有）",
+          "3. update_wallpaper_config 调整样式",
+          "4. export_wallpaper 导出下载"
+        ]
+      },
+      {
+        "name": "调整现有设计",
+        "steps": [
+          "1. get_wallpaper_config 获取当前配置",
+          "2. 根据用户需求调整特定字段",
+          "3. update_wallpaper_config 应用更改",
+          "4. 如需保存：export_wallpaper"
+        ]
+      }
+    ]
+  },
+  "ui_hints": {
+    "entry_point": "页面右下角 🤖 AI 按钮",
+    "language_support": ["zh-CN", "en"],
+    "suggested_prompts": [
+      "帮我把背景换成深蓝色，标题改为'早安'，然后导出",
+      "把水印改成'@我的品牌'，颜色用金色",
+      "换成 iPhone 尺寸，去掉设备边框",
+      "把标题字体换成可爱的风格"
+    ]
+  }
+}

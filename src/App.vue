@@ -38,6 +38,9 @@
     />
     <!-- 噪点纹理层 -->
     <div class="noise-overlay"></div>
+    
+    <!-- AI 助手 -->
+    <AIAssistant v-if="!isXHS" />
   </div>
 </template>
 <script setup lang="ts">
@@ -47,13 +50,15 @@ import SettingsModal from '@/components/common/SettingsModal.vue';
 import Header from '@/components/common/Header.vue';
 import ShareCard from '@/components/common/ShareCard.vue';
 import PWAPrompt from '@/components/PWAPrompt.vue';
+import AIAssistant from '@/components/common/AIAssistant.vue';
 import { useDark } from "@vueuse/core";
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
 import { captureWallpaper } from './utils/captureUtils';
 import { formatFileTimestamp } from './utils/time';
+import { globalPreviewArea } from './utils/webmcp';
 
 const isDark = useDark();
 const route = useRoute();
@@ -69,6 +74,14 @@ const wallpaperEditorRef = ref<{
   previewAreaRef: HTMLElement | null;
   loadTemplates?: () => Promise<void>;
 } | null>(null);
+
+// 同步预览区域给 WebMCP
+watch(() => wallpaperEditorRef.value?.previewAreaRef, (el) => {
+  if (el) {
+    globalPreviewArea.value = el;
+    console.log('📱 WebMCP: Preview Area Registered');
+  }
+}, { immediate: true });
 
 // 获取壁纸配置
 const { watermarkSettings, titleSettings, previewSettings, backgroundSettings, imageUrl } = useWallpaper();

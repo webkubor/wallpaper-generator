@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AIAssistant: typeof import('./../components/common/AIAssistant.vue')['default']
     BackgroundSettings: typeof import('./../components/toolbar/BackgroundSettings.vue')['default']
     BaseButton: typeof import('./../components/base/BaseButton.vue')['default']
     BaseCard: typeof import('./../components/base/BaseCard.vue')['default']

@@ -10,6 +10,24 @@
 
 ---
 
+## 2026-03
+
+
+### 功能（feat）
+- 2026-03-18 17:40:00 [Kimi Code] feat: 新增 AI 助手 UI 组件，支持一键复制 Prompt 和查看可用工具
+- 2026-03-18 17:35:00 [Kimi Code] feat: WebMCP 新增 apply_template 工具，支持一键应用 5 种预设风格模板
+- 2026-03-18 17:30:00 [Kimi Code] feat: WebMCP 新增 set_watermark_position 工具，支持精确设置水印位置
+- 2026-03-18 17:25:00 [Kimi Code] feat: WebMCP 新增 get_available_templates/get_available_fonts 工具
+- 2026-03-18 17:20:00 [Kimi Code] feat: 完善 WebMCP 协议元数据，增加 agent_guidelines 和示例
+- 2026-03-15 12:00:00 [Gemini] feat: 接入 WebMCP 协议实现 AI 原生化改造 (AI-Native)
+- 2026-03-15 12:10:00 [Gemini] feat: 支持通过 AI 代理自动修改壁纸文字、背景与一键导出
+- 2026-03-15 12:15:00 [Gemini] feat: 新增 llms.txt 项目索引，优化 AI 对项目结构的感知速度
+
+### 文档（docs）
+- 2026-03-18 17:45:00 [Kimi Code] docs: 更新 README.md，完善 AI 使用指南和 WebMCP 接入文档
+- 2026-03-18 17:50:00 [Kimi Code] docs: 更新版本号至 0.3.0
+
+---
 
 ## 2026-01
 

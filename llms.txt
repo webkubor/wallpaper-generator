@@ -1,0 +1,23 @@
+# Product Wallpaper Studio
+
+> 氛围壁纸生成器 | AI-Native Transformation
+
+## 核心功能
+- **设备预览**: 支持 iPhone, iPad, Mac, 车机等多种设备模型预览。
+- **自定义编辑**: 支持修改背景图、标题、水印及其位置颜色。
+- **导出下载**: 支持带背景或仅设备导出的 PNG 下载。
+
+## AI 接入 (WebMCP)
+本项目已完整接入 WebMCP 协议，AI 代理可以通过 `window.mcp` 调用以下工具：
+
+### 工具清单 (Tools)
+- `get_wallpaper_config`: 获取当前壁纸所有配置。
+- `update_wallpaper_config`: 实时修改文字、颜色、设备等。
+- `set_image_url`: 切换背景底图。
+- `export_wallpaper`: 触发截图并下载。
+- `reset_wallpaper_config`: 恢复默认设置。
+
+### 文件索引
+- `src/utils/webmcp.ts`: WebMCP 运行时实现。
+- `public/.well-known/webmcp.json`: WebMCP 协议描述文件。
+- `src/composables/useWallpaper.ts`: 核心状态管理（AI 操作的实体）。
