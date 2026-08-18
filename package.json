@@ -1,7 +1,7 @@
 {
   "name": "wallpaper-generator",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Ambient Wallpaper Studio — an online, privacy-first wallpaper maker that runs entirely in the browser. Create wallpapers for iPhone, iPad, Mac, car screens, and custom devices.",
   "type": "module",
   "scripts": {
     "dev": "vite dev --host",

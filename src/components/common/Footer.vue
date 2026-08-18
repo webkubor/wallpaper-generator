@@ -11,16 +11,6 @@
         <div class="social-links">
           <n-tooltip trigger="hover">
             <template #trigger>
-              <a href="https://www.xiaohongshu.com/user/profile/5c3c1581000000000501835d?xsec_token=ABTfMj6hyxBdKl6VBK2GMfj1IL_SbEmMZCldv5T1hs0t0%3D&xsec_source=pc_search" 
-                 target="_blank" 
-                 class="social-link xiaohongshu">
-                <n-icon :component="Heart" class="social-icon" />
-              </a>
-            </template>
-            访问我的小红书
-          </n-tooltip>
-          <n-tooltip trigger="hover">
-            <template #trigger>
               <a href="mailto:webkubor@163.com" class="social-link email">
                 <n-icon :component="Envelope" class="social-icon" />
               </a>
@@ -35,7 +25,7 @@
 
 <script setup lang="ts">
 import { NLayoutFooter, NIcon, NTooltip } from 'naive-ui';
-import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from "@phosphor-icons/vue";
+import { PhEnvelope as Envelope, PhSparkle as Sparkles } from "@phosphor-icons/vue";
 </script>
 
 <style scoped lang="scss">
@@ -114,11 +104,6 @@ import { PhEnvelope as Envelope, PhSparkle as Sparkles, PhHeart as Heart } from 
           color: var(--n-text-color);
           opacity: 0.8;
           transition: all 0.3s ease;
-        }
-        
-        &.xiaohongshu:hover .social-icon {
-          color: #b46a63;
-          opacity: 1;
         }
         
         &.email:hover .social-icon {
