@@ -11,10 +11,68 @@
 ---
 
 
+## 2026-08
+
+
+### 修复（fix）
+- 2026-08-18 14:36:01 bb861d0 [webkubor] fix(ci): pnpm-workspace.yaml 补 packages 字段解决 CI setup-node cache 报错 [skip ci]
+
+### 移除/重构（remove/chore）
+- 2026-08-18 14:11:58 d07556a [webkubor] chore: 开源发布准备
+- 2026-08-10 14:59:39 510d44b [webkubor] chore(deps): upgrade to Vite 8 + vue-router 5 + unplugin 21/32 (TS6)
+
+### 其他（other/merge）
+- 2026-08-18 14:33:24 9cd794a [webkubor] ci: 添加自动化发布 workflow（build + CHANGELOG + Release）
+- 2026-08-12 14:39:24 d2ae961 [webkubor] security: 从 git 移除 .env（含 Gemini API Key），补 .gitignore 规则
+
+## 2026-01
+
+
+### 功能（feat）
+- 2026-01-13 19:00:32 d7b5ab4 [webkubor] Feat 提交莫兰迪色系优化
+
+### 修复（fix）
+- 2026-01-14 09:30:00 144998e [webkubor] Fix XHS cover navigation and update PWA/versioning
+- 2026-01-13 19:17:59 66a405b [webkubor] fix export clone placement
+
+### 移除/重构（remove/chore）
+- 2026-01-06 13:50:23 776f2f4 [webkubor] refactor(types): 将类型定义文件移动到src/types目录并更新配置
+
+### 其他（other/merge）
+- 2026-01-13 19:54:37 bbb920e [webkubor] 提交修改 banner
+- 2026-01-13 19:54:26 f09e3e8 [webkubor] 提交修改版本
+- 2026-01-13 19:24:23 d051716 [webkubor] switch capture to dom-to-image-more
+- 2026-01-13 19:19:13 bef6992 [webkubor] restore export scale handling
+- 2026-01-13 19:15:56 c655398 [webkubor] refine toolbar header actions
+- 2026-01-13 18:41:31 b4b9109 [webkubor] UI 提交
+
 ## 2025-09
 
 
 ### 功能（feat）
+- 2025-09-10 10:20:28 89690fe [webkubor] feat  自适应裁减问题
+- 2025-09-10 10:13:30 8e4bf61 [webkubor] feat 融合配置
+- 2025-09-08 09:39:25 42482d7 [webkubor] feat(标题设置): 添加字体大小配置选项
+- 2025-09-06 14:13:36 6e9a57f [webkubor] feat: 将标题设置移至独立的折叠面板中
+- 2025-09-06 12:22:12 240e0ea [webkubor] feat: 支持副标题多行显示及换行功能
+- 2025-09-05 23:05:19 0100b2c [webkubor] feat: 为海报编辑器添加标题和副标题的拖拽功能
+- 2025-09-05 22:39:46 b3e1906 [webkubor] feat: 更新字体名称并添加海报光照效果开关
+- 2025-09-05 22:20:26 abadd81 [webkubor] feat: 优化模板卡片样式，添加悬停和选中状态的视觉效果
+- 2025-09-05 21:57:22 09a7350 [webkubor] feat: 移除自定义字体选项并优化控制栏背景样式
+- 2025-09-05 21:38:14 c24958f [webkubor] feat: 优化竖排文字方向和模板副标题显示逻辑
+- 2025-09-05 18:26:16 e9911f6 [webkubor] feat: 为小红书海报编辑器添加副标题显示开关功能
+- 2025-09-05 18:24:36 f6e7f39 [webkubor] feat: 使用主标题作为海报下载文件名并清理特殊字符
+- 2025-09-05 18:19:35 469e811 [webkubor] feat: 优化海报编辑器字体大小单位并移除文字占比限制功能
+- 2025-09-05 18:04:32 2d32e17 [webkubor] feat: 将字体大小单位从 px 改为 em 并优化海报布局样式
+- 2025-09-05 17:17:22 c13620f [webkubor] feat: 优化竖排文字方向并添加武侠和极简黑白海报模板
+- 2025-09-05 17:02:02 eb5e88b [webkubor] feat: 为海报编辑器添加文字阴影效果并优化布局样式
+- 2025-09-05 16:22:26 c82fdb0 [webkubor] feat: 新增小红书海报下载功能并优化模板选择界面
+- 2025-09-05 15:46:53 ef6af1c [webkubor] feat: 使用 naive-ui 重构设计提示组件并优化模板预览布局
+- 2025-09-05 15:38:42 0071479 [webkubor] feat: 新增字体选择、文字排版和预设模板功能
+- 2025-09-05 14:54:18 93b56a5 [webkubor] feat: 将vue-router移至生产依赖并添加小红书封面编辑功能
+- 2025-09-05 14:38:32 71d4bbe [webkubor] feat: 重构模板管理功能并统一时间格式化工具
+- 2025-09-05 14:09:45 1128eeb [webkubor] feat: 添加模板和配置保存时的用户反馈提示
+- 2025-09-04 18:00:02 15bd793 [webkubor] feat: 为移动端添加自适应布局和底部抽屉组件
 - 2025-09-04 17:30:20 f54c952 [webkubor] feat: 添加背景设置到模板保存和加载功能中
 - 2025-09-04 17:17:20 a3b1c9e [webkubor] feat  移除消息提示测试
 - 2025-09-04 17:16:24 7f388de [webkubor] feat  更新配置
@@ -67,9 +125,14 @@
 - 2025-09-02 17:17:21 252370d [webkubor] feat  删除无用的配置
 
 ### 修复（fix）
+- 2025-09-05 17:07:26 6e0cc45 [webkubor] fix: 修复标题描边样式默认值并更新模板颜色配置
 - 2025-09-04 11:20:54 1db50a8 [webkubor] fix: 修复模板加载事件的TypeScript类型定义语法
 
 ### 移除/重构（remove/chore）
+- 2025-09-05 22:40:43 1df2cfe [webkubor] refactor: 将字体 Chinese3 重命名为 Wuxia 以更好地表达武侠风格
+- 2025-09-05 18:21:36 6f9b276 [webkubor] refactor: 将文字排版布局的布尔值改为字符串枚举类型
+- 2025-09-05 16:30:33 b7e14f6 [webkubor] refactor: 将海报模板和字体配置抽离到独立JSON文件
+- 2025-09-05 14:12:19 784342a [webkubor] chore: 添加生成变更日志脚本并更新开发服务器配置
 - 2025-09-04 15:44:13 804ff5e [webkubor] refactor: 移除 NMessageProvider 组件并使用全局消息通知
 - 2025-09-04 11:42:45 76450ff [webkubor] refactor: 将拖拽功能移至独立文件并优化分享卡片组件
 - 2025-09-04 11:29:32 7923cb4 [webkubor] refactor: 重构壁纸和分享卡片的截图下载逻辑到独立工具函数
@@ -85,6 +148,12 @@
 - 2025-09-02 19:16:08 01b8567 [webkubor] refactor: 将手机相关组件移动至iphone目录
 
 ### 其他（other/merge）
+- 2025-09-05 23:48:10 fefe06b [webkubor] 删除: 移除小红书封面编辑器组件和设计提示组件
+- 2025-09-05 22:14:14 63ab751 [webkubor] 优化: 改进海报编辑器页面的布局和响应式设计
+- 2025-09-05 21:52:07 c47214d [webkubor] 移除vampire-wars字体并优化文字渲染样式
+- 2025-09-05 16:48:31 8ef2032 [webkubor] 样式: 调整海报高度限制并新增黑金科幻等模板样式
+- 2025-09-05 16:40:12 f23d958 [webkubor] 样式: 更新模板卡片选中状态样式并简化主题色系统为金色调
+- 2025-09-05 14:13:32 4bace70 [webkubor] docs: 删除CHANGELOG文件以迁移至其他格式
 - 2025-09-04 09:09:30 602e041 [webkubor] 添加新文件
 - 2025-09-04 09:08:57 61e2e9b [webkubor] 添加更新日志
 - 2025-09-04 09:07:49 a481a49 [webkubor] 添加新文件
