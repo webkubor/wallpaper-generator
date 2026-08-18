@@ -92,8 +92,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Detect commits since last tag
+      - name: Detect commits & classify
         id: detect
+        shell: bash
         run: |
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$LAST_TAG" ]; then
@@ -101,34 +102,39 @@ jobs:
           else
             RANGE="$LAST_TAG..HEAD"
           fi
-          LOG=$(git log "$RANGE" --pretty=format:'%s')
-          echo "commits=$LOG" >> "$GITHUB_OUTPUT"
+          # 计算是否含语义化 feat / fix commit
+          FEAT_COUNT=$(git log "$RANGE" --pretty=format:'%s' | grep -icE "(^feat|^feature|feat\(|^Feat)") || true
+          FIX_COUNT=$(git log "$RANGE" --pretty=format:'%s' | grep -icE "(^fix|fix\(|^Fix)") || true
+          echo "has_feat=$([ "$FEAT_COUNT" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "has_fix=$([ "$FIX_COUNT" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           echo "last_tag=$LAST_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Determine next version & whether to release
         id: version
+        shell: bash
         run: |
-          COMMITS="${{ steps.detect.outputs.commits }}"
-          HAS_FEAT=$(echo "$COMMITS" | grep -icE "(^feat|feature|feat\(|^Feat)") || true
-          HAS_FIX=$(echo "$COMMITS" | grep -icE "(^fix|fix\(|^Fix)") || true
+          HAS_FEAT="${{ steps.detect.outputs.has_feat }}"
+          HAS_FIX="${{ steps.detect.outputs.has_fix }}"
           CURRENT=$(node -p "require('./package.json').version")
           LAST_TAG="${{ steps.detect.outputs.last_tag }}"
-          # 若还没有任何 tag：这是首次发布，直接定 v1.0.0，不叠加历史 commit 的语义
+          # 若还没有任何 tag：这是首次发布，直接定 v1.0.0
           if [ -z "$LAST_TAG" ]; then
             echo "next_version=1.0.0" >> "$GITHUB_OUTPUT"
-            echo "is_first_release=true" >> "$GITHUB_OUTPUT"
             echo "has_releasable=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           IFS='.' read -r MAJ MIN PAT <<< "$CURRENT"
-          if [ "$HAS_FEAT" -gt 0 ]; then
+          if [ "$HAS_FEAT" = "true" ]; then
             MIN=$((MIN+1)); PAT=0
           else
             PAT=$((PAT+1))
           fi
           echo "next_version=$MAJ.$MIN.$PAT" >> "$GITHUB_OUTPUT"
-          echo "is_first_release=false" >> "$GITHUB_OUTPUT"
-          echo "has_releasable=$([ $((HAS_FEAT+HAS_FIX)) -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          if [ "$HAS_FEAT" = "true" ] || [ "$HAS_FIX" = "true" ]; then
+            echo "has_releasable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_releasable=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Tag & Release
         if: steps.version.outputs.has_releasable == 'true'
