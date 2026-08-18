@@ -14,6 +14,9 @@
 ## 2026-08
 
 
+### 功能（feat）
+- 2026-08-18 14:40:26 7f01b85 [webkubor] feat: 为英文 README 添加开源徽章（license/CI/release）
+
 ### 修复（fix）
 - 2026-08-18 14:36:01 bb861d0 [webkubor] fix(ci): pnpm-workspace.yaml 补 packages 字段解决 CI setup-node cache 报错 [skip ci]
 
@@ -22,6 +25,7 @@
 - 2026-08-10 14:59:39 510d44b [webkubor] chore(deps): upgrade to Vite 8 + vue-router 5 + unplugin 21/32 (TS6)
 
 ### 其他（other/merge）
+- 2026-08-18 06:37:43 e5b1f23 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-18 14:33:24 9cd794a [webkubor] ci: 添加自动化发布 workflow（build + CHANGELOG + Release）
 - 2026-08-12 14:39:24 d2ae961 [webkubor] security: 从 git 移除 .env（含 Gemini API Key），补 .gitignore 规则
 
