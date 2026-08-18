@@ -2,6 +2,10 @@
 
 > Where the wind has a home, and the heart has a color.
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![CI](https://github.com/webkubor/wallpaper-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/webkubor/wallpaper-generator/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/webkubor/wallpaper-generator)](https://github.com/webkubor/wallpaper-generator/releases)
+
 An **online wallpaper maker** that runs entirely in your browser — create beautiful wallpapers adapted to a wide variety of devices in minutes.
 
 ## ✨ Features
