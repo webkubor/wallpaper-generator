@@ -1,0 +1,148 @@
+name: CI / Release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ci-master
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  changelog:
+    name: Update CHANGELOG
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Generate CHANGELOG from git log
+        run: |
+          CHANGELOG_BRANCH=master pnpm changelog
+          if [ -n "$(git status --porcelain CHANGELOG.md)" ]; then
+            echo "changelog_changed=true" >> "$GITHUB_ENV"
+          else
+            echo "changelog_changed=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Commit & push CHANGELOG
+        if: env.changelog_changed == 'true'
+        run: |
+          git config user.name "webkubor"
+          git config user.email "webkubor@163.com"
+          git add CHANGELOG.md
+          git commit -m "docs: auto-update CHANGELOG [skip ci]"
+          git push origin HEAD:master
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: changelog
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect commits since last tag
+        id: detect
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            RANGE="HEAD"
+          else
+            RANGE="$LAST_TAG..HEAD"
+          fi
+          LOG=$(git log "$RANGE" --pretty=format:'%s')
+          echo "commits=$LOG" >> "$GITHUB_OUTPUT"
+          echo "last_tag=$LAST_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Determine next version & whether to release
+        id: version
+        run: |
+          COMMITS="${{ steps.detect.outputs.commits }}"
+          HAS_FEAT=$(echo "$COMMITS" | grep -icE "(^feat|feature|feat\(|^Feat)") || true
+          HAS_FIX=$(echo "$COMMITS" | grep -icE "(^fix|fix\(|^Fix)") || true
+          CURRENT=$(node -p "require('./package.json').version")
+          LAST_TAG="${{ steps.detect.outputs.last_tag }}"
+          # 若还没有任何 tag：这是首次发布，直接定 v1.0.0，不叠加历史 commit 的语义
+          if [ -z "$LAST_TAG" ]; then
+            echo "next_version=1.0.0" >> "$GITHUB_OUTPUT"
+            echo "is_first_release=true" >> "$GITHUB_OUTPUT"
+            echo "has_releasable=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          IFS='.' read -r MAJ MIN PAT <<< "$CURRENT"
+          if [ "$HAS_FEAT" -gt 0 ]; then
+            MIN=$((MIN+1)); PAT=0
+          else
+            PAT=$((PAT+1))
+          fi
+          echo "next_version=$MAJ.$MIN.$PAT" >> "$GITHUB_OUTPUT"
+          echo "is_first_release=false" >> "$GITHUB_OUTPUT"
+          echo "has_releasable=$([ $((HAS_FEAT+HAS_FIX)) -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Tag & Release
+        if: steps.version.outputs.has_releasable == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_VERSION: ${{ steps.version.outputs.next_version }}
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version=process.env.NEXT_VERSION;fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n')"
+          git config user.name "webkubor"
+          git config user.email "webkubor@163.com"
+          git add package.json pnpm-lock.yaml 2>/dev/null || true
+          git commit -m "chore: release v$NEXT_VERSION [skip ci]" || true
+          git push origin HEAD:master || true
+          git tag "v$NEXT_VERSION"
+          git push origin "v$NEXT_VERSION" || true
+          NOTES=$(awk '/^## /{c++} c==1{print}' CHANGELOG.md | head -80)
+          gh release create "v$NEXT_VERSION" --title "v$NEXT_VERSION" --notes "$NOTES" || true
