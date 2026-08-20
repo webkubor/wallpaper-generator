@@ -27,16 +27,17 @@ function refExists(ref) {
   }
 }
 
-// 解析日志参考 ref：优先 cli 参数 > 环境变量 > 默认 master；优先远端 origin/<branch>
+// 解析日志参考 ref：优先 cli 参数 > 环境变量 > 默认 main；优先远端 origin/<branch>
 function resolveTargetRef() {
-  let desired = getArgBranch() || process.env.CHANGELOG_BRANCH || 'master';
-  if (!refExists(desired) && desired === 'master' && refExists('main')) {
-    desired = 'main';
+  let desired = getArgBranch() || process.env.CHANGELOG_BRANCH || 'main';
+  // 兼容仍停在 master 的老 clone（2026-08-20 主干已改名 main）
+  if (!refExists(desired) && desired === 'main' && refExists('master')) {
+    desired = 'master';
   }
   const remoteRef = `origin/${desired}`;
   if (refExists(remoteRef)) return remoteRef;
   if (refExists(desired)) return desired;
-  const fallbacks = ['origin/master', 'master', 'origin/main', 'main'];
+  const fallbacks = ['origin/main', 'main', 'origin/master', 'master'];
   for (const fb of fallbacks) {
     if (refExists(fb)) return fb;
   }
@@ -131,7 +132,7 @@ function groupByMonth(commits) {
 
 function render(chunks) {
   const displayBranch = String(targetRef).replace(/^origin\//, '');
-  const isProd = displayBranch === 'master';
+  const isProd = displayBranch === 'main';
   const branchInfo = `来源分支: ${displayBranch}${isProd ? '（线上分支）' : ''}  | 实际引用: ${targetRef}`;
 
   const header = `# 更新日志（CHANGELOG）\n\n${branchInfo}\n\n由Git提交记录自动汇总，按月份（YYYY-MM）分组，分类展示主要类型：\n- 功能（feat）\n- 修复（fix）\n- 移除/重构（remove/chore）\n- 其他（other/merge）\n\n---\n`;

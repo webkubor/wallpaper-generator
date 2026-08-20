@@ -14,8 +14,8 @@
 ### 提交代码
 如果你想为项目贡献代码：
 
-1. **Fork 项目** - 在 GitLab 上 fork 这个仓库
-2. **创建分支** - 从 `master` 分支创建你的功能分支
+1. **Fork 项目** - 在 GitHub 上 fork 这个仓库
+2. **创建分支** - 从 `main` 分支创建你的功能分支
    ```bash
    git checkout -b feature/amazing-feature
    ```

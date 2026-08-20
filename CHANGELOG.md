@@ -1,6 +1,6 @@
 # 更新日志（CHANGELOG）
 
-来源分支: master（线上分支）  | 实际引用: origin/master
+来源分支: main（线上分支）  | 实际引用: main
 
 由Git提交记录自动汇总，按月份（YYYY-MM）分组，分类展示主要类型：
 - 功能（feat）
@@ -26,6 +26,7 @@
 - 2026-08-10 14:59:39 510d44b [webkubor] chore(deps): upgrade to Vite 8 + vue-router 5 + unplugin 21/32 (TS6)
 
 ### 其他（other/merge）
+- 2026-08-18 06:45:28 40da73b [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-18 06:41:19 9bd22c3 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-18 06:37:43 e5b1f23 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-18 14:33:24 9cd794a [webkubor] ci: 添加自动化发布 workflow（build + CHANGELOG + Release）
