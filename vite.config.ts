@@ -4,6 +4,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { refreshGuard } from 'vite-plugin-refresh-guard'
 import path from 'path';
 import fs from 'node:fs';
 
@@ -34,7 +35,7 @@ export default defineConfig({
       replacement: path.resolve(__dirname, 'src')
     }]
   },
-  plugins: [vue(), VitePWA({
+  plugins: [refreshGuard({ changelog: false }), vue(), VitePWA({
     registerType: 'prompt',
     manifestFilename: 'site.webmanifest',
     includeAssets: ['logo.svg', 'webkubor.svg'],

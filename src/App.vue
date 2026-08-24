@@ -38,6 +38,7 @@
         :wallpaper-image="currentWallpaperImage"
       />
     </n-layout>
+    <UpdatePrompt :visible="hasUpdate" :mode="mode" :changelog-html="'<p>有新版本可用，即将自动刷新。</p>'" @refresh="applyUpdate" />
   </n-config-provider>
 </template>
 <script setup lang="ts">
@@ -55,6 +56,10 @@ import { useWallpaper } from './composables/useWallpaper';
 import { templateDB, type Template } from './utils/indexedDB';
 import { captureWallpaper } from './utils/captureUtils';
 import { formatFileTimestamp } from './utils/time';
+import { useVersionCheck } from 'vite-plugin-refresh-guard/vue'
+import UpdatePrompt from 'vite-plugin-refresh-guard/vue/UpdatePrompt.vue'
+
+const { hasUpdate, mode, applyUpdate } = useVersionCheck(__REFRESH_GUARD_VERSION__, { mode: 'toast-auto', interval: 5 * 60 * 1000, checkOnVisible: true })
 
 const isDark = useDark();
 const route = useRoute();

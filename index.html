@@ -15,6 +15,9 @@
 <meta name="twitter:description" content="你的心情壁纸生成器，东方美学、水彩风、极简留白。">
     <meta name="keywords" content="壁纸生成器,氛围壁纸,水彩风壁纸,极简留白,东方美学壁纸,心情壁纸,AI壁纸工具">
     <meta name="description" content="氛围壁纸工坊，支持用户上传图片，提供水彩风、极简留白、东方美学的壁纸优化和水印点缀。记录你的心情瞬间，让壁纸成为生活的留白。">
+    <script>
+    (function () { var KEY='wallpaper-chunk-reload-ts'; window.addEventListener('vite:preloadError', function (e) { e.preventDefault(); var now=Date.now(); var last=Number(sessionStorage.getItem(KEY)||0); if (now-last<10000) return; sessionStorage.setItem(KEY,String(now)); var tasks=[]; if ('serviceWorker' in navigator) tasks.push(navigator.serviceWorker.getRegistrations().then(function(r){return Promise.all(r.map(function(x){return x.unregister()}))}).catch(function(){})); if ('caches' in window) tasks.push(caches.keys().then(function(k){return Promise.all(k.map(function(x){return caches.delete(x)}))}).catch(function(){})); Promise.all(tasks).finally(function(){window.location.reload()}); }); })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

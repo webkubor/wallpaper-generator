@@ -1,8 +1,8 @@
 packages:
   - '.'
 allowBuilds:
-  '@parcel/watcher': set this to true or false
-  sharp: set this to true or false
+  '@parcel/watcher': true
+  sharp: true
 onlyBuiltDependencies:
   - sharp
   - '@parcel/watcher'
