@@ -15,6 +15,7 @@
 
 
 ### 功能（feat）
+- 2026-08-24 17:01:49 1ca1214 [webkubor] feat(refresh-guard): 接入 vite-plugin-refresh-guard + 修复 pnpm-workspace.yaml allowBuilds 占位符（此前阻塞 pnpm build）
 - 2026-08-18 14:40:26 7f01b85 [webkubor] feat: 为英文 README 添加开源徽章（license/CI/release）
 
 ### 修复（fix）
@@ -26,6 +27,7 @@
 - 2026-08-10 14:59:39 510d44b [webkubor] chore(deps): upgrade to Vite 8 + vue-router 5 + unplugin 21/32 (TS6)
 
 ### 其他（other/merge）
+- 2026-08-20 13:11:46 08d7f0e [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-20 21:10:40 bafacb1 [webkubor] ci: 主干分支 master 改名 main，同步全部引用
 - 2026-08-18 06:45:28 40da73b [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-18 06:41:19 9bd22c3 [webkubor] docs: auto-update CHANGELOG [skip ci]
