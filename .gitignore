@@ -28,3 +28,6 @@ _tmp_*
 *.njsproj
 *.sln
 *.sw?
+
+# wrangler 本地状态与构建缓存，不进版本库
+.wrangler/
