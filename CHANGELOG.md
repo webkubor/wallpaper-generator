@@ -11,6 +11,12 @@
 ---
 
 
+## 2026-09
+
+
+### 移除/重构（remove/chore）
+- 2026-09-11 11:39:10 1f233cd [webkubor] chore(gitignore): 忽略 .wrangler/ —— wrangler 本地状态与构建缓存
+
 ## 2026-08
 
 
@@ -27,6 +33,7 @@
 - 2026-08-10 14:59:39 510d44b [webkubor] chore(deps): upgrade to Vite 8 + vue-router 5 + unplugin 21/32 (TS6)
 
 ### 其他（other/merge）
+- 2026-08-24 09:04:56 9c3f5de [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-20 13:11:46 08d7f0e [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-08-20 21:10:40 bafacb1 [webkubor] ci: 主干分支 master 改名 main，同步全部引用
 - 2026-08-18 06:45:28 40da73b [webkubor] docs: auto-update CHANGELOG [skip ci]
