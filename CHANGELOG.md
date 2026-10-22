@@ -11,11 +11,20 @@
 ---
 
 
+## 2026-10
+
+
+### 其他（other/merge）
+- 2026-10-22 16:14:10 78e6b4f [webkubor] docs(readme): 补齐徽章，覆盖版本/CI/授权/技术栈维度
+
 ## 2026-09
 
 
 ### 移除/重构（remove/chore）
 - 2026-09-11 11:39:10 1f233cd [webkubor] chore(gitignore): 忽略 .wrangler/ —— wrangler 本地状态与构建缓存
+
+### 其他（other/merge）
+- 2026-09-11 03:40:01 16eefc1 [webkubor] docs: auto-update CHANGELOG [skip ci]
 
 ## 2026-08
 
