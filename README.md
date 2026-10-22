@@ -2,6 +2,16 @@
 
 > 风有归处，心有颜色。
 
+
+<p align="center">
+  <a href="https://github.com/webkubor/wallpaper-generator/releases"><img src="https://img.shields.io/github/v/release/webkubor/wallpaper-generator?style=for-the-badge&color=coral" alt="版本"></a>
+  <a href="https://github.com/webkubor/wallpaper-generator/releases/latest"><img src="https://img.shields.io/github/downloads/webkubor/wallpaper-generator/total?style=for-the-badge&color=orange" alt="下载"></a>
+  <a href="https://github.com/webkubor/wallpaper-generator/blob/main/LICENSE"><img src="https://img.shields.io/github/license/webkubor/wallpaper-generator?style=for-the-badge&color=gold" alt="License"></a>
+  <a href="https://github.com/webkubor/wallpaper-generator/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/webkubor/wallpaper-generator/ci.yml?style=for-the-badge&color=4c9a6b" alt="CI"></a>
+  <a href="https://github.com/webkubor/wallpaper-generator"><img src="https://img.shields.io/github/stars/webkubor/wallpaper-generator?style=for-the-badge&color=coral" alt="Stars"></a>
+  <a href="https://github.com/webkubor/wallpaper-generator"><img src="https://img.shields.io/badge/Vue%203-333333?style=for-the-badge" alt="技术栈"></a>
+</p>
+
 一个在线壁纸制作工具，让你在浏览器中轻松创建适配多种设备的精美壁纸。
 
 ## 🌟 产品特色
