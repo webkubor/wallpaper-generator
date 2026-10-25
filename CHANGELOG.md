@@ -15,6 +15,8 @@
 
 
 ### 其他（other/merge）
+- 2026-10-25 20:30:02 16aad00 [webkubor] docs: add AGENTS.md and llms.txt
+- 2026-10-22 08:14:53 070a680 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-22 16:14:10 78e6b4f [webkubor] docs(readme): 补齐徽章，覆盖版本/CI/授权/技术栈维度
 
 ## 2026-09
