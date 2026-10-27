@@ -1,3 +1,5 @@
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/webkubor/free-imgbed@main/wallpaper-generator/logo.svg" width="96" alt="Ambient Wallpaper Studio logo"></p>
+
 # 🎨 Ambient Wallpaper Studio
 
 > Where the wind has a home, and the heart has a color.

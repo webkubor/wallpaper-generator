@@ -1,3 +1,5 @@
+<p align="center"><img src="https://cdn.jsdelivr.net/gh/webkubor/free-imgbed@main/wallpaper-generator/logo.svg" width="96" alt="氛围壁纸工坊 logo"></p>
+
 # ✨ 氛围壁纸工坊
 
 > 风有归处，心有颜色。
