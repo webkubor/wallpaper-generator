@@ -15,6 +15,8 @@
 
 
 ### 其他（other/merge）
+- 2026-10-27 15:07:42 876a59d [webkubor] docs: use verified project logo from free-imgbed
+- 2026-10-25 12:30:44 0241a7e [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-25 20:30:02 16aad00 [webkubor] docs: add AGENTS.md and llms.txt
 - 2026-10-22 08:14:53 070a680 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-22 16:14:10 78e6b4f [webkubor] docs(readme): 补齐徽章，覆盖版本/CI/授权/技术栈维度
