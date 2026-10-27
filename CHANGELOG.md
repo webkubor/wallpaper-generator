@@ -15,6 +15,8 @@
 
 
 ### 其他（other/merge）
+- 2026-10-27 18:22:08 152c3f1 [webkubor] docs: use square transparent brand marks with theme variants
+- 2026-10-27 07:08:25 6e41f3f [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-27 15:07:42 876a59d [webkubor] docs: use verified project logo from free-imgbed
 - 2026-10-25 12:30:44 0241a7e [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-25 20:30:02 16aad00 [webkubor] docs: add AGENTS.md and llms.txt
