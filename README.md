@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.jsdelivr.net/gh/webkubor/free-imgbed@main/wallpaper-generator/logo.svg" width="96" alt="氛围壁纸工坊 logo"></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.jsdelivr.net/gh/webkubor/free-imgbed@main/wallpaper-generator/mark-v3-dark.svg"><img src="https://cdn.jsdelivr.net/gh/webkubor/free-imgbed@main/wallpaper-generator/mark-v3.svg" width="96" alt="氛围壁纸工坊 logo"></picture></p>
 
 # ✨ 氛围壁纸工坊
 
