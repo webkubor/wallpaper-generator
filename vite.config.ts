@@ -5,6 +5,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { refreshGuard } from 'vite-plugin-refresh-guard'
+import { agentEyes } from 'vite-plugin-agent-eyes'
 import path from 'path';
 import fs from 'node:fs';
 
@@ -23,6 +24,9 @@ try {
   appVersion = '0.0.0'
 }
 
+// Preserve the global credential scanner when local hooksPath is enabled.
+const chainGlobalPreCommit = 'g=$(git config --global --get core.hooksPath); [ -z "$g" ] || [ ! -x "$g/pre-commit" ] || "$g/pre-commit"'
+
 // https://vite.dev/config/
 export default defineConfig({
   base: isDev || isVercel ? '/' : './',
@@ -35,7 +39,12 @@ export default defineConfig({
       replacement: path.resolve(__dirname, 'src')
     }]
   },
-  plugins: [refreshGuard({ changelog: false }), vue(), VitePWA({
+  plugins: [...agentEyes({
+    git: { precommit: [chainGlobalPreCommit] },
+    guard: { level: 'block', checks: { designTokens: { tokenFiles: ['src/styles/theme.scss'] } } },
+    agentDocs: false,
+    visual: false,
+  }), refreshGuard({ changelog: false }), vue(), VitePWA({
     registerType: 'prompt',
     manifestFilename: 'site.webmanifest',
     includeAssets: ['logo.svg', 'webkubor.svg'],

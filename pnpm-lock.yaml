@@ -45,6 +45,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.9.1
         version: 0.9.1(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))
+      frontend-contrast-guard:
+        specifier: https://codeload.github.com/webkubor/frontend-contrast-guard/tar.gz/4a41657f91fd82b0858de2408c8ad3376c4db869
+        version: https://codeload.github.com/webkubor/frontend-contrast-guard/tar.gz/4a41657f91fd82b0858de2408c8ad3376c4db869
       naive-ui:
         specifier: ^2.44.1
         version: 2.44.1(vue@3.5.41(typescript@6.0.3))
@@ -66,6 +69,9 @@ importers:
       vite:
         specifier: ^8.2.1
         version: 8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0)
+      vite-plugin-agent-eyes:
+        specifier: ^0.18.0
+        version: 0.18.0(vite@8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0))
       vite-plugin-pwa:
         specifier: ^1.2.0
         version: 1.3.0(vite@8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0))(workbox-build@7.4.1)(workbox-window@7.4.1)
@@ -1602,6 +1608,12 @@ packages:
     resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
     engines: {node: '>=14'}
 
+  frontend-contrast-guard@https://codeload.github.com/webkubor/frontend-contrast-guard/tar.gz/4a41657f91fd82b0858de2408c8ad3376c4db869:
+    resolution: {tarball: https://codeload.github.com/webkubor/frontend-contrast-guard/tar.gz/4a41657f91fd82b0858de2408c8ad3376c4db869}
+    version: 0.4.0
+    engines: {node: '>=18'}
+    hasBin: true
+
   fs-extra@9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
     engines: {node: '>=10'}
@@ -2437,6 +2449,12 @@ packages:
     peerDependencies:
       vue: ^3.0.11
 
+  vite-plugin-agent-eyes@0.18.0:
+    resolution: {integrity: sha512-wawJYk4QPNYQmZeQVeagU/aKjbJV8iQT7+YdTb3xtaCLmlxN7WTNaGZaS+/oVHWacfBBpUOVf357G30tR4aeqQ==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      vite: '>=4 <10'
+
   vite-plugin-pwa@1.3.0:
     resolution: {integrity: sha512-c5kMgN+ITrOtHXp8PAtk2uOIEea6XjP/unCGxOWWBzQ6qa65qj/awHg0wf+QF9E/2u9vh86LqxPwzEPNbM2r5A==}
     engines: {node: '>=16.0.0'}
@@ -2628,6 +2646,18 @@ packages:
 
   workbox-window@7.4.1:
     resolution: {integrity: sha512-notZDH2u8VXaqyuD7xaqIfEFi6SRM4SUSd7ewe9PDsVqADuepxX2ZMY3uvuZGxzY5ZOsGC/vD3A/3smFtJt4/A==}
+
+  ws@8.22.2:
+    resolution: {integrity: sha512-/rEZ2ejown2N5gxVTHUu9bVVC7ttu0/Tgzf5hbTOixR3Fs7mbbXgn2DbdbcKgJOmpQMtrIUWivtYuVMnp/W/yA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -4195,6 +4225,8 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
+  frontend-contrast-guard@https://codeload.github.com/webkubor/frontend-contrast-guard/tar.gz/4a41657f91fd82b0858de2408c8ad3376c4db869: {}
+
   fs-extra@9.1.0:
     dependencies:
       at-least-node: 1.0.0
@@ -5153,6 +5185,14 @@ snapshots:
       evtd: 0.2.4
       vue: 3.5.41(typescript@6.0.3)
 
+  vite-plugin-agent-eyes@0.18.0(vite@8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0)):
+    dependencies:
+      vite: 8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0)
+      ws: 8.22.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   vite-plugin-pwa@1.3.0(vite@8.2.1(@types/node@24.13.3)(sass@1.102.0)(terser@5.49.2)(yaml@2.9.0))(workbox-build@7.4.1)(workbox-window@7.4.1):
     dependencies:
       debug: 4.4.3
@@ -5413,6 +5453,8 @@ snapshots:
     dependencies:
       '@types/trusted-types': 2.0.7
       workbox-core: 7.4.1
+
+  ws@8.22.2: {}
 
   yallist@3.1.1: {}
 

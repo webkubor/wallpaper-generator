@@ -31,3 +31,7 @@ _tmp_*
 
 # wrangler 本地状态与构建缓存，不进版本库
 .wrangler/
+
+# agent-eyes local artifacts
+log/
+.githooks/
