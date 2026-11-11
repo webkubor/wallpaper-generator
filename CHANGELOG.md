@@ -11,10 +11,17 @@
 ---
 
 
+## 2026-11
+
+
+### 移除/重构（remove/chore）
+- 2026-11-11 22:16:24 27d70dd [lunove] chore(git): ignore .claude/ worktree 运行时目录
+
 ## 2026-10
 
 
 ### 其他（other/merge）
+- 2026-10-27 10:24:34 1847056 [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-27 18:22:08 152c3f1 [webkubor] docs: use square transparent brand marks with theme variants
 - 2026-10-27 07:08:25 6e41f3f [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-10-27 15:07:42 876a59d [webkubor] docs: use verified project logo from free-imgbed
