@@ -25,3 +25,7 @@ pnpm build     # 构建
 - **隐私红线**：不引入任何图片上传 / 服务端处理；新增功能不得破坏「本地处理」承诺。
 - 设备预设与模板保持数据驱动，新增预设不硬编码。
 - 双语 README（`README.md` / `README.en.md`）同步维护。
+
+## UI 配套
+
+改 UI 前先读 DESIGN.md 并执行 `cs skill show ui-design`；tokens 真源 `src/styles/theme.scss`。提交前运行 `pnpm contrast:check`。agentGuard(block) 含 designTokens，生成 pre-commit 串回全局凭据扫描；不要跳过门禁。dev 启动安装钩子。

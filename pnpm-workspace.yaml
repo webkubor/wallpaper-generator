@@ -3,6 +3,8 @@ packages:
 allowBuilds:
   '@parcel/watcher': true
   sharp: true
+minimumReleaseAgeExclude:
+  - vite-plugin-agent-eyes@0.18.0
 onlyBuiltDependencies:
   - sharp
   - '@parcel/watcher'
