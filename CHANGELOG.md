@@ -15,7 +15,11 @@
 
 
 ### 移除/重构（remove/chore）
+- 2026-11-12 16:17:08 566ca06 [webkubor] chore(gitignore): 忽略 log/ 运行时报告目录
 - 2026-11-11 22:16:24 27d70dd [lunove] chore(git): ignore .claude/ worktree 运行时目录
+
+### 其他（other/merge）
+- 2026-11-11 14:17:40 bd06f78 [webkubor] docs: auto-update CHANGELOG [skip ci]
 
 ## 2026-10
 
