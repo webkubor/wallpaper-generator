@@ -1,5 +1,7 @@
 # AGENTS.md — AI 助手工作守则
 
+通用表达规范见 `writing-standard-skills`，此处只写本项目特有细则；表达规范以 `~/dev/agent-skills/writing-standard-skills` 为准。
+
 ## 这是什么
 
 Ambient Wallpaper Studio —— 浏览器壁纸编辑器：为多设备制作壁纸（预设尺寸），
