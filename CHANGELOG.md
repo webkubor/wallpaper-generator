@@ -19,6 +19,8 @@
 - 2026-11-11 22:16:24 27d70dd [lunove] chore(git): ignore .claude/ worktree 运行时目录
 
 ### 其他（other/merge）
+- 2026-11-19 22:02:40 49661a9 [lunove] docs: AGENTS.md 指向 writing-standard-skills 表达规范真源
+- 2026-11-12 08:19:04 cb90b1a [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-11-11 14:17:40 bd06f78 [webkubor] docs: auto-update CHANGELOG [skip ci]
 
 ## 2026-10
