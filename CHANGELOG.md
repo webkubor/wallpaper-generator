@@ -15,10 +15,12 @@
 
 
 ### 移除/重构（remove/chore）
+- 2026-11-22 00:25:35 c975574 [Lunove] chore(ui): 补齐 DESIGN 草稿、对比度检查与提交期设计门禁 (#1)
 - 2026-11-12 16:17:08 566ca06 [webkubor] chore(gitignore): 忽略 log/ 运行时报告目录
 - 2026-11-11 22:16:24 27d70dd [lunove] chore(git): ignore .claude/ worktree 运行时目录
 
 ### 其他（other/merge）
+- 2026-11-19 14:03:19 a98f0fb [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-11-19 22:02:40 49661a9 [lunove] docs: AGENTS.md 指向 writing-standard-skills 表达规范真源
 - 2026-11-12 08:19:04 cb90b1a [webkubor] docs: auto-update CHANGELOG [skip ci]
 - 2026-11-11 14:17:40 bd06f78 [webkubor] docs: auto-update CHANGELOG [skip ci]
