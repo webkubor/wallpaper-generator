@@ -35,3 +35,6 @@ _tmp_*
 
 # agent 运行时目录（worktrees / CLAUDE 会话）不进库
 .claude/
+
+# agent-eyes local artifacts
+.githooks/

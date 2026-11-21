@@ -1,0 +1,19 @@
+{
+  "files": [
+    "src/styles/theme.scss"
+  ],
+  "pairs": [
+    {
+      "fg": "morandi-ink",
+      "bg": "morandi-paper",
+      "min": 4.5,
+      "label": "morandi-ink / paper"
+    },
+    {
+      "fg": "morandi-ink-muted",
+      "bg": "morandi-paper",
+      "min": 4.5,
+      "label": "morandi-ink-muted / paper"
+    }
+  ]
+}
