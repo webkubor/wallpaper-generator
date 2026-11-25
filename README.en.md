@@ -70,3 +70,7 @@ Pure client-side — **all image processing happens locally in your browser**. N
 ---
 
 *Chinese README: [README.md](./README.md)*
+
+## Anonymous usage counts
+
+Only page opens and successfully triggered exports are sent to the shared Core API. Chat text, images, titles, filenames, URLs and user identifiers stay local. Do Not Track disables collection; opt out on this site with `localStorage.setItem('usage-analytics', 'off')` in the browser console. Image processing remains local. Export counts mean a file was generated and browser download triggered; final saving cannot be confirmed.

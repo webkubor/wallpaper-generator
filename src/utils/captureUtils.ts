@@ -1,3 +1,4 @@
+import { trackUsage } from './analytics';
 import domtoimage from 'dom-to-image-more';
 import { formatNow } from './time';
 
@@ -72,6 +73,7 @@ export async function captureAndDownload(
   link.download = filename;
   document.body.appendChild(link);
   link.click();
+  trackUsage('image.export');
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }

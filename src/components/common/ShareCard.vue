@@ -92,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+import { trackUsage } from '@/utils/analytics';
 import { ref, computed, watch } from 'vue';
 import { NModal, NButton, NSpace } from 'naive-ui';
 import { PhDownload, PhArrowsClockwise } from '@phosphor-icons/vue';
@@ -187,6 +188,7 @@ const handleDownloadCard = async () => {
     link.download = `share-card-${formatFileTimestamp()}.png`;
     link.href = url;
     link.click();
+    trackUsage('image.export');
     URL.revokeObjectURL(url);
   } catch (error) {
     console.error('下载卡片失败:', error);

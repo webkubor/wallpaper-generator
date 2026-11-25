@@ -1,3 +1,4 @@
+import { trackUsage } from './utils/analytics'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { useMessagePlugin } from "@/plugins/message";
@@ -13,3 +14,6 @@ const app = createApp(App)
 app.use(useMessagePlugin)
 app.use(router)
 app.mount('#app')
+
+// Count a loaded application once; editor state and route names stay local.
+trackUsage('page.view')
