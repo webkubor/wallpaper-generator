@@ -1,6 +1,1 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="120" fill="#f5f1ea"/>
-  <circle cx="256" cy="256" r="168" fill="#9aa7a1"/>
-  <circle cx="256" cy="256" r="96" fill="#c4b2a3"/>
-  <path d="M256 156L280 196L324 208L290 244L298 288L256 268L214 288L222 244L188 208L232 196L256 156Z" fill="#3f3a36" opacity="0.85"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="氛围壁纸工坊应用图标"><title>氛围壁纸工坊应用图标</title><defs><linearGradient id="wallpaper-fresh-E-dark" gradientUnits="userSpaceOnUse" x1="78" y1="52" x2="184" y2="207"><stop offset="0" stop-color="#CBF381"/><stop offset="0.55" stop-color="#A3EA85"/><stop offset="1" stop-color="#69DCA3"/></linearGradient></defs><rect width="256" height="256" fill="#2B2A27"/><path transform="translate(29.44 29.44) scale(0.77)" fill="url(#wallpaper-fresh-E-dark)" fill-rule="evenodd" d="M40 157 C40 99 89 52 156 45 L198 40 C209 39 216 46 216 57 L216 145 C216 180 190 207 155 213 L55 228 C45 230 38 222 41 213 L51 186 C66 173 83 168 109 172 C145 178 166 164 183 132 C155 151 133 154 110 147 C84 139 63 139 40 157 Z"/></svg>
