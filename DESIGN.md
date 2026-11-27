@@ -4,11 +4,15 @@
 
 ## 色系与 tokens
 
-色系来源：`public/logo.svg` 的 `#3f3a36`（墨色）、`#9aa7a1`（鼠尾草）、`#c4b2a3`（陶土）、`#f5f1ea`（纸色）。当前 `src/styles/theme.scss` 与这四色一致，是现有 CSS token 真源；保留原值。
+应用界面的墨色、鼠尾草、陶土和纸色来自 `src/styles/theme.scss`。品牌标识单独使用已确认的青柚绿，其渐变色值为 `#CBF381`、`#A3EA85`、`#69DCA3`。
 
 - 默认浅色莫兰迪纸面；`[data-theme="dark"]` 覆盖同名 tokens。
 - 全局字体与容器来自 `src/styles/global.scss`，字体首选 AlimamaFangYuanTiVF-Thin；容器 max-width 1200px。
 - 产品用于生成和预览壁纸；既有画布/模板色值属于内容数据，不在本轮修改。
+
+## 品牌标识
+
+2026-11-27 定稿。用画幅内的一道风线表现壁纸工坊的氛围感。透明标识存放于 `public/brand-mark.svg`，使用深色展示底。标签页、项目首页和安装图标使用 `public/logo.svg` 的 `#2B2A27` 深色底，标识路径与渐变沿用母版。用 `pnpm generate-icons` 更新 192px 和 512px 安装图标。
 
 ## 工程配套
 
